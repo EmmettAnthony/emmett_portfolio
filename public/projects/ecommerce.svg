@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:0.15"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#8B5CF6"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#g1)"/>
+  <rect x="300" y="175" width="200" height="150" rx="16" fill="url(#g2)" opacity="0.9"/>
+  <text x="400" y="265" text-anchor="middle" fill="white" font-size="48" font-weight="bold" font-family="system-ui">S</text>
+  <text x="400" y="290" text-anchor="middle" fill="white" font-size="14" font-weight="500" font-family="system-ui" opacity="0.8">E-Commerce</text>
+</svg>

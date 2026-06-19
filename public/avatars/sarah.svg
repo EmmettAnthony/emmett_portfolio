@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <rect width="80" height="80" rx="40" fill="url(#g)"/>
+  <defs><radialGradient id="g"><stop offset="0%" style="stop-color:#3B82F6"/><stop offset="100%" style="stop-color:#8B5CF6"/></radialGradient></defs>
+  <text x="40" y="47" text-anchor="middle" fill="white" font-size="22" font-weight="bold" font-family="system-ui">SJ</text>
+</svg>

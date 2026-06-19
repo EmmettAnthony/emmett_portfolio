@@ -1,0 +1,59 @@
+[
+  {
+    "id": "starter",
+    "name": "Starter",
+    "description": "Perfect for small businesses and personal projects looking to establish an online presence.",
+    "price": 999,
+    "currency": "$",
+    "interval": "one-time",
+    "features": [
+      "5-page responsive website",
+      "Basic SEO optimization",
+      "Contact form integration",
+      "Social media integration",
+      "Mobile-friendly design",
+      "1 month support"
+    ],
+    "highlighted": false
+  },
+  {
+    "id": "professional",
+    "name": "Professional",
+    "description": "Ideal for growing businesses that need a powerful online presence with advanced features.",
+    "price": 2499,
+    "currency": "$",
+    "interval": "one-time",
+    "features": [
+      "10-page responsive website",
+      "Advanced SEO optimization",
+      "CMS integration",
+      "E-commerce functionality",
+      "Custom animations",
+      "Performance optimization",
+      "3 months support",
+      "Analytics integration"
+    ],
+    "highlighted": true
+  },
+  {
+    "id": "enterprise",
+    "name": "Enterprise",
+    "description": "For large organizations requiring custom solutions, scalability, and dedicated support.",
+    "price": "Custom",
+    "currency": "",
+    "interval": "",
+    "features": [
+      "Unlimited pages",
+      "Custom web application",
+      "API development",
+      "Database design & integration",
+      "Advanced security features",
+      "Cloud infrastructure setup",
+      "Dedicated project manager",
+      "12 months support",
+      "Priority maintenance",
+      "Team training"
+    ],
+    "highlighted": false
+  }
+]

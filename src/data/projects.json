@@ -1,0 +1,74 @@
+[
+  {
+    "id": "project-1",
+    "title": "ShopFlow E-Commerce Platform",
+    "description": "A full-featured e-commerce platform with real-time inventory management, payment processing, and an admin dashboard. Built for scalability and performance.",
+    "image": "/projects/ecommerce.png",
+    "category": "Web Development",
+    "tags": ["Next.js", "TypeScript", "Stripe", "PostgreSQL"],
+    "githubUrl": "https://github.com/emmettanthony/shopflow",
+    "liveUrl": "https://shopflow-demo.vercel.app",
+    "featured": true,
+    "year": 2024
+  },
+  {
+    "id": "project-2",
+    "title": "TaskPro Project Management",
+    "description": "A collaborative project management tool with Kanban boards, Gantt charts, team messaging, and real-time updates using WebSockets.",
+    "image": "/projects/taskpro.png",
+    "category": "Business Applications",
+    "tags": ["React", "Node.js", "Socket.io", "MongoDB"],
+    "githubUrl": "https://github.com/emmettanthony/taskpro",
+    "liveUrl": "https://taskpro-demo.vercel.app",
+    "featured": true,
+    "year": 2024
+  },
+  {
+    "id": "project-3",
+    "title": "ContentCMS",
+    "description": "A headless CMS platform with a rich text editor, media library, role-based access control, and API-first architecture for content management.",
+    "image": "/projects/cms.png",
+    "category": "CMS Solutions",
+    "tags": ["Laravel", "PHP", "MySQL", "Vue.js"],
+    "githubUrl": "https://github.com/emmettanthony/contentcms",
+    "liveUrl": null,
+    "featured": true,
+    "year": 2023
+  },
+  {
+    "id": "project-4",
+    "title": "InvoiceHub",
+    "description": "A cloud-based invoicing and billing system with automated recurring invoices, expense tracking, financial reporting, and multi-currency support.",
+    "image": "/projects/invoice.png",
+    "category": "Custom Software",
+    "tags": ["Next.js", "TypeScript", "PostgreSQL", "Tailwind CSS"],
+    "githubUrl": "https://github.com/emmettanthony/invoicehub",
+    "liveUrl": "https://invoicehub-demo.vercel.app",
+    "featured": false,
+    "year": 2023
+  },
+  {
+    "id": "project-5",
+    "title": "UrbanBites Restaurant Website",
+    "description": "A modern restaurant website with online ordering, reservation system, menu management, and delivery integration for a local restaurant chain.",
+    "image": "/projects/restaurant.png",
+    "category": "E-commerce",
+    "tags": ["WordPress", "WooCommerce", "PHP", "JavaScript"],
+    "githubUrl": null,
+    "liveUrl": "https://urbanbites.example.com",
+    "featured": false,
+    "year": 2023
+  },
+  {
+    "id": "project-6",
+    "title": "DataVista Analytics Dashboard",
+    "description": "An interactive data visualization dashboard with real-time analytics, custom charts, CSV imports, and export functionality for business intelligence.",
+    "image": "/projects/analytics.png",
+    "category": "Business Applications",
+    "tags": ["React", "D3.js", "Node.js", "MongoDB"],
+    "githubUrl": "https://github.com/emmettanthony/datavista",
+    "liveUrl": "https://datavista-demo.vercel.app",
+    "featured": false,
+    "year": 2022
+  }
+]

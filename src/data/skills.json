@@ -1,0 +1,52 @@
+[
+  {
+    "category": "Frontend",
+    "icon": "Code2",
+    "skills": [
+      { "name": "Next.js", "level": 95 },
+      { "name": "React", "level": 95 },
+      { "name": "TypeScript", "level": 90 },
+      { "name": "JavaScript", "level": 95 },
+      { "name": "HTML5", "level": 98 },
+      { "name": "CSS3", "level": 95 },
+      { "name": "Tailwind CSS", "level": 92 }
+    ]
+  },
+  {
+    "category": "Backend",
+    "icon": "Server",
+    "skills": [
+      { "name": "Node.js", "level": 88 },
+      { "name": "Laravel", "level": 82 },
+      { "name": "PHP", "level": 80 },
+      { "name": "REST APIs", "level": 90 }
+    ]
+  },
+  {
+    "category": "Database",
+    "icon": "Database",
+    "skills": [
+      { "name": "MySQL", "level": 85 },
+      { "name": "PostgreSQL", "level": 82 },
+      { "name": "MongoDB", "level": 78 }
+    ]
+  },
+  {
+    "category": "CMS",
+    "icon": "FileText",
+    "skills": [
+      { "name": "WordPress", "level": 85 },
+      { "name": "WooCommerce", "level": 80 }
+    ]
+  },
+  {
+    "category": "Tools",
+    "icon": "Wrench",
+    "skills": [
+      { "name": "Git", "level": 92 },
+      { "name": "GitHub", "level": 92 },
+      { "name": "Docker", "level": 75 },
+      { "name": "VS Code", "level": 95 }
+    ]
+  }
+]

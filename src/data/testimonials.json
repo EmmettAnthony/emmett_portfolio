@@ -1,0 +1,31 @@
+[
+  {
+    "id": "testimonial-1",
+    "name": "Sarah Johnson",
+    "role": "CEO, TechVentures Inc.",
+    "avatar": "/avatars/sarah.svg",
+    "content": "Emmett delivered an exceptional e-commerce platform that exceeded our expectations. His attention to detail and technical expertise made the entire process smooth and efficient.",
+    "rating": 5
+  },
+  {
+    "id": "testimonial-2",
+    "name": "Michael Chen",
+    "role": "CTO, DataFlow Systems",
+    "content": "Working with Emmett was a fantastic experience. He built a complex analytics dashboard that handles millions of data points with ease. Highly recommended for any full-stack project.",
+    "rating": 5
+  },
+  {
+    "id": "testimonial-3",
+    "name": "Emily Rodriguez",
+    "role": "Founder, Bloom Studios",
+    "content": "The corporate website Emmett created for us perfectly captures our brand identity. The design is stunning, and the performance improvements have significantly boosted our conversion rates.",
+    "rating": 5
+  },
+  {
+    "id": "testimonial-4",
+    "name": "David Park",
+    "role": "Project Manager, Nexus Digital",
+    "content": "Emmett's expertise in both frontend and backend development is impressive. He consistently delivers high-quality code on time and communicates clearly throughout the project lifecycle.",
+    "rating": 5
+  }
+]

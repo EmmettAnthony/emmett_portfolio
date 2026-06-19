@@ -1,0 +1,84 @@
+{
+  "summary": "Professional Software Developer with 3+ years of experience building modern web applications, e-commerce platforms, and business solutions. Passionate about clean code, performance optimization, and delivering exceptional user experiences.",
+  "experience": [
+    {
+      "id": "exp-1",
+      "company": "TechFlow Solutions",
+      "position": "Senior Software Developer",
+      "location": "San Francisco, CA",
+      "startDate": "2023-03",
+      "endDate": null,
+      "current": true,
+      "description": [
+        "Lead development of microservices architecture serving 100K+ daily users",
+        "Architected and implemented a real-time analytics dashboard reducing reporting time by 80%",
+        "Mentored junior developers through code reviews and pair programming sessions",
+        "Optimized database queries resulting in 60% improvement in API response times"
+      ]
+    },
+    {
+      "id": "exp-2",
+      "company": "WebCraft Agency",
+      "position": "Full Stack Developer",
+      "location": "San Francisco, CA",
+      "startDate": "2021-06",
+      "endDate": "2023-02",
+      "current": false,
+      "description": [
+        "Developed 15+ client websites and web applications using React, Next.js, and Laravel",
+        "Built custom WordPress themes and plugins for e-commerce and CMS solutions",
+        "Implemented CI/CD pipelines reducing deployment time by 70%",
+        "Collaborated with design team to create responsive, accessible interfaces"
+      ]
+    },
+    {
+      "id": "exp-3",
+      "company": "StartUp Labs",
+      "position": "Junior Developer",
+      "location": "Oakland, CA",
+      "startDate": "2020-01",
+      "endDate": "2021-05",
+      "current": false,
+      "description": [
+        "Built and maintained RESTful APIs using Node.js and Express",
+        "Created responsive web pages using HTML5, CSS3, and JavaScript",
+        "Implemented automated testing reducing bug reports by 40%",
+        "Participated in agile development sprints and daily standups"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "institution": "University of California, Berkeley",
+      "degree": "Bachelor of Science in Computer Science",
+      "location": "Berkeley, CA",
+      "startDate": "2016",
+      "endDate": "2020",
+      "gpa": "3.7"
+    }
+  ],
+  "certifications": [
+    {
+      "id": "cert-1",
+      "name": "AWS Certified Developer - Associate",
+      "issuer": "Amazon Web Services",
+      "date": "2023",
+      "url": "https://aws.amazon.com/certification/"
+    },
+    {
+      "id": "cert-2",
+      "name": "Meta Front-End Developer",
+      "issuer": "Meta (Coursera)",
+      "date": "2022",
+      "url": "https://www.coursera.org/professional-certificates/meta-front-end-developer"
+    },
+    {
+      "id": "cert-3",
+      "name": "Google Professional Cloud Developer",
+      "issuer": "Google Cloud",
+      "date": "2023",
+      "url": "https://cloud.google.com/learn/certification/cloud-developer"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#8B5CF6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1100" cy="100" r="300" fill="#3B82F6" opacity="0.08"/>
+  <circle cx="150" cy="500" r="200" fill="#8B5CF6" opacity="0.08"/>
+  <rect x="100" y="180" width="16" height="100" rx="8" fill="url(#accent)"/>
+  <text x="130" y="230" fill="white" font-size="64" font-weight="bold" font-family="system-ui">Emmett Anthony</text>
+  <text x="130" y="280" fill="#94a3b8" font-size="28" font-weight="400" font-family="system-ui">Professional Software Developer</text>
+  <text x="130" y="340" fill="#64748b" font-size="20" font-weight="400" font-family="system-ui">Building modern, scalable, and user-focused digital solutions.</text>
+  <text x="130" y="420" fill="#3B82F6" font-size="16" font-weight="500" font-family="system-ui">emmettanthony.dev</text>
+</svg>

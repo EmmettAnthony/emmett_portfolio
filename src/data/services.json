@@ -1,0 +1,80 @@
+[
+  {
+    "id": "web-development",
+    "title": "Web Development",
+    "description": "Custom websites built with modern frameworks and optimized for performance, SEO, and user experience.",
+    "icon": "Globe",
+    "features": [
+      "Responsive design",
+      "SEO optimization",
+      "Performance tuning",
+      "CMS integration",
+      "Analytics setup"
+    ]
+  },
+  {
+    "id": "software-development",
+    "title": "Software Development",
+    "description": "Full-stack applications, management systems, and custom software solutions tailored to your business needs.",
+    "icon": "Terminal",
+    "features": [
+      "Custom applications",
+      "Management systems",
+      "Business solutions",
+      "API development",
+      "Cloud deployment"
+    ]
+  },
+  {
+    "id": "ecommerce",
+    "title": "E-Commerce Development",
+    "description": "Online stores with secure payment processing, inventory management, and seamless shopping experiences.",
+    "icon": "ShoppingCart",
+    "features": [
+      "Online stores",
+      "Payment integration",
+      "Inventory management",
+      "Shopping cart",
+      "Order management"
+    ]
+  },
+  {
+    "id": "maintenance",
+    "title": "Website Maintenance",
+    "description": "Ongoing maintenance, security updates, performance optimization, and technical support for your website.",
+    "icon": "RefreshCw",
+    "features": [
+      "Regular updates",
+      "Security patches",
+      "Performance optimization",
+      "Backup management",
+      "Technical support"
+    ]
+  },
+  {
+    "id": "consulting",
+    "title": "Technical Consulting",
+    "description": "Expert advice on technology strategy, system architecture, and technical decision-making for your projects.",
+    "icon": "Lightbulb",
+    "features": [
+      "Technology strategy",
+      "System architecture",
+      "Code reviews",
+      "Tech stack selection",
+      "Development planning"
+    ]
+  },
+  {
+    "id": "corporate",
+    "title": "Corporate Websites",
+    "description": "Professional corporate websites and landing pages that establish your brand and drive business growth.",
+    "icon": "Building2",
+    "features": [
+      "Business websites",
+      "Corporate websites",
+      "Landing pages",
+      "Brand integration",
+      "Content strategy"
+    ]
+  }
+]

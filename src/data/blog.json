@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "building-performant-nextjs-applications",
+    "title": "Building Performant Next.js Applications: A Comprehensive Guide",
+    "excerpt": "Learn the best practices for building high-performance Next.js applications with optimized rendering, caching strategies, and performance monitoring.",
+    "content": "Next.js has become the go-to framework for building modern web applications. In this comprehensive guide, we'll explore the key strategies for building performant Next.js applications that deliver exceptional user experiences.\n\n## Server Components vs Client Components\n\nUnderstanding when to use Server Components vs Client Components is crucial for performance. Server Components reduce the JavaScript bundle size by rendering on the server and sending only the HTML to the client.\n\n## Image Optimization\n\nNext.js provides built-in image optimization through the `next/image` component. It automatically generates responsive images, lazy loads them, and serves them in modern formats like WebP.\n\n## Caching Strategies\n\nImplementing proper caching strategies can significantly improve your application's performance. Next.js supports multiple caching layers including Full Route Cache, Data Cache, and Router Cache.\n\n## Code Splitting\n\nAutomatic code splitting in Next.js ensures that users only download the code they need for the current page. Dynamic imports can further optimize loading by splitting large components.\n\n## Conclusion\n\nBuilding performant Next.js applications requires attention to detail across multiple areas. By following these best practices, you can create applications that load quickly and provide smooth user experiences.",
+    "image": "/blog/nextjs-performance.png",
+    "category": "Web Development",
+    "tags": ["Next.js", "Performance", "React", "Optimization"],
+    "author": "Emmett Anthony",
+    "publishedAt": "2024-11-15",
+    "featured": true
+  },
+  {
+    "slug": "typescript-best-practices-2024",
+    "title": "TypeScript Best Practices for Production Applications in 2024",
+    "excerpt": "Discover the essential TypeScript patterns and practices that will help you write safer, more maintainable code in production applications.",
+    "content": "TypeScript continues to evolve and improve. Here are the best practices you should follow for production applications in 2024.\n\n## Strict Mode\n\nAlways enable strict mode in your tsconfig.json. This enables all strict type-checking options and catches more potential bugs at compile time.\n\n## Discriminated Unions\n\nUse discriminated unions for handling different states in your application. This pattern makes impossible states impossible and improves code safety.\n\n## Utility Types\n\nLeverage TypeScript's built-in utility types like Partial, Pick, Omit, and Record to reduce boilerplate and maintain type safety.\n\n## Generics\n\nGenerics allow you to create reusable components that work with a variety of types while maintaining type safety.\n\n## Conclusion\n\nFollowing these TypeScript best practices will help you write safer, more maintainable code that scales well with your application.",
+    "image": "/blog/typescript.png",
+    "category": "Software Development",
+    "tags": ["TypeScript", "JavaScript", "Best Practices"],
+    "author": "Emmett Anthony",
+    "publishedAt": "2024-10-20",
+    "featured": true
+  },
+  {
+    "slug": "modern-css-with-tailwind-v4",
+    "title": "Modern CSS with Tailwind CSS v4: What's New and How to Use It",
+    "excerpt": "Explore the exciting new features in Tailwind CSS v4 including the CSS-first configuration, new utilities, and improved performance.",
+    "content": "Tailwind CSS v4 introduces a completely redesigned engine with CSS-first configuration. Let's explore what's new.\n\n## CSS-First Configuration\n\nTailwind v4 moves configuration from JavaScript to CSS using `@theme` directives. This makes it easier to customize your design system inline.\n\n## New Engine\n\nThe new engine is built on top of Lightning CSS and offers significantly faster build times. It also provides better integration with modern CSS features.\n\n## New Utilities\n\nNew utilities for container queries, animations, and more make it even easier to build complex layouts without leaving your HTML.\n\n## Conclusion\n\nTailwind CSS v4 represents a significant step forward for the framework. The CSS-first approach and improved performance make it an excellent choice for modern web development.",
+    "image": "/blog/tailwind.png",
+    "category": "Web Development",
+    "tags": ["CSS", "Tailwind CSS", "Frontend"],
+    "author": "Emmett Anthony",
+    "publishedAt": "2024-09-05",
+    "featured": false
+  },
+  {
+    "slug": "building-rest-apis-with-nextjs",
+    "title": "Building RESTful APIs with Next.js Route Handlers",
+    "excerpt": "A practical guide to building robust RESTful APIs using Next.js App Router route handlers with TypeScript and best practices.",
+    "content": "Next.js App Router provides a powerful way to build APIs using route handlers. This guide covers everything you need to know.\n\n## Route Handlers\n\nRoute handlers allow you to create API endpoints within your Next.js application. They support all HTTP methods and can leverage Next.js features like caching and revalidation.\n\n## Type Safety\n\nUsing TypeScript with route handlers ensures type safety across your API endpoints. Define request and response types for better code quality.\n\n## Error Handling\n\nImplement proper error handling middleware to provide consistent error responses across your API.\n\n## Authentication\n\nSecure your API endpoints with authentication middleware. Next.js route handlers work well with JWT tokens and session-based auth.\n\n## Conclusion\n\nNext.js route handlers provide a powerful, type-safe way to build APIs. Combined with TypeScript and proper error handling, you can build robust backends for your applications.",
+    "image": "/blog/api.png",
+    "category": "Backend Development",
+    "tags": ["Next.js", "API", "TypeScript", "Backend"],
+    "author": "Emmett Anthony",
+    "publishedAt": "2024-08-12",
+    "featured": false
+  },
+  {
+    "slug": "docker-for-developers",
+    "title": "Docker for Web Developers: A Practical Introduction",
+    "excerpt": "Get started with Docker for local development. Learn how to containerize your applications and streamline your development workflow.",
+    "image": "/blog/docker.png",
+    "category": "DevOps",
+    "tags": ["Docker", "DevOps", "Development"],
+    "author": "Emmett Anthony",
+    "content": "Docker has revolutionized how we develop and deploy applications. This practical guide will help you get started.\n\n## What is Docker?\n\nDocker is a platform for developing, shipping, and running applications inside containers. Containers are lightweight, portable, and consistent across different environments.\n\n## Dockerfile Basics\n\nLearn how to create efficient Dockerfiles for your web applications, including multi-stage builds for smaller image sizes.\n\n## Docker Compose\n\nDocker Compose allows you to define and run multi-container applications. Perfect for setting up development environments with databases, caching, and other services.\n\n## Best Practices\n\nFollow Docker best practices including using specific base image tags, minimizing layers, and using .dockerignore files.\n\n## Conclusion\n\nDocker is an essential tool for modern web development. It ensures consistency across development, testing, and production environments.",
+    "publishedAt": "2024-07-18",
+    "featured": false
+  },
+  {
+    "slug": "seo-optimization-nextjs",
+    "title": "SEO Optimization for Next.js Websites: Complete Guide",
+    "excerpt": "Master SEO for your Next.js applications with dynamic metadata, structured data, sitemaps, and advanced optimization techniques.",
+    "image": "/blog/seo.png",
+    "category": "Web Development",
+    "tags": ["SEO", "Next.js", "Optimization", "Metadata"],
+    "author": "Emmett Anthony",
+    "content": "SEO is crucial for the success of any website. Next.js provides powerful tools for SEO optimization.\n\n## Dynamic Metadata\n\nNext.js App Router supports dynamic metadata generation through the metadata API, allowing you to set titles, descriptions, and Open Graph tags for each page.\n\n## Structured Data\n\nImplement structured data using JSON-LD to help search engines understand your content and enable rich results.\n\n## Sitemap Generation\n\nGenerate dynamic sitemaps using Next.js route handlers to help search engines discover and index your content.\n\n## Performance\n\nCore Web Vitals are important ranking factors. Next.js helps you achieve excellent performance through automatic code splitting, image optimization, and server-side rendering.\n\n## Conclusion\n\nWith Next.js's built-in SEO features, you can create websites that are both user-friendly and search-engine optimized.",
+    "publishedAt": "2024-06-22",
+    "featured": false
+  }
+]

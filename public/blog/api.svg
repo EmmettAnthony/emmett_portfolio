@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0f172a"/><stop offset="100%" style="stop-color:#2d1b69"/></linearGradient></defs>
+  <rect width="800" height="450" fill="url(#g)"/>
+  <path d="M250 210 L350 210 L370 180 L430 240 L450 210 L550 210" stroke="#a78bfa" stroke-width="3" fill="none" opacity="0.6" stroke-linecap="round"/>
+  <rect x="230" y="195" width="20" height="30" rx="4" fill="#a78bfa" opacity="0.8"/>
+  <rect x="550" y="195" width="20" height="30" rx="4" fill="#a78bfa" opacity="0.8"/>
+  <text x="400" y="320" text-anchor="middle" fill="#fff" font-size="14" font-weight="500" font-family="system-ui" opacity="0.6">REST APIs with Next.js</text>
+</svg>

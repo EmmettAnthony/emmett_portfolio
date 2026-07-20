@@ -2,9 +2,11 @@
 
 import { ArrowUp } from "lucide-react";
 import { motion, useScroll, useSpring } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export function BackToTop() {
+  const t = useTranslations();
   const { scrollYProgress } = useScroll();
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -36,7 +38,7 @@ export function BackToTop() {
             : ("none" as const)
           : ("none" as const),
       }}
-      aria-label="Back to top"
+      aria-label={t("backToTop.ariaLabel")}
     >
       <ArrowUp className="h-4 w-4" />
     </motion.button>

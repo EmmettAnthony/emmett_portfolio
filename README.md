@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Emmett Anthony — Portfolio
 
-## Getting Started
+Professional portfolio and services platform built with Next.js 15, TypeScript, Prisma, and PostgreSQL. Features include a blog, portfolio showcase, contact management, booking system, AI chatbot, and admin dashboard.
 
-First, run the development server:
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS v4 + shadcn/ui |
+| Database | PostgreSQL + Prisma ORM |
+| Testing | Vitest + Playwright |
+| CI/CD | GitHub Actions |
+| Email | Resend + Brevo |
+| Auth | NextAuth.js v5 |
+| AI | OpenAI / Vercel AI SDK |
+| Storage | UploadThing + Cloudflare R2 |
+| Monitoring | Sentry + Google Analytics |
+| Deployment | Vercel |
+
+## Quick Start
 
 ```bash
+npm install
+cp .env.example .env.local   # fill in your values
+npx prisma generate && npx prisma db push && npx prisma db seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Documentation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| File | Purpose |
+|------|---------|
+| [DEVELOPMENT.md](./DEVELOPMENT.md) | Dev setup, scripts, project structure |
+| [GIT_WORKFLOW.md](./GIT_WORKFLOW.md) | Branch strategy, commit convention, PR process |
+| [CI-CD.md](./CI-CD.md) | CI/CD pipeline architecture and configuration |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contributing guidelines |
+| [TESTING.md](./TESTING.md) | Testing strategy |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+```bash
+npm run dev          # Development server
+npm run build        # Production build
+npm run lint         # ESLint
+npm run type-check   # TypeScript check
+npm test             # Run tests
+npm run test:e2e     # Playwright E2E
+npm run db:seed      # Seed database
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Branch Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+main        → Production (protected, PR only)
+develop     → Integration (protected, PR only)
+feature/*   → New features (branch from develop)
+bugfix/*    → Bug fixes (branch from develop)
+hotfix/*    → Emergency fixes (branch from main)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Status
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Production deployment at [emmettanthony.dev](https://emmettanthony.dev)

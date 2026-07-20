@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/newsletter/cron",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/calendar/cron",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}

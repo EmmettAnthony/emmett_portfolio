@@ -1,0 +1,69 @@
+{
+  "budgets": [
+    {
+      "options": {
+        "budgetType": "perPage"
+      },
+      "path": "/",
+      "timings": [
+        { "metric": "interactive", "budget": 5000 },
+        { "metric": "first-meaningful-paint", "budget": 3000 },
+        { "metric": "first-contentful-paint", "budget": 2500 }
+      ],
+      "resourceSizes": [
+        { "resourceType": "total", "budget": 5000000 },
+        { "resourceType": "script", "budget": 2000000 },
+        { "resourceType": "image", "budget": 1500000 },
+        { "resourceType": "font", "budget": 500000 }
+      ],
+      "resourceCounts": [
+        { "resourceType": "total", "budget": 100 },
+        { "resourceType": "script", "budget": 20 },
+        { "resourceType": "stylesheet", "budget": 10 }
+      ]
+    },
+    {
+      "options": {
+        "budgetType": "perPage"
+      },
+      "path": "/about",
+      "timings": [
+        { "metric": "interactive", "budget": 5000 },
+        { "metric": "first-contentful-paint", "budget": 2500 }
+      ],
+      "resourceSizes": [
+        { "resourceType": "total", "budget": 4000000 },
+        { "resourceType": "script", "budget": 1500000 },
+        { "resourceType": "image", "budget": 1000000 }
+      ]
+    },
+    {
+      "options": {
+        "budgetType": "perPage"
+      },
+      "path": "/portfolio",
+      "timings": [
+        { "metric": "interactive", "budget": 5000 },
+        { "metric": "first-contentful-paint", "budget": 2500 }
+      ],
+      "resourceSizes": [
+        { "resourceType": "total", "budget": 5000000 },
+        { "resourceType": "image", "budget": 2000000 }
+      ]
+    },
+    {
+      "options": {
+        "budgetType": "perPage"
+      },
+      "path": "/admin/login",
+      "timings": [
+        { "metric": "interactive", "budget": 4000 },
+        { "metric": "first-contentful-paint", "budget": 2000 }
+      ],
+      "resourceSizes": [
+        { "resourceType": "total", "budget": 3000000 },
+        { "resourceType": "script", "budget": 1000000 }
+      ]
+    }
+  ]
+}

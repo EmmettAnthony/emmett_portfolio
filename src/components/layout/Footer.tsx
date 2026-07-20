@@ -1,47 +1,46 @@
 import { Mail, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { siteConfig } from "@/data/site-config";
+import { useSiteSettings } from "@/components/settings/SiteSettingsProvider";
 import { GithubIcon, LinkedInIcon, TwitterIcon } from "@/components/ui/SocialIcons";
+import { useTranslations } from "@/lib/i18n";
 
-const footerLinks: Array<{
-  title: string;
-  links: Array<{ label: string; href: string; external?: boolean }>;
-}> = [
-  {
-    title: "Pages",
-    links: [
-      { label: "Home", href: "/" },
-      { label: "About", href: "/about" },
-      { label: "Portfolio", href: "/portfolio" },
-      { label: "Services", href: "/services" },
-      { label: "Resume", href: "/resume" },
-      { label: "Blog", href: "/blog" },
-      { label: "Contact", href: "/contact" },
-    ],
-  },
-  {
-    title: "Services",
-    links: [
-      { label: "Web Development", href: "/services#web-development" },
-      { label: "E-Commerce", href: "/services#ecommerce" },
-      { label: "Custom Software", href: "/services#software-development" },
-      { label: "Consulting", href: "/services#consulting" },
-    ],
-  },
-  {
-    title: "Connect",
-    links: [
-      { label: "GitHub", href: siteConfig.links.github, external: true },
-      { label: "LinkedIn", href: siteConfig.links.linkedin, external: true },
-      { label: "Twitter", href: siteConfig.links.twitter, external: true },
-      { label: "Email", href: `mailto:${siteConfig.links.email}`, external: true },
-    ],
-  },
-];
+export function Footer({ hidden }: { hidden?: boolean }) {
+  const t = useTranslations();
+  const settings = useSiteSettings();
+  if (hidden) return null;
 
-export function Footer() {
+  const footerLinks: Array<{
+    title: string;
+    links: Array<{ label: string; href: string; external?: boolean }>;
+  }> = [
+    {
+      title: t("footer.quickLinks"),
+      links: settings.navigationLinks.map((l) => ({ label: l.label, href: l.href })),
+    },
+    {
+      title: t("footer.services"),
+      links: [
+        { label: t("footer.webDevelopment"), href: "/services#web-development" },
+        { label: t("footer.ecommerce"), href: "/services#ecommerce" },
+        { label: t("footer.customSoftware"), href: "/services#software-development" },
+        { label: t("footer.consulting"), href: "/services#consulting" },
+      ],
+    },
+    {
+      title: t("footer.connect"),
+      links: [
+        { label: "GitHub", href: settings.social.github, external: true },
+        { label: "LinkedIn", href: settings.social.linkedin, external: true },
+        { label: "Twitter", href: settings.social.twitter, external: true },
+        { label: "Email", href: `mailto:${settings.social.email}`, external: true },
+      ],
+    },
+  ];
   return (
-    <footer className="border-t border-zinc-200 dark:border-zinc-800">
+    <>
+      {/* Trigger element for newsletter popup (IntersectionObserver on mobile) */}
+      <div data-popup-trigger="newsletter" className="h-px w-px overflow-hidden" aria-hidden="true" />
+      <footer className="border-t border-zinc-200 dark:border-zinc-800">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
@@ -50,18 +49,18 @@ export function Footer() {
               href="/"
               className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white"
             >
-              {siteConfig.name.split(" ")[0]}
+              {settings.siteName.split(" ")[0]}
               <span className="text-blue-700">.</span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-              {siteConfig.tagline}
+              {settings.tagline}
             </p>
             <div className="mt-6 flex gap-3">
               {[
-                { icon: GithubIcon, href: siteConfig.links.github, label: "GitHub" },
-                { icon: LinkedInIcon, href: siteConfig.links.linkedin, label: "LinkedIn" },
-                { icon: TwitterIcon, href: siteConfig.links.twitter, label: "Twitter" },
-                { icon: Mail, href: `mailto:${siteConfig.links.email}`, label: "Email" },
+                { icon: GithubIcon, href: settings.social.github, label: "GitHub" },
+                { icon: LinkedInIcon, href: settings.social.linkedin, label: "LinkedIn" },
+                { icon: TwitterIcon, href: settings.social.twitter, label: "Twitter" },
+                { icon: Mail, href: `mailto:${settings.social.email}`, label: "Email" },
               ].map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
@@ -113,10 +112,11 @@ export function Footer() {
 
         <div className="mt-16 border-t border-zinc-200 pt-8 dark:border-zinc-800">
           <p className="text-center text-sm text-zinc-500 dark:text-zinc-500">
-            &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+            &copy; {new Date().getFullYear()} {settings.siteName}. {t("footer.copyright")}
           </p>
         </div>
       </div>
     </footer>
+    </>
   );
 }

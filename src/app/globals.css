@@ -5,6 +5,19 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* ── Status Badge Tokens ────────────────────────────── */
+  /* Usage: bg-badge-{type}-bg / text-badge-{type}-text */
+  --color-badge-success-bg: oklch(0.696 0.17 162.48 / 0.2);
+  --color-badge-success-text: oklch(0.765 0.177 163.22);
+  --color-badge-warning-bg: oklch(0.769 0.188 70.08 / 0.2);
+  --color-badge-warning-text: oklch(0.828 0.137 66.03);
+  --color-badge-error-bg: oklch(0.637 0.237 25.331 / 0.2);
+  --color-badge-error-text: oklch(0.704 0.191 22.216);
+  --color-badge-info-bg: oklch(0.585 0.233 277.117 / 0.2);
+  --color-badge-info-text: oklch(0.673 0.182 276.935);
+  --color-badge-neutral-bg: oklch(0.556 0.005 285 / 0.2);
+  --color-badge-neutral-text: oklch(0.705 0.015 285);
 }
 
 /* Smooth scroll */
@@ -54,4 +67,151 @@ body {
 
 .dark ::selection {
   background-color: hsl(217 91% 60% / 0.3);
+}
+
+/* ── Chat Markdown Styles ──────────────────────────────────────── */
+.prose-chat p {
+  margin: 0.25rem 0;
+}
+
+.prose-chat ul,
+.prose-chat ol {
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.prose-chat li {
+  margin: 0.125rem 0;
+}
+
+.prose-chat h1,
+.prose-chat h2,
+.prose-chat h3,
+.prose-chat h4 {
+  margin: 0.75rem 0 0.25rem;
+  font-weight: 600;
+}
+
+.prose-chat h1 { font-size: 1.05rem; }
+.prose-chat h2 { font-size: 0.95rem; }
+.prose-chat h3 { font-size: 0.875rem; }
+.prose-chat h4 { font-size: 0.825rem; }
+
+.prose-chat blockquote {
+  border-left: 3px solid #d4d4d8;
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+  font-style: italic;
+  color: #71717a;
+}
+
+.dark .prose-chat blockquote {
+  border-left-color: #52525b;
+  color: #a1a1aa;
+}
+
+.prose-chat table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.prose-chat th,
+.prose-chat td {
+  border: 1px solid #d4d4d8;
+  padding: 0.375rem 0.5rem;
+  text-align: left;
+}
+
+.dark .prose-chat th,
+.dark .prose-chat td {
+  border-color: #52525b;
+}
+
+.prose-chat th {
+  background: #f4f4f5;
+  font-weight: 600;
+}
+
+.dark .prose-chat th {
+  background: #27272a;
+}
+
+.prose-chat hr {
+  margin: 0.75rem 0;
+  border-color: #e4e4e7;
+}
+
+.dark .prose-chat hr {
+  border-color: #3f3f46;
+}
+
+.prose-chat input[type="checkbox"] {
+  accent-color: #2563eb;
+}
+
+/* ── Highlight.js Syntax Highlighting ──────────────────────────── */
+.hljs {
+  color: #e4e4e7;
+  background: transparent;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link {
+  color: #c084fc;
+}
+
+.hljs-string,
+.hljs-title,
+.hljs-name,
+.hljs-type,
+.hljs-attribute,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: #86efac;
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+  color: #71717a;
+}
+
+.hljs-number,
+.hljs-literal {
+  color: #fde047;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #67e8f9;
+}
+
+.hljs-attr {
+  color: #93c5fd;
+}
+
+.hljs-selector-class {
+  color: #fbbf24;
+}
+
+.hljs-selector-id {
+  color: #f472b6;
+}
+
+.hljs-punctuation {
+  color: #a1a1aa;
+}
+
+.hljs-params {
+  color: #d4d4d8;
 }

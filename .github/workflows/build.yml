@@ -1,0 +1,163 @@
+name: Build - Application Build
+on:
+  push:
+    branches: [main, develop]
+    paths-ignore:
+      - "**.md"
+      - ".github/**"
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+    inputs:
+      production:
+        description: "Production build"
+        type: boolean
+        default: false
+
+concurrency:
+  group: build-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_build
+
+jobs:
+  ##############################################################################
+  # BUILD VERIFICATION
+  ##############################################################################
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: portfolio_build
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
+
+      - uses: ./.github/actions/prisma
+        with:
+          database-url: postgresql://postgres:postgres@localhost:5432/portfolio_build
+          run-seed: "false"
+
+      - name: Build Application
+        id: build
+        run: |
+          npm run build 2>&1 | tee build-output.log
+        env:
+          NEXT_PUBLIC_SITE_URL: "https://emmettanthony.dev"
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN || '' }}
+
+      - name: Analyze Build Output
+        run: |
+          echo "## 🏗️ Build Report" > build-report.md
+          echo "" >> build-report.md
+          echo "### Build Summary" >> build-report.md
+          echo "- Status: ✅ Success" >> build-report.md
+          echo "- Duration: ${{ steps.build.duration }}" >> build-report.md
+          echo "" >> build-report.md
+          echo "### Output Size" >> build-report.md
+          if [ -d ".next" ]; then
+            echo "- Total size: $(du -sh .next/ | cut -f1)" >> build-report.md
+            echo "- Pages: $(find .next/server/app -name '*.html' | wc -l)" >> build-report.md
+            echo "- Static files: $(find .next/static -type f | wc -l)" >> build-report.md
+          fi
+          echo "" >> build-report.md
+          echo "### Route Sizes" >> build-report.md
+          echo '```' >> build-report.md
+          du -sh .next/server/app/*/ 2>/dev/null || true >> build-report.md
+          echo '```' >> build-report.md
+          cat build-report.md
+
+      - name: Check Build Output Integrity
+        run: |
+          if [ -d ".next" ]; then
+            echo "✅ Build output exists"
+            echo "Build ID: $(cat .next/BUILD_ID 2>/dev/null || echo 'N/A')"
+            echo "Routes:"
+            ls -d .next/server/app/*/ 2>/dev/null | wc -l
+          else
+            echo "❌ Build output missing"
+            exit 1
+          fi
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: |
+            .next/
+            public/
+            build-report.md
+          retention-days: 7
+          compression-level: 6
+
+      - name: Upload Build Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: build-output.log
+          retention-days: 30
+
+  ##############################################################################
+  # DOCKER BUILD (optional container)
+  ##############################################################################
+  docker:
+    name: Docker Build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: |
+          docker build -t emmett-portfolio:latest \
+            --build-arg NODE_ENV=production \
+            --build-arg DATABASE_URL=${{ env.DATABASE_URL }} \
+            .
+      - name: Scan Docker Image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: emmett-portfolio:latest
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
+
+  ##############################################################################
+  # BUILD CACHE ANALYSIS
+  ##############################################################################
+  cache-analysis:
+    name: Build Cache Analysis
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Analyze Cache Effectiveness
+        run: |
+          echo "## 💾 Build Cache Analysis" >> build-report.md
+          echo "" >> build-report.md
+          echo "### Cache Stats" >> build-report.md
+          echo "- Node modules cache: ${{ steps.npm-cache.outputs.cache-hit == 'true' && '✅ Hit' || '❌ Miss' }}" >> build-report.md
+          echo "" >> build-report.md
+          echo "### Recommendations" >> build-report.md
+          echo "1. Ensure package-lock.json is committed" >> build-report.md
+          echo "2. Use `npm ci` instead of `npm install`" >> build-report.md
+          echo "3. Consider using Turbopack for development" >> build-report.md

@@ -2,16 +2,18 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { useTranslations } from "@/lib/i18n";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import testimonials from "@/data/testimonials.json";
 
 export function Testimonials() {
+  const t = useTranslations();
   return (
     <section className="bg-zinc-50 py-20 dark:bg-zinc-900/50 md:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title="What Clients Say"
-          subtitle="Trusted by businesses and startups to deliver exceptional results."
+          title={t("home.testimonials.title")}
+          subtitle={t("home.testimonials.subtitle")}
         />
 
         <div className="mt-16 grid gap-8 md:grid-cols-2">
@@ -34,7 +36,7 @@ export function Testimonials() {
                 ))}
               </div>
 
-              <blockquote className="mt-4 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <blockquote className="mt-4 text-base leading-relaxed text-muted-foreground dark:text-zinc-400">
                 &ldquo;{testimonial.content}&rdquo;
               </blockquote>
 
@@ -49,7 +51,7 @@ export function Testimonials() {
                   <div className="text-sm font-semibold text-zinc-900 dark:text-white">
                     {testimonial.name}
                   </div>
-                  <div className="text-xs text-zinc-600 dark:text-zinc-400">
+                  <div className="text-xs text-muted-foreground dark:text-zinc-400">
                     {testimonial.role}
                   </div>
                 </div>

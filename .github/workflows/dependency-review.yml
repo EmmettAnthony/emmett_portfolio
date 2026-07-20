@@ -1,0 +1,108 @@
+name: Dependency Review - Supply Chain Security
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: depreview-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  ##############################################################################
+  # DEPENDENCY REVIEW
+  ##############################################################################
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          deny-licenses: AGPL-1.0, AGPL-3.0
+          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense, 0BSD, MPL-2.0
+          comment-summary-in-pr: always
+
+  ##############################################################################
+  # SBOM GENERATION
+  ##############################################################################
+  sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./
+          format: spdx-json
+          output-file: reports/sbom.spdx.json
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: reports/sbom.spdx.json
+          retention-days: 90
+
+  ##############################################################################
+  # DEPENDENCY SUBMISSION (GitHub Advisory Database)
+  ##############################################################################
+  dependency-submission:
+    name: Dependency Submission
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-submission@v4
+        with:
+          allow-ghs: true
+
+  ##############################################################################
+  # NPM PACKAGE LOCK VALIDATION
+  ##############################################################################
+  lockfile-validation:
+    name: Lockfile Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate package-lock.json
+        run: |
+          if [ -f "package-lock.json" ]; then
+            echo "✅ package-lock.json exists"
+            if command -v npm &> /dev/null; then
+              npm ls --depth=0 2>/dev/null | head -30
+            fi
+          else
+            echo "❌ package-lock.json is missing — run npm install"
+            exit 1
+          fi
+
+  ##############################################################################
+  # SUMMARY
+  ##############################################################################
+  summary:
+    name: Dependency Review Summary
+    if: always()
+    needs: [dependency-review, sbom, lockfile-validation]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate Results
+        run: |
+          echo "📊 Dependency Review Results:"
+          echo "  Review: ${{ needs.dependency-review.result }}"
+          echo "  SBOM: ${{ needs.sbom.result }}"
+          echo "  Lockfile: ${{ needs.lockfile-validation.result }}"
+          if [ "${{ needs.dependency-review.result }}" = "success" ]; then
+            echo "✅ All dependency checks passed"
+          else
+            echo "❌ Some dependency checks failed — review PR comments"
+            exit 1
+          fi

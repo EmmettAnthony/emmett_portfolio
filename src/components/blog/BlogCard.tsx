@@ -11,12 +11,13 @@ interface BlogCardProps {
     slug: string;
     title: string;
     excerpt: string;
-    content: string;
+    content?: string;
     image: string;
     category: string;
     tags: string[];
     author: string;
     publishedAt: string;
+    readingTime?: number;
   };
   index: number;
 }
@@ -40,14 +41,14 @@ export function BlogCard({ post, index }: BlogCardProps) {
           />
         </div>
         <div className="mt-5">
-          <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-600 dark:text-zinc-400">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground dark:text-zinc-400">
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {formatDate(post.publishedAt)}
             </span>
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              {readTime(post.content)} min read
+              {post.readingTime ?? (post.content ? readTime(post.content) : 0)} min read
             </span>
             <span className="rounded-md bg-zinc-100 px-2 py-0.5 dark:bg-zinc-800">
               {post.category}
@@ -56,14 +57,14 @@ export function BlogCard({ post, index }: BlogCardProps) {
           <h3 className="mt-3 text-lg font-semibold text-zinc-900 transition-colors group-hover:text-blue-700 dark:text-white dark:group-hover:text-blue-400">
             {post.title}
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-2">
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground dark:text-zinc-400 line-clamp-2">
             {post.excerpt || "Read this article..."}
           </p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {post.tags?.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="inline-flex rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                className="inline-flex rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-muted-foreground dark:bg-zinc-800 dark:text-zinc-400"
               >
                 {tag}
               </span>

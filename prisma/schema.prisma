@@ -1,0 +1,2827 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Lead / Contact ──────────────────────────────────────────────────────────
+model Contact {
+  id                      String   @id @default(cuid())
+  fullName                String
+  email                   String
+  phone                   String?
+  company                 String?
+  projectType             String
+  budget                  String?
+  timeline                String?
+  website                 String?
+  startDate               String?
+  projectDetails          String
+  projectGoals            String?
+  hasExistingWebsite      Boolean?
+  existingWebsiteUrl      String?
+  preferredContactMethod  String?
+  communicationMethod     String?
+  referralSource          String?
+  fileName                String?
+  fileUrl                 String?
+  leadScore               Int      @default(0)
+  status                  String   @default("NEW")
+  notes                   String?
+  tags                    String?
+  assignedTo              String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  events                  LeadTimeline[]
+  appointments            Appointment[]
+
+  @@map("contacts")
+}
+
+model LeadTimeline {
+  id        String   @id @default(cuid())
+  contactId String
+  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  action    String
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@map("lead_timeline")
+}
+
+// ─── Clients ─────────────────────────────────────────────────────────────────
+model Client {
+  id        String         @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  website   String?
+  notes     String?
+  avatar    String?
+  status    String         @default("ACTIVE")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  projects  Project[]
+  appointments Appointment[]
+
+  @@map("clients")
+}
+
+// ─── Projects ────────────────────────────────────────────────────────────────
+model Project {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  budget      Float?
+  deadline    DateTime?
+  status      String     @default("PLANNING")
+  priority    String     @default("MEDIUM")
+  clientId    String?
+  client      Client?    @relation(fields: [clientId], references: [id])
+  tags        String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  milestones  Milestone[]
+  tasks       Task[]
+  appointments Appointment[]
+
+  @@map("projects")
+}
+
+model Milestone {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  dueDate     DateTime?
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+
+  @@map("milestones")
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  assignee    String?
+  status      String   @default("TODO")
+  priority    String   @default("MEDIUM")
+  dueDate     DateTime?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("tasks")
+}
+
+// ─── Portfolio ───────────────────────────────────────────────────────────────
+
+model PortfolioCategory {
+  id          String             @id @default(cuid())
+  name        String
+  slug        String             @unique
+  description String?
+  icon        String?
+  order       Int                @default(0)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  projects    PortfolioProject[]
+
+  @@index([order])
+  @@map("portfolio_categories")
+}
+
+model Technology {
+  id        String             @id @default(cuid())
+  name      String
+  slug      String             @unique
+  icon      String?
+  color     String?
+  category  String?            // frontend, backend, database, devops, mobile, other
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  projects  PortfolioProject[]
+
+  @@index([category])
+  @@map("technologies")
+}
+
+model PortfolioProject {
+  id                String            @id @default(cuid())
+  title             String
+  slug              String            @unique
+  shortDescription  String?
+  fullDescription   String?
+  projectSummary    String?
+  clientName        String?
+  clientIndustry    String?
+  categoryId        String?
+  category          PortfolioCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  technologies      Technology[]
+  featuredImage     String?
+  thumbnailImage    String?
+  galleryImages     Json              @default("[]")
+  videoDemo         String?
+  projectLogo       String?
+  startDate         DateTime?
+  completionDate    DateTime?
+  projectDuration   String?
+  teamSize          Int?
+  status            String            @default("DRAFT") // DRAFT, IN_PROGRESS, COMPLETED, ARCHIVED
+  featured          Boolean           @default(false)
+  published         Boolean           @default(false)
+  order             Int               @default(0)
+  viewCount         Int               @default(0)
+  liveUrl           String?
+  githubUrl         String?
+  demoUrl           String?
+  caseStudyUrl      String?
+  metaTitle         String?
+  metaDescription   String?
+  ogImage           String?
+  canonicalUrl      String?
+  tags              Json              @default("[]")
+  awards            Json              @default("[]")
+  testimonialIds    Json              @default("[]")
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  caseStudy         CaseStudy?
+  metrics           ProjectMetric[]
+  dailyViews        ProjectDailyView[]
+  resumeFeatured    ResumeFeaturedProject[]
+  clientId          String?
+  client            CrmClient? @relation("ClientProjects", fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([featured])
+  @@index([order])
+  @@index([createdAt])
+  @@map("portfolio_projects")
+}
+
+model ProjectMetric {
+  id          String           @id @default(cuid())
+  projectId   String
+  project     PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  label       String
+  value       String
+  prefix      String?
+  suffix      String?
+  order       Int              @default(0)
+  createdAt   DateTime         @default(now())
+
+  @@index([projectId])
+  @@map("project_metrics")
+}
+
+model ProjectDailyView {
+  id        String           @id @default(cuid())
+  projectId String
+  project   PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  date      DateTime         @db.Date
+  count     Int              @default(1)
+
+  @@unique([projectId, date])
+  @@index([projectId])
+  @@index([date])
+  @@map("project_daily_views")
+}
+
+model CaseStudy {
+  id                  String           @id @default(cuid())
+  projectId           String           @unique
+  project             PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  clientBackground    String?
+  businessProblem     String?
+  objectives          String?
+  research            String?
+  solution            String?
+  developmentProcess  String?
+  results             String?
+  lessonsLearned      String?
+  challenges          String?
+  requirements        String?
+  projectGoals        String?
+  problemStatement    String?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@map("case_studies")
+}
+
+// ─── Blog ────────────────────────────────────────────────────────────────────
+model BlogPost {
+  id              String         @id @default(cuid())
+  title           String
+  slug            String         @unique
+  excerpt         String?
+  content         String         @default("")
+  image           String?
+  category        String?
+  tags            String?
+  author          String         @default("Emmett Anthony")
+  published       Boolean        @default(false)
+  featured        Boolean        @default(false)
+  publishedAt     DateTime?
+  scheduledAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  readingTime     Int            @default(0)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  revisions       BlogRevision[]
+
+  @@map("blog_posts")
+}
+
+model BlogRevision {
+  id              String   @id @default(cuid())
+  postId          String
+  post            BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  title           String
+  content         String
+  excerpt         String?
+  category        String?
+  tags            String?
+  image           String?
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+
+  @@index([postId, createdAt])
+  @@map("blog_revisions")
+}
+
+
+
+// ─── Testimonials ────────────────────────────────────────────────────────────
+model Testimonial {
+  id              String   @id @default(cuid())
+  name            String
+  jobTitle        String?
+  company         String?
+  companyWebsite  String?
+  email           String?
+  photo           String?
+  companyLogo     String?
+  title           String?
+  content         String
+  rating          Int      @default(5)
+  projectName     String?
+  projectCategory String?
+  category        String?
+  status          String   @default("PENDING")
+  featured        Boolean  @default(false)
+  displayOnHomepage Boolean @default(true)
+  archived        Boolean  @default(false)
+  order           Int      @default(0)
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  submittedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status])
+  @@index([featured])
+  @@index([createdAt])
+  @@map("testimonials")
+}
+
+model TestimonialCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@map("testimonial_categories")
+}
+
+// ─── Newsletter System ───────────────────────────────────────────────────────
+
+model Subscriber {
+  id                String           @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String           @unique
+  phone             String?
+  company           String?
+  country           String?
+  tags              String?          // JSON array of tag IDs
+  source            String?          // footer, blog_sidebar, contact_page, popup, exit_intent, manual_import
+  status            SubscriberStatus @default(ACTIVE)
+  verificationToken String?
+  verifiedAt        DateTime?
+  gdprConsent       Boolean          @default(false)
+  subscribedAt      DateTime         @default(now())
+  lastOpenedAt      DateTime?
+  lastClickedAt     DateTime?
+  timezone          String?          // e.g. "America/New_York", "Europe/London"
+  notes             String?
+  engagementScore   Int              @default(0) // 0-100 computed score
+  metadata          Json?            // Flexible extra data
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  emailLogs         EmailLog[]
+  campaignEvents    CampaignEvent[]
+  customFieldValues CustomFieldValue[]
+  preferences       SubscriberPreference?
+  unsubscribeReason UnsubscribeReason?
+
+  @@index([email])
+  @@index([status])
+  @@index([source])
+  @@index([country])
+  @@index([createdAt])
+  @@map("subscribers")
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+  PENDING_VERIFICATION
+}
+
+model SubscriberPreference {
+  id                     String     @id @default(cuid())
+  subscriberId           String     @unique
+  subscriber             Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  topics                 String?    // JSON array of topic IDs
+  emailFrequency         String     @default("instant") // instant, daily, weekly, monthly
+  preferredSendHour      Int        @default(9)          // 0-23, local time hour to send emails
+  receivePromotions      Boolean    @default(true)
+  receiveNewsletters     Boolean    @default(true)
+  receiveBlogUpdates     Boolean    @default(true)
+  updatedAt              DateTime   @updatedAt
+
+  @@map("subscriber_preferences")
+}
+
+model UnsubscribeReason {
+  id             String     @id @default(cuid())
+  subscriberId   String     @unique
+  subscriber     Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  reason         String?
+  detail         String?
+  unsubscribedAt DateTime   @default(now())
+
+  @@map("unsubscribe_reasons")
+}
+
+model Tag {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  color       String    @default("#3b82f6")
+  description String?
+  createdAt   DateTime  @default(now())
+  segments    Segment[]
+
+  @@map("tags")
+}
+
+model Segment {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  criteria    Json?      // Flexible segment criteria (country, tags, source, activity, etc.)
+  isDynamic   Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  tags        Tag[]
+  campaigns   Campaign[]
+
+  @@map("segments")
+}
+
+// ─── Campaigns ───────────────────────────────────────────────────────────────
+
+model Campaign {
+  id              String          @id @default(cuid())
+  name            String
+  subject         String
+  previewText     String?
+  senderName      String?
+  senderEmail     String?
+  content         String          @default("")
+  status          String          @default("DRAFT") // DRAFT, REVIEW, APPROVED, SCHEDULED, SENDING, AWAITING_WINNER, SENT, PAUSED, CANCELLED, FAILED
+  submittedForReviewAt DateTime?
+  approvedAt          DateTime?
+  reviewNotes         String?
+  templateId      String?
+  template        Template?       @relation(fields: [templateId], references: [id])
+  segmentId       String?
+  segment         Segment?        @relation(fields: [segmentId], references: [id])
+  scheduledAt     DateTime?
+  sentAt          DateTime?
+  completedAt     DateTime?
+  totalRecipients Int             @default(0)
+  testEmails      String?         // JSON array of test email addresses
+  abTestEnabled       Boolean         @default(false)
+  abTestVariantA      String?         // JSON for variant A
+  abTestVariantB      String?         // JSON for variant B
+  abTestTestPercent   Int             @default(20)  // % of list to test on before winner promotion
+  abTestWinner        String?         // "A" or "B" when winner is declared
+  abTestWinnerDeclaredAt DateTime?
+  isPublic            Boolean         @default(false)
+  recurringFrequency  String?         // "daily", "weekly", "monthly", null for one-time
+  recurringDayOfWeek  Int?            // 0=Sun..6=Sat for weekly
+  recurringDayOfMonth Int?            // 1-31 for monthly
+  recurringNextRunAt  DateTime?
+  recurringEndsAt     DateTime?       // optional end date
+  recurringCount      Int             @default(0) // how many times sent
+  recurringMaxCount   Int?            // optional max sends
+  metadata            Json?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  events          CampaignEvent[]
+  emailLogs       EmailLog[]
+  automations     Automation[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("campaigns")
+}
+
+model CampaignEvent {
+  id                String    @id @default(cuid())
+  campaignId        String
+  campaign          Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  subscriberId      String?
+  subscriber        Subscriber? @relation(fields: [subscriberId], references: [id], onDelete: SetNull)
+  email             String
+  eventType         String    // sent, opened, clicked, bounced, unsubscribed, complained
+  metadata          Json?     // click URL, user agent, ip, etc.
+  createdAt         DateTime  @default(now())
+
+  @@index([campaignId, eventType])
+  @@index([subscriberId])
+  @@index([createdAt])
+  @@map("campaign_events")
+}
+
+model EmailLog {
+  id             String    @id @default(cuid())
+  campaignId     String?
+  campaign       Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  subscriberId   String?
+  subscriber     Subscriber? @relation(fields: [subscriberId], references: [id], onDelete: SetNull)
+  email          String
+  subject        String?
+  status         String    // queued, sent, delivered, bounced, failed, opened, clicked
+  error          String?
+  sentAt         DateTime?
+  openedAt       DateTime?
+  clickedAt      DateTime?
+  opensCount     Int       @default(0)
+  clicksCount    Int       @default(0)
+  resendId       String?   // Resend API message ID
+  metadata       Json?
+  createdAt      DateTime  @default(now())
+
+  @@index([campaignId])
+  @@index([subscriberId])
+  @@index([status])
+  @@map("email_logs")
+}
+
+// ─── Templates ───────────────────────────────────────────────────────────────
+
+model Template {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  content     String     @default("")
+  category    String?    // company_newsletter, product_update, blog_digest, announcement, promotion, event, custom
+  thumbnail   String?
+  isBuiltIn   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  campaigns   Campaign[]
+
+  @@index([category])
+  @@map("templates")
+}
+
+// ─── Automations ─────────────────────────────────────────────────────────────
+
+model Automation {
+  id             String            @id @default(cuid())
+  name           String
+  description    String?
+  triggerType    String            // welcome_series, blog_notification, lead_nurturing, re_engagement, tag_added, custom
+  triggerConfig  Json?             // Trigger configuration (delay, conditions, etc.)
+  status         String            @default("ACTIVE") // ACTIVE, PAUSED, ARCHIVED
+  campaignId     String?
+  campaign       Campaign?         @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  steps          AutomationStep[]  // For multi-step automations
+
+  @@index([triggerType, status])
+  @@map("automations")
+}
+
+model AutomationStep {
+  id            String     @id @default(cuid())
+  automationId  String
+  automation    Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  stepOrder     Int
+  name          String
+  subject       String?
+  content       String?
+  delayDays     Int        @default(0)
+  delayHours    Int        @default(0)
+  condition     Json?      // Optional condition for conditional branching
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([automationId, stepOrder])
+  @@map("automation_steps")
+}
+
+// ─── Calendar System ──────────────────────────────────────────────────────────
+
+// ─── Meeting Types ────────────────────────────────────────────────────────────
+model MeetingType {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  duration    Int      @default(30)  // in minutes
+  color       String   @default("#3b82f6")  // hex color for calendar
+  icon        String?  // lucide icon name
+  location    String?  // "virtual", "in-person", or custom
+  link        String?  // default meeting link (e.g., Google Meet, Zoom)
+  price       Float?   // if paid consultation
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  events      CalendarEvent[]
+  appointments Appointment[]
+
+  @@index([slug])
+  @@index([isActive])
+  @@map("meeting_types")
+}
+
+// ─── Appointments (extended) ──────────────────────────────────────────────────
+model Appointment {
+  id            String       @id @default(cuid())
+  name          String
+  email         String
+  phone         String?
+  company       String?
+  projectType   String?
+  preferredDate DateTime
+  preferredTime String?      // stored as "HH:mm"
+  duration      Int          @default(30)
+  message       String?
+  notes         String?      // internal notes
+  status        String       @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED, RESCHEDULED, NO_SHOW
+  source        String       @default("WEBSITE") // WEBSITE, DASHBOARD, REFERRAL, OTHER
+  timezone      String?
+  website       String?
+  country       String?
+  budget        String?
+  timeline      String?
+  preferredContactMethod String?
+  newsletter    Boolean   @default(false)
+  terms         Boolean   @default(false)
+  fileUrl       String?
+  fileName      String?
+  meetingTypeId String?
+  meetingType   MeetingType? @relation(fields: [meetingTypeId], references: [id], onDelete: SetNull)
+  contactId     String?      // link to CRM lead
+  contact       Contact?     @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  projectId     String?      // link to project
+  project       Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  clientId      String?      // link to client
+  client        Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  cancellationReason String?
+  rescheduleCount Int       @default(0)
+  reminderSent   Boolean    @default(false)
+  confirmedAt    DateTime?
+  cancelledAt    DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  events         CalendarEvent[]
+  appointmentLogs AppointmentLog[]
+
+  @@index([email])
+  @@index([status])
+  @@index([preferredDate])
+  @@index([meetingTypeId])
+  @@index([contactId])
+  @@map("appointments")
+}
+
+// ─── Calendar Events ──────────────────────────────────────────────────────────
+model CalendarEvent {
+  id            String       @id @default(cuid())
+  title         String
+  description   String?
+  startDate     DateTime
+  endDate       DateTime?
+  startTime     String?      // "HH:mm"
+  endTime       String?      // "HH:mm"
+  allDay        Boolean      @default(false)
+  location      String?
+  link          String?      // meeting link
+  color         String       @default("#3b82f6")  // hex color
+  eventType     String       @default("MEETING") // MEETING, CONSULTATION, PROJECT_DEADLINE, PERSONAL, TASK, REMINDER
+  status        String       @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED, RESCHEDULED
+  priority      String       @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  notes         String?
+  attachments   String?      // JSON array of file URLs
+  recurring     String?      // JSON for recurring rule: { freq: "daily"|"weekly"|"monthly"|"yearly", interval: 1, until: "date", count: 5 }
+  recurrenceId  String?      // group ID for recurring event instances
+  metadata      Json?        // flexible extra data
+  appointmentId String?
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  meetingTypeId String?
+  meetingType   MeetingType? @relation(fields: [meetingTypeId], references: [id], onDelete: SetNull)
+  taskId        String?
+  task          CalendarTask? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  reminderId    String?
+  reminder      Reminder?    @relation(fields: [reminderId], references: [id], onDelete: SetNull)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([startDate])
+  @@index([endDate])
+  @@index([eventType])
+  @@index([status])
+  @@index([appointmentId])
+  @@index([taskId])
+  @@index([reminderId])
+  @@map("calendar_events")
+}
+
+// ─── Calendar Tasks ───────────────────────────────────────────────────────────
+model CalendarTask {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  priority    String         @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  status      String         @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  progress    Int            @default(0) // 0-100
+  category    String?        // work, personal, follow-up, etc.
+  tags        String?        // JSON array
+  order       Int            @default(0)
+  color       String         @default("#8b5cf6")
+  completedAt DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  events      CalendarEvent[]
+
+  @@index([status])
+  @@index([dueDate])
+  @@index([priority])
+  @@map("calendar_tasks")
+}
+
+// ─── Reminders ────────────────────────────────────────────────────────────────
+model Reminder {
+  id              String         @id @default(cuid())
+  title           String
+  description     String?
+  remindAt        DateTime
+  remindType      String         @default("EMAIL") // EMAIL, DASHBOARD, BOTH
+  status          String         @default("PENDING") // PENDING, SENT, DISMISSED
+  sentAt          DateTime?
+  relatedType     String?        // MEETING, DEADLINE, TASK, FOLLOW_UP
+  relatedId       String?        // ID of the related entity
+  repeatInterval  String?        // "daily", "weekly", "monthly", "yearly"
+  repeatUntil     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  events          CalendarEvent[]
+
+  @@index([remindAt])
+  @@index([status])
+  @@index([relatedType, relatedId])
+  @@map("reminders")
+}
+
+// ─── Availability / Working Hours ─────────────────────────────────────────────
+model Availability {
+  id        String   @id @default(cuid())
+  dayOfWeek Int      // 0=Sunday, 1=Monday, ..., 6=Saturday
+  isActive  Boolean  @default(true)
+  startTime String   // "HH:mm"
+  endTime   String   // "HH:mm"
+  breakStart String? // "HH:mm"
+  breakEnd   String? // "HH:mm"
+  slotDuration Int   @default(30) // minutes per time slot
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([dayOfWeek])
+  @@index([dayOfWeek, isActive])
+  @@map("availability")
+}
+
+// ─── Date Exceptions (holidays, vacations, blocked dates) ─────────────────────
+model DateException {
+  id          String   @id @default(cuid())
+  date        DateTime @db.Date
+  type        String   // HOLIDAY, VACATION, BLOCKED, SPECIAL_HOURS
+  title       String?
+  isAvailable Boolean  @default(false)
+  startTime   String?  // for special hours
+  endTime     String?  // for special hours
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@unique([date, type])
+  @@index([date])
+  @@map("date_exceptions")
+}
+
+// ─── Calendar Integrations ────────────────────────────────────────────────────
+model CalendarIntegration {
+  id            String   @id @default(cuid())
+  provider      String   // GOOGLE, OUTLOOK, APPLE
+  email         String?
+  accessToken   String?
+  refreshToken  String?
+  tokenExpiry   DateTime?
+  calendarId    String?  // remote calendar ID
+  calendarName  String?
+  syncEnabled   Boolean  @default(true)
+  lastSyncedAt  DateTime?
+  syncDirection String   @default("BOTH") // IMPORT, EXPORT, BOTH
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([provider, email])
+  @@index([provider])
+  @@map("calendar_integrations")
+}
+
+// ─── Appointment Activity Log ─────────────────────────────────────────────────
+model AppointmentLog {
+  id            String   @id @default(cuid())
+  appointmentId String
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  action        String   // CREATED, CONFIRMED, CANCELLED, RESCHEDULED, COMPLETED, NO_SHOW, REMINDER_SENT
+  detail        String?
+  ip            String?
+  userAgent     String?
+  createdAt     DateTime @default(now())
+
+  @@index([appointmentId])
+  @@index([createdAt])
+  @@map("appointment_logs")
+}
+
+// ─── Media ───────────────────────────────────────────────────────────────────
+model Media {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  type      String
+  mimeType  String?
+  size      Int?
+  width     Int?
+  height    Int?
+  alt       String?
+  folder    String?
+  createdAt DateTime @default(now())
+
+  @@map("media")
+}
+
+// ─── SEO ─────────────────────────────────────────────────────────────────────
+model SeoSettings {
+  id        String   @id @default("global")
+  siteName  String?
+  tagline   String?
+  description String?
+  keywords  String?
+  ogImage   String?
+  favicon   String?
+  googleVerification String?
+  metaSuffix String?
+  updatedAt DateTime @updatedAt
+
+  @@map("seo_settings")
+}
+
+// ─── Users / RBAC ────────────────────────────────────────────────────────────
+model User {
+  id                 String        @id @default(cuid())
+  name               String?
+  email              String        @unique
+  password           String?
+  role               String        @default("EDITOR")
+  avatar             String?
+  emailVerified      DateTime?
+  resetToken         String?
+  resetTokenExpiry   DateTime?
+  twoFactorEnabled   Boolean       @default(false)
+  twoFactorSecret    String?
+  onboardingCompleted Boolean      @default(false)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  activityLogs       ActivityLog[]
+  sessions           UserSession[]
+  assignedTickets    SupportTicket[] @relation("AssignedTickets")
+  supportReplies     SupportReply[]
+
+  @@map("users")
+}
+
+enum ActivitySeverity {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+
+  @@map("activity_severity")
+}
+
+model ActivityLog {
+  id          String           @id @default(cuid())
+  userId      String?
+  user        User?            @relation(fields: [userId], references: [id])
+  action      String           // e.g., "login", "create", "update", "delete", "publish", "archive"
+  module      String           // e.g., "auth", "crm", "contact", "portfolio", "blog", "newsletter", "calendar", "payment", "file", "user", "system"
+  entity      String?          // e.g., "Lead", "Client", "Project", "BlogPost"
+  entityId    String?          // ID of the affected entity
+  description String           // Human-readable description
+  severity    ActivitySeverity @default(INFO)
+  metadata    Json?            // Flexible extra data
+  ip          String?
+  userAgent   String?
+  browser     String?          // Extracted browser name
+  os          String?          // Extracted OS name
+  device      String?          // Extracted device type
+  country     String?          // Geo-location (future)
+  createdAt   DateTime         @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([module])
+  @@index([entity, entityId])
+  @@index([severity])
+  @@index([createdAt])
+  @@index([module, action])
+  @@map("activity_logs")
+}
+
+model AuditTrail {
+  id          String   @id @default(cuid())
+  entityType  String   // e.g., "Lead", "Client", "Project", "BlogPost"
+  entityId    String   // ID of the audited entity
+  action      String   // "create", "update", "delete"
+  field       String?  // which field changed (null for create/delete)
+  beforeValue String?  // previous value (for updates)
+  afterValue  String?  // new value (for updates)
+  beforeData  Json?    // Full snapshot before change
+  afterData   Json?    // Full snapshot after change
+  userId      String?
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([entityType])
+  @@index([entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+  @@map("audit_trails")
+}
+
+model SecurityEvent {
+  id          String           @id @default(cuid())
+  eventType   String           // "failed_login", "suspicious_activity", "permission_violation", "api_abuse", "rate_limit"
+  description String
+  severity    ActivitySeverity @default(WARNING)
+  userId      String?
+  ipAddress   String?
+  userAgent   String?
+  metadata    Json?
+  resolved    Boolean          @default(false)
+  resolvedAt  DateTime?
+  createdAt   DateTime         @default(now())
+
+  @@index([eventType])
+  @@index([severity])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([resolved])
+  @@map("security_events")
+}
+
+model UserSession {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionToken  String    @unique
+  ipAddress     String?
+  userAgent     String?
+  browser       String?
+  os            String?
+  device        String?
+  country       String?
+  isActive      Boolean   @default(true)
+  lastActiveAt  DateTime  @default(now())
+  expiresAt     DateTime?
+  createdAt     DateTime  @default(now())
+  endedAt       DateTime?
+
+  @@index([userId])
+  @@index([sessionToken])
+  @@index([isActive])
+  @@index([lastActiveAt])
+  @@map("user_sessions")
+}
+
+// ─── Settings ────────────────────────────────────────────────────────────────
+model SiteSettings {
+  id        String   @id @default("global")
+  siteName  String?
+  tagline   String?
+  logo      String?
+  favicon   String?
+  email     String?
+  phone     String?
+  address   String?
+  social    String?
+  navigationLinks String?
+  integrations String?
+  formFieldOptions Json?        @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model NewsletterSettings {
+  id                   String   @id @default("global")
+  defaultSenderName    String   @default("Emmett Anthony")
+  defaultSenderEmail   String?
+  replyToEmail         String?
+  dailySendLimit       Int      @default(500)
+  weeklySendLimit      Int      @default(3000)
+  monthlySendLimit     Int      @default(12000)
+  doubleOptIn          Boolean  @default(true)
+  trackOpens           Boolean  @default(true)
+  trackClicks          Boolean  @default(true)
+  gdprEnabled          Boolean  @default(true)
+  unsubscribeFooter    String?  // Custom unsubscribe text
+  footerHtml           String?
+  signupFormConfig     Json?    // Form builder config { fields, style, redirect }
+  updatedAt            DateTime @updatedAt
+
+  @@map("newsletter_settings")
+}
+
+// ─── Webhooks ───────────────────────────────────────────────────────────────
+model Webhook {
+  id        String   @id @default(cuid())
+  url       String
+  events    String   // comma-separated: "subscribe,unsubscribe,bounce,open,click"
+  secret    String?  // optional HMAC secret for signature
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("webhooks")
+}
+
+// ─── API Keys ────────────────────────────────────────────────────────────────
+model ApiKey {
+  id          String    @id @default(cuid())
+  name        String
+  keyPrefix   String    // first 8 chars for identification
+  keyHash     String    @unique // hashed full key
+  permissions String    @default("read") // read, write, admin
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([keyHash])
+  @@map("api_keys")
+}
+
+// ─── Blocklist / Suppression List ────────────────────────────────────────────
+model BlocklistEntry {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  reason    String?  // "bounced", "complained", "manual"
+  notes     String?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@map("blocklist_entries")
+}
+
+// ─── Custom Fields for Subscribers ───────────────────────────────────────────
+model CustomField {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  fieldType     String   @default("text") // text, number, date, select, boolean
+  required      Boolean  @default(false)
+  options       String?  // JSON array for select type
+  placeholder   String?
+  defaultValue  String?
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  values        CustomFieldValue[]
+
+  @@index([slug])
+  @@map("custom_fields")
+}
+
+model CustomFieldValue {
+  id            String       @id @default(cuid())
+  customFieldId String
+  customField   CustomField  @relation(fields: [customFieldId], references: [id], onDelete: Cascade)
+  subscriberId  String
+  subscriber    Subscriber   @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  value         String?
+
+  @@unique([customFieldId, subscriberId])
+  @@map("custom_field_values")
+}
+
+// ─── Notifications ───────────────────────────────────────────────────────────
+// Enterprise Notification System
+// Categories: CRM, CONTACT, CALENDAR, PORTFOLIO, NEWSLETTER, RESUME, TESTIMONIAL, SYSTEM
+
+enum NotifCategory {
+  CRM
+  CONTACT
+  CALENDAR
+  PORTFOLIO
+  NEWSLETTER
+  RESUME
+  TESTIMONIAL
+  SUPPORT
+  SYSTEM
+
+  @@map("notif_category")
+}
+
+enum NotifPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+
+  @@map("notif_priority")
+}
+
+enum NotifType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+
+  @@map("notif_type")
+}
+
+enum NotifDeliveryChannel {
+  IN_APP
+  EMAIL
+  PUSH
+  SMS
+  WHATSAPP
+
+  @@map("notif_delivery_channel")
+}
+
+model Notification {
+  id              String     @id @default(cuid())
+  userId          String?    // null = system-wide notification
+  category        NotifCategory @default(SYSTEM)
+  priority        NotifPriority @default(MEDIUM)
+  notifType       NotifType     @default(INFO) @map("notif_type")
+  key             String?    // unique key for deduplication (e.g., "lead-new-{id}")
+  title           String
+  message         String?
+  link            String?    // relative URL to navigate to
+  image           String?    // optional notification image/avatar URL
+  read            Boolean    @default(false)
+  archived        Boolean    @default(false)
+  pinned          Boolean    @default(false)
+  snoozedUntil    DateTime?
+  acknowledged    Boolean    @default(false) // critical requires acknowledgement
+  actionLabel     String?    // e.g., "View Deal", "Reply", "Approve"
+  actionUrl       String?    // URL for the action button
+  metadata        Json?      // flexible extra data (related entity ids, etc.)
+  source          String?    // which module created this (crm, calendar, newsletter, etc.)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  sentAt          DateTime?  // when it was delivered (for scheduled)
+  expiresAt       DateTime?  // auto-archive after this date
+  logs            NotificationLog[]
+
+  @@index([userId, read])
+  @@index([userId, category])
+  @@index([userId, priority])
+  @@index([category])
+  @@index([priority])
+  @@index([key])
+  @@index([createdAt])
+  @@index([expiresAt])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  // Per-category delivery channel preferences (JSON)
+  // Format: { "CRM": ["IN_APP","EMAIL"], "NEWSLETTER": ["IN_APP"], ... }
+  categoryChannels Json     @default("{}")
+  // Global settings
+  emailDigest      String   @default("instant") // instant, daily, weekly, never
+  pushEnabled      Boolean  @default(false)
+  soundEnabled     Boolean  @default(true)
+  desktopEnabled   Boolean  @default(false)
+  quietHoursStart  String?  // "HH:mm"
+  quietHoursEnd    String?  // "HH:mm"
+  snoozeUntil      DateTime? // global snooze
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("notification_preferences")
+}
+
+model NotificationTemplate {
+  id              String   @id @default(cuid())
+  name            String   @unique
+  label           String
+  category        NotifCategory @default(SYSTEM)
+  priority        NotifPriority @default(MEDIUM)
+  notifType       NotifType     @default(INFO) @map("notif_type")
+  title           String   // supports {{variable}} placeholders
+  message         String?  // supports {{variable}} placeholders
+  emailSubject    String?  // for email delivery
+  emailBody       String?  // HTML template for email
+  pushTitle       String?  // for push notification
+  pushBody        String?  // for push notification
+  variables       Json     @default("[]") // array of variable names this template uses
+  channels        Json     @default("[\"IN_APP\"]") // default delivery channels
+  actionLabel     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+  @@map("notification_templates")
+}
+
+model NotificationLog {
+  id              String       @id @default(cuid())
+  notificationId  String
+  notification    Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  channel         NotifDeliveryChannel
+  status          String       // queued, sent, delivered, failed, opened, clicked
+  error           String?
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+  openedAt        DateTime?
+  clickedAt       DateTime?
+  metadata        Json?        // provider-specific data (e.g., Resend message ID)
+  createdAt       DateTime     @default(now())
+
+  @@index([notificationId])
+  @@index([channel, status])
+  @@index([createdAt])
+  @@map("notification_logs")
+}
+
+// ─── Analytics (kept simple, extended from existing) ─────────────────────────
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  event     String
+  label     String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@map("analytics_events")
+}
+// ─── Services Module ──────────────────────────────────────────────────────────
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  NEGOTIATION
+  CONVERTED
+  CLOSED
+  LOST
+
+  @@map("inquiry_status")
+}
+
+model ServiceCategory {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  icon        String?
+  image       String?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  services    Service[]
+
+  @@index([order])
+  @@map("service_categories")
+}
+
+model ServicePackage {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  price           Float
+  features        Json
+  deliveryTime    String?
+  revisions       Int      @default(0)
+  supportDuration String?
+  isPopular       Boolean  @default(false)
+  order           Int      @default(0)
+  serviceId       String
+  service         Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([serviceId, order])
+  @@map("service_packages")
+}
+
+model ServiceFAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  order     Int      @default(0)
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([serviceId, order])
+  @@map("service_faqs")
+}
+
+model ServiceInquiry {
+  id          String        @id @default(cuid())
+  serviceId   String?
+  service     Service?      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  serviceName String?
+  fullName    String
+  email       String
+  phone       String?
+  company     String?
+  budget      String?
+  message     String
+  status      InquiryStatus @default(NEW)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([serviceId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("service_inquiries")
+}
+
+model Service {
+  id                String          @id @default(cuid())
+  title             String
+  slug              String          @unique
+  shortDescription  String?
+  fullDescription   String?
+  categoryId        String
+  category          ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  icon              String?
+  featuredImage     String?
+  galleryImages     Json
+  features          Json
+  benefits          Json
+  technologies      Json
+  deliverables      Json
+  estimatedTimeline String?
+  startingPrice     Float?
+  featured          Boolean         @default(false)
+  published         Boolean         @default(false)
+  order             Int             @default(0)
+  metaTitle         String?
+  metaDescription   String?
+  ogImage           String?
+  canonicalUrl      String?
+  viewCount         Int             @default(0)
+  testimonialIds    Json
+  tags              Json
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  packages          ServicePackage[]
+  faqs              ServiceFAQ[]
+  inquiries         ServiceInquiry[]
+
+  @@index([categoryId])
+  @@index([published])
+  @@index([featured])
+  @@index([order])
+  @@index([createdAt])
+  @@map("services")
+}
+
+model ResumeProfile {
+  id                String   @id @default(cuid())
+  fullName          String
+  professionalTitle String
+  photo             String?
+  location          String?
+  yearsOfExperience Float?
+  summary           String?
+  summaryTitle      String?
+  specializations   Json     @default("[]")
+  socialLinks       Json     @default("[]")
+  email             String?
+  phone             String?
+  website           String?
+  template          String   @default("modern") // modern, corporate, minimalist, developer, executive
+  metaTitle         String?
+  metaDescription   String?
+  ogImage           String?
+  published         Boolean  @default(false)
+  experiences       Experience[]
+  education         Education[]
+  skills            Skill[]
+  certifications    Certification[]
+  awards            Award[]
+  languages         Language[]
+  references        Reference[]
+  downloads         ResumeDownload[]
+  featuredProjects  ResumeFeaturedProject[]
+  versions          ResumeVersion[]
+  sectionViews      ResumeSectionView[]
+  visibility        Json                 @default("{\"summary\":true,\"experience\":true,\"education\":true,\"skills\":true,\"certifications\":true,\"awards\":true,\"languages\":true,\"references\":true,\"featuredProjects\":true}")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("resume_profile")
+}
+
+model Experience {
+  id              String   @id @default(cuid())
+  resumeId        String
+  resume          ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  jobTitle        String
+  company         String
+  employmentType  String   @default("Full-Time") // Full-Time, Part-Time, Contract, Freelance, Internship
+  location        String?
+  startDate       DateTime
+  endDate         DateTime?
+  current         Boolean  @default(false)
+  responsibilities Json    @default("[]")
+  achievements    Json     @default("[]")
+  technologies    Json     @default("[]")
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([resumeId])
+  @@index([order])
+  @@map("resume_experiences")
+}
+
+model Education {
+  id            String   @id @default(cuid())
+  resumeId      String
+  resume        ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  institution   String
+  degree        String?
+  fieldOfStudy  String?
+  startDate     DateTime
+  endDate       DateTime?
+  grade         String?
+  description   String?
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([resumeId])
+  @@index([order])
+  @@map("resume_education")
+}
+
+model Skill {
+  id               String   @id @default(cuid())
+  resumeId         String
+  resume           ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  name             String
+  category         String   @default("Other") // Frontend, Backend, Database, CMS, Tools, Other
+  proficiency      Int      @default(50) // 0-100
+  yearsOfExperience Float?
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([resumeId])
+  @@index([category])
+  @@index([order])
+  @@map("resume_skills")
+}
+
+model Certification {
+  id              String   @id @default(cuid())
+  resumeId        String
+  resume          ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  name            String
+  organization    String
+  issueDate       DateTime
+  expiryDate      DateTime?
+  credentialId    String?
+  credentialUrl   String?
+  certificateFile String?
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([resumeId])
+  @@index([order])
+  @@map("resume_certifications")
+}
+
+model Award {
+  id           String   @id @default(cuid())
+  resumeId     String
+  resume       ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  title        String
+  organization String?
+  date         DateTime?
+  description  String?
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([resumeId])
+  @@index([order])
+  @@map("resume_awards")
+}
+
+model Language {
+  id          String   @id @default(cuid())
+  resumeId    String
+  resume      ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  language    String
+  proficiency String   @default("Native") // Beginner, Intermediate, Advanced, Fluent, Native
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([resumeId])
+  @@index([order])
+  @@map("resume_languages")
+}
+
+model Reference {
+  id           String   @id @default(cuid())
+  resumeId     String
+  resume       ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  name         String
+  position     String?
+  organization String?
+  email        String?
+  phone        String?
+  isPublic     Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([resumeId])
+  @@index([order])
+  @@map("resume_references")
+}
+
+model ResumeDownload {
+  id          String   @id @default(cuid())
+  resumeId    String
+  resume      ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  template    String   @default("modern")
+  downloadedAt DateTime @default(now())
+
+  @@index([resumeId])
+  @@index([downloadedAt])
+  @@map("resume_downloads")
+}
+
+model ResumeFeaturedProject {
+  id        String   @id @default(cuid())
+  resumeId  String
+  resume    ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  projectId String
+  project   PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([resumeId, projectId])
+  @@index([resumeId])
+  @@index([projectId])
+  @@map("resume_featured_projects")
+}
+
+model ResumeVersion {
+  id        String   @id @default(cuid())
+  resumeId  String
+  resume    ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  label     String   @default("")
+  data      Json
+  createdAt DateTime @default(now())
+
+  @@index([resumeId])
+  @@index([createdAt])
+  @@map("resume_versions")
+}
+
+model ResumeSectionView {
+  id        String        @id @default(cuid())
+  resumeId  String
+  section   String
+  date      DateTime      @default(now())
+  count     Int           @default(0)
+  resume    ResumeProfile @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@unique([resumeId, section, date])
+  @@index([resumeId, section])
+  @@index([date])
+  @@map("resume_section_views")
+}
+
+// ─── CRM ────────────────────────────────────────────────────────────────────
+
+model CrmLead {
+  id                  String   @id @default(cuid())
+  firstName           String
+  lastName            String
+  email               String
+  phone               String?
+  company             String?
+  position            String?
+  country             String?
+  website             String?
+  source              String   @default("MANUAL") // contact_form, service_inquiry, consultation, newsletter, manual
+  tags                Json     @default("[]")
+  leadScore           Int      @default(0)
+  status              String   @default("NEW") // NEW, CONTACTED, QUALIFIED, PROPOSAL_SENT, NEGOTIATION, WON, LOST
+  notes               String?
+  assignedTo          String?
+  convertedToClientId String?
+  convertedToClient   CrmClient? @relation("LeadToClient", fields: [convertedToClientId], references: [id], onDelete: SetNull)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  activities          CrmActivity[]
+  tasks               CrmTask[]
+  communications      CrmCommunication[]
+  deals               CrmDeal[]
+
+  @@index([email])
+  @@index([status])
+  @@index([source])
+  @@map("crm_leads")
+}
+
+model CrmClient {
+  id            String   @id @default(cuid())
+  firstName     String
+  lastName      String
+  email         String
+  phone         String?
+  position      String?
+  companyId     String?
+  company       CrmCompany? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  industry      String?
+  website       String?
+  healthScore   Int      @default(0)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  leads         CrmLead[]            @relation("LeadToClient")
+  deals         CrmDeal[]
+  contracts     CrmContract[]
+  invoices      CrmInvoice[]
+  proposals     CrmProposal[]
+  projects      PortfolioProject[]   @relation("ClientProjects")
+  activities    CrmActivity[]
+  tasks         CrmTask[]
+  communications CrmCommunication[]
+
+  @@index([email])
+  @@index([companyId])
+  @@map("crm_clients")
+}
+
+model CrmCompany {
+  id            String   @id @default(cuid())
+  name          String
+  industry      String?
+  website       String?
+  address       String?
+  companySize   String?
+  annualRevenue Float?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  clients       CrmClient[]
+  deals         CrmDeal[]
+
+  @@index([name])
+  @@map("crm_companies")
+}
+
+model CrmDeal {
+  id                String    @id @default(cuid())
+  name              String
+  value             Float     @default(0)
+  probability       Int       @default(0)
+  expectedCloseDate DateTime?
+  stage             String    @default("NEW_LEAD") // NEW_LEAD, DISCOVERY, QUALIFIED, PROPOSAL_SENT, NEGOTIATION, WON, LOST
+  lostReason        String?
+  notes             String?
+  leadId            String?
+  lead              CrmLead?  @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  clientId          String?
+  client            CrmClient? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  companyId         String?
+  company           CrmCompany? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  activities        CrmActivity[]
+  tasks             CrmTask[]
+
+  @@index([stage])
+  @@index([clientId])
+  @@index([leadId])
+  @@map("crm_deals")
+}
+
+model CrmActivity {
+  id          String    @id @default(cuid())
+  type        String    // CALL, EMAIL, MEETING, NOTE, TASK, FOLLOW_UP
+  subject     String
+  description String?
+  date        DateTime  @default(now())
+  duration    Int?
+  completed   Boolean   @default(false)
+  leadId      String?
+  lead        CrmLead?  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  clientId    String?
+  client      CrmClient? @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  dealId      String?
+  deal        CrmDeal?  @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  assignedTo  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([type])
+  @@index([date])
+  @@index([leadId])
+  @@index([clientId])
+  @@map("crm_activities")
+}
+
+model CrmTask {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  priority    String    @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, CANCELLED
+  leadId      String?
+  lead        CrmLead?  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  clientId    String?
+  client      CrmClient? @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  dealId      String?
+  deal        CrmDeal?  @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  assignedTo  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+  @@index([dueDate])
+  @@index([leadId])
+  @@index([clientId])
+  @@map("crm_tasks")
+}
+
+model CrmProposal {
+  id              String    @id @default(cuid())
+  proposalNumber  String    @unique
+  title           String
+  clientId        String
+  client          CrmClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  services        Json      @default("[]")
+  pricing         Json      @default("{}")
+  terms           String?
+  total           Float     @default(0)
+  status          String    @default("DRAFT") // DRAFT, SENT, APPROVED, REJECTED
+  pdfUrl          String?
+  sentAt          DateTime?
+  approvedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([clientId])
+  @@index([status])
+  @@map("crm_proposals")
+}
+
+model CrmContract {
+  id            String    @id @default(cuid())
+  contractName  String
+  clientId      String
+  client        CrmClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  startDate     DateTime
+  endDate       DateTime?
+  value         Float     @default(0)
+  status        String    @default("ACTIVE") // DRAFT, ACTIVE, EXPIRED, TERMINATED
+  pdfUrl        String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([clientId])
+  @@index([status])
+  @@map("crm_contracts")
+}
+
+model CrmInvoice {
+  id            String    @id @default(cuid())
+  invoiceNumber String    @unique
+  clientId      String
+  client        CrmClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  amount        Float     @default(0)
+  dueDate       DateTime
+  paidAt        DateTime?
+  status        String    @default("DRAFT") // DRAFT, SENT, PAID, OVERDUE, CANCELLED
+  pdfUrl        String?
+  notes         String?
+  lineItems     Json      @default("[]")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([clientId])
+  @@index([status])
+  @@map("crm_invoices")
+}
+
+model CrmCommunication {
+  id        String     @id @default(cuid())
+  type      String     // EMAIL, NOTE, MEETING, WHATSAPP, INTERNAL
+  subject   String
+  content   String?
+  direction String     // INBOUND, OUTBOUND, INTERNAL
+  date      DateTime   @default(now())
+  leadId    String?
+  lead      CrmLead?   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  clientId  String?
+  client    CrmClient? @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+
+  @@index([type])
+  @@index([date])
+  @@index([leadId])
+  @@map("crm_communications")
+}
+
+model CrmAutomation {
+  id        String   @id @default(cuid())
+  trigger   String   // NEW_LEAD, PROPOSAL_SENT, DEAL_WON
+  action    String   // SEND_EMAIL, CREATE_TASK, CONVERT_LEAD, CREATE_PROJECT
+  config    Json     @default("{}")
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("crm_automations")
+}
+
+// ─── Legal Pages ────────────────────────────────────────────────────────────
+model LegalPage {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  content     String
+  lastUpdated DateTime @default(now())
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([published])
+  @@map("legal_pages")
+}
+
+// ─── Contact / FAQ ─────────────────────────────────────────────────────────
+model ContactFaq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String?  // general, process, technical, business
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published])
+  @@index([order])
+  @@map("contact_faqs")
+}
+
+// ─── Contact / Booking Email Log ──────────────────────────────────────────
+model ContactEmailLog {
+  id        String   @id @default(cuid())
+  type      String   // CONTACT_AUTO_REPLY, CONTACT_OWNER, BOOKING_AUTO_REPLY, BOOKING_OWNER
+  to        String
+  from      String
+  subject   String
+  status    String   // SUCCESS, FAILED
+  error     String?
+  contactId String?  // link to Contact
+  appointmentId String? // link to Appointment
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([contactId])
+  @@index([appointmentId])
+  @@index([createdAt])
+  @@map("contact_email_logs")
+}
+
+// ─── Email Templates ──────────────────────────────────────────────────────
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String   @unique  // contact_owner, contact_auto_reply, booking_owner, booking_auto_reply
+  label     String   // Human-readable name
+  subject   String
+  htmlBody  String
+  variables String   // JSON array of variable names this template uses
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@map("email_templates")
+}
+
+// ─── Internationalization (i18n) ────────────────────────────────────────────
+
+enum LanguageDirection {
+  LTR
+  RTL
+
+  @@map("lang_direction")
+}
+
+model SiteLanguage {
+  id            String            @id @default(cuid())
+  code          String            @unique // ISO 639-1: en, fr, es, pt, ar, de, it, zh, ja, ko
+  name          String            // Native name: English, Français, Español
+  nameEn        String            // English name: English, French, Spanish
+  nativeName    String            // Self-name in its own script: English, Français, Español, العربية
+  direction     LanguageDirection @default(LTR)
+  flagEmoji     String?           // 🇺🇸, 🇫🇷, 🇪🇸, etc.
+  flagImage     String?           // URL to custom flag image
+  isEnabled     Boolean           @default(true)
+  isDefault     Boolean           @default(false)
+  fallbackLocale String?          // Fallback language code for missing translations
+  order         Int               @default(0)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  groups        TranslationGroup[]
+  translations  Translation[]
+
+  @@index([isEnabled])
+  @@index([order])
+  @@index([code])
+  @@map("site_languages")
+}
+
+model TranslationGroup {
+  id          String        @id @default(cuid())
+  name        String        // e.g., "Homepage", "Navigation", "Footer"
+  slug        String        @unique // e.g., "homepage", "navigation", "footer"
+  description String?
+  order       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  languageId  String?
+  language    SiteLanguage?     @relation(fields: [languageId], references: [id], onDelete: Cascade)
+  translations Translation[]
+
+  @@index([slug])
+  @@index([order])
+  @@map("translation_groups")
+}
+
+model Translation {
+  id          String           @id @default(cuid())
+  groupId     String
+  group       TranslationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  key         String           // e.g., "hero.title", "nav.home"
+  value       String?          // Translated text (null = missing)
+  languageId  String
+  language    SiteLanguage     @relation(fields: [languageId], references: [id], onDelete: Cascade)
+  pluralForm  String?          // "zero", "one", "two", "few", "many", "other" (for ICU MessageFormat)
+  context     String?          // Optional context hint for translators
+  isAutoTranslated Boolean     @default(false)
+  needsReview  Boolean         @default(false)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([groupId, key, languageId])
+  @@index([groupId])
+  @@index([languageId])
+  @@index([key])
+  @@map("translations")
+}
+
+model LocaleSetting {
+  id              String   @id @default("global")
+  autoDetect      Boolean  @default(true)
+  localePrefix    String   @default("always") // "always" | "as-needed" | "never"
+  cookieName      String   @default("NEXT_LOCALE")
+  enableTranslationApi Boolean @default(false)
+  translationApiProvider String? // "google", "deepl", "openai", "azure"
+  translationApiKey     String?
+  updatedAt       DateTime @updatedAt
+
+  @@map("locale_settings")
+}
+
+// ─── About Page ──────────────────────────────────────────────────────────────
+
+model AboutPage {
+  id              String   @id @default("single")
+  fullName        String   @default("Emmett Anthony")
+  professionalTitle String @default("Professional Software Developer")
+  shortIntro      String?
+  photo           String?
+  resumeUrl       String?
+
+  // Professional Summary
+  summaryHeading  String?
+  shortBio        String?
+  fullBiography   String?     // rich text
+  yearsOfExperience Float?
+  missionStatement String?
+  visionStatement String?
+
+  // Why Work With Me
+  whyWorkWithMe   Json       @default("[]")  // [{title, description, icon}]
+
+  // Work Process
+  workProcess     Json       @default("[]")  // [{step, title, description, icon}]
+
+  // Personal Interests
+  personalInterests Json    @default("[]")  // [{name, description, icon, image}]
+
+  // Social Links
+  socialLinks     Json       @default("[]")  // [{platform, url, icon, enabled}]
+
+  // FAQs
+  faqs            Json       @default("[]")  // [{question, answer, order}]
+
+  // CTA Section
+  ctaHeading      String?
+  ctaDescription  String?
+  ctaPrimaryButton String?
+  ctaPrimaryLink  String?
+  ctaSecondaryButton String?
+  ctaSecondaryLink String?
+  ctaBackground   String?
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+  canonicalUrl    String?
+  ogImage         String?
+
+  // Settings
+  published       Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  statistics     AboutStatistic[]
+  technologies   AboutTechnology[]
+
+  @@map("about_page")
+}
+
+model AboutStatistic {
+  id        String   @id @default(cuid())
+  aboutId   String
+  about     AboutPage @relation(fields: [aboutId], references: [id], onDelete: Cascade)
+  title     String
+  value     String
+  suffix    String?
+  icon      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([aboutId])
+  @@index([order])
+  @@map("about_statistics")
+}
+
+model AboutTechnology {
+  id              String   @id @default(cuid())
+  aboutId         String
+  about           AboutPage @relation(fields: [aboutId], references: [id], onDelete: Cascade)
+  name            String
+  category        String     // Frontend, Backend, Database, CMS, Cloud, Tools
+  logo            String?
+  experienceLevel String?    // Beginner, Intermediate, Advanced, Expert
+  order           Int        @default(0)
+  createdAt       DateTime   @default(now())
+
+  @@index([aboutId])
+  @@index([category])
+  @@map("about_technologies")
+}
+
+// ─── Homepage ────────────────────────────────────────────────────────────────
+
+model Homepage {
+  id              String   @id @default("single")
+
+  // Hero Section
+  heroHeadline      String   @default("Building Modern Software Solutions That Drive Business Growth")
+  heroHighlight     String?  // Highlighted text in headline
+  heroSubheadline   String?  @default("Professional Software Developer")
+  heroDescription   String?  @default("Helping businesses create websites, web applications, CRM systems, and digital solutions.")
+  heroImage         String?  // Hero image/video URL
+  heroBackground    String?  // Background image/effect
+  heroPrimaryCta    String   @default("Hire Me")
+  heroPrimaryLink   String   @default("/contact")
+  heroSecondaryCta  String   @default("View Portfolio")
+  heroSecondaryLink String   @default("/portfolio")
+  heroResumeCta     String?  @default("Download Resume")
+  heroResumeLink    String?
+
+  // Statistics Section
+  statsTitle        String?  @default("By the Numbers")
+  statsSubtitle     String?  @default("A snapshot of my professional journey")
+  statsEnabled      Boolean  @default(true)
+
+  // Why Choose Me
+  whyChooseTitle    String?  @default("Why Choose Me")
+  whyChooseSubtitle String?  @default("What sets me apart from other developers")
+  whyChooseItems    Json     @default("[]")  // [{title, description, icon}]
+
+  // Work Process
+  processTitle      String?  @default("How I Work")
+  processSubtitle   String?  @default("A proven process for delivering exceptional results")
+  processSteps      Json     @default("[]")  // [{step, title, description, icon}]
+
+  // Featured Projects
+  projectsTitle     String?  @default("Featured Projects")
+  projectsSubtitle  String?  @default("A selection of my most recent and impactful work")
+  projectsEnabled   Boolean  @default(true)
+  projectsCount     Int      @default(6)
+  layout            String   @default("grid") // grid, carousel, masonry
+
+  // Testimonials
+  testimonialsTitle    String?  @default("What Clients Say")
+  testimonialsSubtitle String?  @default("Trusted by businesses to deliver exceptional results")
+  testimonialsEnabled  Boolean  @default(true)
+  testimonialsCount   Int      @default(6)
+  testimonialLayout   String   @default("grid") // carousel, grid, slider
+
+  // Services
+  servicesTitle     String?  @default("Services I Offer")
+  servicesSubtitle  String?  @default("Professional services to help you build and grow")
+
+  // Blog
+  blogTitle         String?  @default("Latest Articles")
+  blogSubtitle      String?  @default("Thoughts on web development and technology")
+  blogEnabled       Boolean  @default(true)
+  blogCount         Int      @default(3)
+
+  // Certifications & Achievements
+  certTitle         String?  @default("Certifications & Achievements")
+  certSubtitle      String?  @default("Credentials and milestones that validate my expertise")
+  certEnabled       Boolean  @default(true)
+
+  // FAQ Section
+  faqTitle          String?  @default("Frequently Asked Questions")
+  faqSubtitle       String?  @default("Answers to common questions about my services and process")
+  faqs              Json     @default("[]")  // [{question, answer}]
+  faqEnabled        Boolean  @default(true)
+
+  // Newsletter
+  newsletterTitle   String?  @default("Stay Updated")
+  newsletterDesc    String?  @default("Get the latest articles and updates delivered to your inbox")
+  newsletterEnabled Boolean  @default(true)
+
+  // CTA Section
+  ctaTitle          String?  @default("Let's Work Together")
+  ctaDescription    String?  @default("Have a project in mind? Let's discuss how I can help.")
+  ctaBackground     String?
+  ctaPrimaryButton  String   @default("Get in Touch")
+  ctaPrimaryLink    String   @default("/contact")
+  ctaSecondaryButton String? @default("Book a Consultation")
+  ctaSecondaryLink  String?  @default("/booking")
+  ctaEnabled        Boolean  @default(true)
+
+  // SEO
+  metaTitle         String?
+  metaDescription   String?
+  metaKeywords      String?
+  canonicalUrl      String?
+  ogImage           String?
+
+  // Typewriter effect texts
+  heroTypewriterTexts Json     @default("[]")  // ["Full Stack Developer", "UI/UX Enthusiast", ...]
+
+  // Settings
+  published         Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  trustedLogos      TrustedLogo[]
+  homepageStats     HomepageStatistic[]
+  homepageTechs     HomepageTechnology[]
+
+  @@map("homepage")
+}
+
+model TrustedLogo {
+  id          String   @id @default(cuid())
+  homepageId  String
+  homepage    Homepage @relation(fields: [homepageId], references: [id], onDelete: Cascade)
+  name        String
+  logoUrl     String
+  website     String?
+  enabled     Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([homepageId])
+  @@index([order])
+  @@map("trusted_logos")
+}
+
+model HomepageStatistic {
+  id          String   @id @default(cuid())
+  homepageId  String
+  homepage    Homepage @relation(fields: [homepageId], references: [id], onDelete: Cascade)
+  title       String
+  value       String
+  icon        String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([homepageId])
+  @@index([order])
+  @@map("homepage_statistics")
+}
+
+model HomepageTechnology {
+  id          String   @id @default(cuid())
+  homepageId  String
+  homepage    Homepage @relation(fields: [homepageId], references: [id], onDelete: Cascade)
+  name        String
+  category    String     // Frontend, Backend, Database, CMS, DevOps, Tools
+  logo        String?
+  experienceLevel String?  // Beginner, Intermediate, Advanced, Expert
+  order       Int        @default(0)
+  createdAt   DateTime   @default(now())
+
+  @@index([homepageId])
+  @@index([category])
+  @@map("homepage_technologies")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AI CHATBOT SYSTEM
+// ═══════════════════════════════════════════════════════════════════════════
+
+model ChatConversation {
+  id              String         @id @default(cuid())
+  visitorId       String?
+  visitorName     String?
+  visitorEmail    String?
+  status          String         @default("ACTIVE")
+  source          String         @default("chat_widget")
+  language        String         @default("en")
+  metadata        Json?
+  messageCount    Int            @default(0)
+  leadId          String?
+  feedbackScore   Int?
+  isHighPriority  Boolean        @default(false)
+  tags            String[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  lastActivityAt  DateTime       @default(now())
+  messages        ChatMessage[]
+  lead            ChatLead?
+  feedback        ChatFeedback[]
+
+  @@index([visitorId])
+  @@index([status])
+  @@index([isHighPriority])
+  @@index([createdAt])
+  @@index([lastActivityAt])
+  @@map("chat_conversations")
+}
+
+model ChatMessage {
+  id              String           @id @default(cuid())
+  conversationId  String
+  conversation    ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role            String
+  content         String
+  metadata        Json?
+  createdAt       DateTime         @default(now())
+
+  @@index([conversationId, createdAt])
+  @@map("chat_messages")
+}
+
+model KnowledgeCategory {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?
+  icon        String?
+  color       String?
+  order       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  items       KnowledgeBase[]
+
+  @@map("knowledge_categories")
+}
+
+model KnowledgeBase {
+  id          String             @id @default(cuid())
+  title       String
+  content     String
+  categoryId  String?
+  category    KnowledgeCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags        String[]
+  source      String?
+  sourceUrl   String?
+  embedding   Unsupported("vector(1536)")?
+  enabled     Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([categoryId])
+  @@index([enabled])
+  @@index([title])
+  @@map("knowledge_base")
+}
+
+model PromptTemplate {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  label       String
+  description String?
+  prompt      String
+  category    String
+  variables   String[]
+  isSystem    Boolean  @default(false)
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([enabled])
+  @@map("prompt_templates")
+}
+
+model ChatLead {
+  id              String           @id @default(cuid())
+  conversationId  String           @unique
+  conversation    ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  name            String
+  email           String
+  phone           String?
+  company         String?
+  budget          String?
+  timeline        String?
+  requirements    String
+  projectType     String?
+  industry        String?
+  preferredContact String?
+  leadScore       Int              @default(0)
+  priority        String           @default("MEDIUM")
+  status          String           @default("NEW")
+  notes           String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([email])
+  @@map("chat_leads")
+}
+
+model ChatSettings {
+  id                      String   @id @default(cuid())
+  provider                String   @default("openai")
+  model                   String   @default("gpt-4o-mini")
+  temperature             Float    @default(0.7)
+  maxTokens               Int      @default(4000)
+  systemPrompt            String   @default("")
+  welcomeMessage          String   @default("Hi! I'm Emmett's AI assistant. How can I help you today?")
+  suggestedQuestions      String[] @default([])
+  blockedWords            String[] @default([])
+  rateLimitPerMinute      Int      @default(10)
+  rateLimitPerDay         Int      @default(500)
+  maxConversationLength   Int      @default(100)
+  enableFileSearch        Boolean  @default(true)
+  enableLeadCapture       Boolean  @default(true)
+  enableBooking           Boolean  @default(true)
+  enableHumanHandoff      Boolean  @default(true)
+  enableMultilingual      Boolean  @default(true)
+  enableAnalytics         Boolean  @default(true)
+  enableWelcomeTrigger    Boolean  @default(true)
+  welcomeDelayMs          Int      @default(15000)
+  enableExitIntent        Boolean  @default(true)
+  exitIntentMessage       String   @default("👋 Before you go! I'd love to help with your next project. Whether you need a website, web app, CRM, or just have a question — I'm here to chat. What's on your mind?")
+  widgetPosition          String   @default("right")
+  widgetColor             String   @default("#2563eb")
+  widgetTitle             String   @default("Chat with Emmett")
+  widgetSubtitle          String   @default("AI Assistant")
+  widgetAvatar            String?
+  widgetSize              String   @default("md")
+  enabled                 Boolean  @default(true)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("chat_settings")
+}
+
+model ChatFeedback {
+  id              String           @id @default(cuid())
+  conversationId  String           @unique
+  conversation    ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  score           Int
+  comment         String?
+  category        String?
+  createdAt       DateTime         @default(now())
+
+  @@map("chat_feedback")
+}
+
+model ChatAnalytics {
+  id                String   @id @default(cuid())
+  date              DateTime @unique
+  totalConversations Int     @default(0)
+  totalMessages     Int      @default(0)
+  leadsGenerated    Int      @default(0)
+  bookingsMade      Int      @default(0)
+  questionsAsked    Int      @default(0)
+  resolvedCount     Int      @default(0)
+  escalatedCount    Int      @default(0)
+  avgResponseTime       Float    @default(0)
+  avgSessionDuration    Float    @default(0)
+  satisfactionScore     Float    @default(0)
+  welcomeTriggerCount   Int      @default(0)
+  exitIntentTriggerCount Int     @default(0)
+  popularTopics         Json     @default("{}")
+  providerUsage         Json     @default("{}")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("chat_analytics")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BREVO EMAIL MODULE
+// ═══════════════════════════════════════════════════════════════════════════
+
+model EmailSetting {
+  id                String   @id @default("global")
+  apiKey            String?
+  smtpServer        String   @default("smtp-relay.brevo.com")
+  smtpPort          Int      @default(587)
+  smtpLogin         String?
+  smtpPassword      String?
+  senderName        String   @default("Emmett Anthony")
+  senderEmail       String?
+  replyToEmail      String?
+  trackingEnabled   Boolean  @default(true)
+  doubleOptIn       Boolean  @default(true)
+  defaultListId     String?
+  dailySendLimit    Int      @default(300)
+  weeklySendLimit   Int      @default(2000)
+  monthlySendLimit  Int      @default(8000)
+  webhookSecret     String?
+  lastSyncAt        DateTime?
+  updatedAt         DateTime @updatedAt
+
+  @@map("email_settings")
+}
+
+model ContactList {
+  id          String              @id @default(cuid())
+  name        String
+  description String?
+  brevoId     Int?                @unique // Brevo's list ID
+  folderId    Int?
+  isDefault   Boolean             @default(false)
+  isPublic    Boolean             @default(true)
+  isArchived  Boolean             @default(false)
+  subscriberCount Int             @default(0)
+  source      String?             // newsletter, clients, leads, partners, manual
+  color       String?             @default("#3b82f6")
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  members     ContactListMember[]
+
+  @@index([isDefault])
+  @@index([isArchived])
+  @@index([source])
+  @@map("contact_lists")
+}
+
+model ContactListMember {
+  id              String      @id @default(cuid())
+  listId          String
+  list            ContactList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  email           String
+  firstName       String?
+  lastName        String?
+  company         String?
+  phone           String?
+  website         String?
+  country         String?
+  tags            String?     // JSON array
+  source          String?     // contact_form, booking, crm, newsletter, payment, chatbot, manual
+  status          String      @default("ACTIVE") // ACTIVE, UNSUBSCRIBED, BOUNCED, PENDING
+  metadata        Json?
+  brevoContactId  Int?        // Brevo's contact ID
+  brevoSyncStatus String      @default("PENDING") // PENDING, SYNCED, FAILED
+  brevoSyncError  String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@unique([listId, email])
+  @@index([listId])
+  @@index([email])
+  @@index([status])
+  @@index([brevoSyncStatus])
+  @@map("contact_list_members")
+}
+
+model BrevoSyncLog {
+  id          String   @id @default(cuid())
+  action      String   // contact_create, contact_update, contact_delete, list_create, campaign_send, template_sync, webhook_received
+  entityType  String?  // contact, list, campaign, template
+  entityId    String?  // local entity ID
+  brevoId     String?  // Brevo entity ID
+  status      String   // SUCCESS, FAILED, PENDING
+  request     Json?
+  response    Json?
+  error       String?
+  duration    Int?     // ms
+  createdAt   DateTime @default(now())
+
+  @@index([action])
+  @@index([status])
+  @@index([createdAt])
+  @@map("brevo_sync_logs")
+}
+
+// ─── Support System ─────────────────────────────────────────────────────────
+
+model SupportAutomationRule {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  trigger     String   // "ticket_created", "ticket_updated", "ticket_closed", "ticket_escalated"
+  conditions  Json     // Array of { field: string; operator: "equals" | "contains" | "gt" | "lt"; value: string }
+  actions     Json     // Array of { type: "assign_to" | "change_status" | "change_priority" | "add_tag" | "send_email" | "notify"; value: string }
+  isEnabled   Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("support_automation_rules")
+}
+
+model SupportTicketTemplate {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  fields      Json     // Array of { name: string; label: string; type: "text" | "textarea" | "select" | "email" | "tel"; required: boolean; options?: string[] }
+  defaultPriorityId String?
+  defaultPriority   SupportPriority? @relation(fields: [defaultPriorityId], references: [id])
+  defaultCategoryId String?
+  defaultCategory   SupportCategory? @relation(fields: [defaultCategoryId], references: [id])
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("support_ticket_templates")
+}
+
+model SupportCategory {
+  id          String         @id @default(cuid())
+  name        String
+  slug        String         @unique
+  description String?
+  icon        String?
+  color       String?
+  order       Int            @default(0)
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  tickets     SupportTicket[]
+  ticketTemplates SupportTicketTemplate[]
+
+  @@index([order])
+  @@index([isActive])
+  @@map("support_categories")
+}
+
+model SupportPriority {
+  id        String         @id @default(cuid())
+  name      String         @unique
+  slug      String         @unique
+  level     Int            @default(0)
+  color     String?
+  slaHours  Int?           // Target response time in hours
+  createdAt DateTime       @default(now())
+  tickets   SupportTicket[]
+  ticketTemplates SupportTicketTemplate[]
+
+  @@index([level])
+  @@map("support_priorities")
+}
+
+model SupportStatus {
+  id        String         @id @default(cuid())
+  name      String         @unique
+  slug      String         @unique
+  color     String?
+  order     Int            @default(0)
+  isClosed  Boolean        @default(false)
+  isDefault Boolean        @default(false)
+  createdAt DateTime       @default(now())
+  tickets   SupportTicket[]
+
+  @@index([order])
+  @@map("support_statuses")
+}
+
+model SupportTicket {
+  id                  String            @id @default(cuid())
+  ticketNumber        String            @unique
+  subject             String
+  description         String
+  fullName            String
+  email               String
+  phone               String?
+  company             String?
+  preferredContact    String?           // email, phone, any
+  source              String            @default("web") // web, email, chatbot, api, phone
+  tags                String?           // JSON array
+  internalNotes       String?
+  responseTime        Int?              // Minutes to first response
+  resolutionTime      Int?              // Minutes to resolution
+  firstResponseAt     DateTime?
+  resolvedAt          DateTime?
+  closedAt            DateTime?
+  metadata            Json?
+  isVerified          Boolean           @default(false)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  // Relations
+  categoryId          String?
+  category            SupportCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  priorityId          String?
+  priority            SupportPriority?  @relation(fields: [priorityId], references: [id], onDelete: SetNull)
+  statusId            String
+  status              SupportStatus     @relation(fields: [statusId], references: [id])
+  assignedToId        String?
+  assignedTo          User?             @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
+  contactId           String?           // Link to CRM Contact
+  clientId            String?           // Link to CRM Client
+  replies             SupportReply[]
+  attachments         SupportAttachment[]
+  ratings             SupportRating[]
+
+  @@index([email])
+  @@index([statusId])
+  @@index([priorityId])
+  @@index([categoryId])
+  @@index([assignedToId])
+  @@index([createdAt])
+  @@index([source])
+  @@map("support_tickets")
+}
+
+model SupportReply {
+  id          String         @id @default(cuid())
+  body        String         @db.Text
+  isInternal  Boolean        @default(false) // Staff-only notes
+  isStaff     Boolean        @default(false)
+  staffName   String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // Relations
+  ticketId    String
+  ticket      SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId    String?        // User who replied (null for customer)
+  author      User?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  attachments SupportAttachment[]
+
+  @@index([ticketId])
+  @@index([createdAt])
+  @@map("support_replies")
+}
+
+model SupportAttachment {
+  id          String        @id @default(cuid())
+  fileName    String
+  fileSize    Int
+  mimeType    String
+  url         String
+  storageKey  String?
+  createdAt   DateTime      @default(now())
+
+  // Relations
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  replyId     String?
+  reply       SupportReply? @relation(fields: [replyId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@map("support_attachments")
+}
+
+model SupportMacro {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  body        String   @db.Text
+  category    String?  // welcome, password_reset, booking, payment, project_started, project_completed, general
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([sortOrder])
+  @@map("support_macros")
+}
+
+model SupportRating {
+  id          String        @id @default(cuid())
+  rating      Int           // 1-5
+  comment     String?
+  createdAt   DateTime      @default(now())
+
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketId])
+  @@map("support_ratings")
+}
+
+model SupportSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("support_settings")
+}
+
+model SupportKnowledgeCategory {
+  id          String                     @id @default(cuid())
+  name        String
+  slug        String                     @unique
+  description String?
+  icon        String?
+  color       String?
+  order       Int                        @default(0)
+  isActive    Boolean                    @default(true)
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+  articles    SupportKnowledgeArticle[] @relation("KBCategoryArticles")
+
+  @@index([order])
+  @@index([isActive])
+  @@map("support_knowledge_categories")
+}
+
+model SupportKnowledgeArticle {
+  id            String                   @id @default(cuid())
+  title         String
+  slug          String                   @unique
+  excerpt       String?
+  content       String                   @db.Text
+  imageUrl      String?
+  videoUrl      String?
+  readingTime   Int?                     // Minutes
+  tags          String?                  // JSON array
+  published     Boolean                  @default(false)
+  viewCount     Int                      @default(0)
+  helpfulCount  Int                      @default(0)
+  notHelpfulCount Int                    @default(0)
+  sortOrder     Int                      @default(0)
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+
+  // Relations
+  categoryId    String?
+  category      SupportKnowledgeCategory? @relation("KBCategoryArticles", fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([published])
+  @@index([slug])
+  @@map("support_knowledge_articles")
+}
+
+model FAQ {
+  id          String   @id @default(cuid())
+  question    String
+  answer      String   @db.Text
+  category    String?  // general, billing, technical, account, support, other
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([sortOrder])
+  @@index([isActive])
+  @@map("faqs")
+}

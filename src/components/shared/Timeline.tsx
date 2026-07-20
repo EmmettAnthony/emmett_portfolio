@@ -47,7 +47,7 @@ export function Timeline({ items }: TimelineProps) {
                 {item.description.map((desc, i) => (
                   <li
                     key={i}
-                    className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400"
+                    className="text-sm leading-relaxed text-muted-foreground dark:text-zinc-400"
                   >
                     {desc}
                   </li>

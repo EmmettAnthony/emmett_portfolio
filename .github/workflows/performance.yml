@@ -1,0 +1,156 @@
+name: Performance - Lighthouse CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "URLs to test (comma-separated)"
+        required: false
+        default: "/,/about,/portfolio,/services,/blog,/contact,/resume,/admin/login"
+
+concurrency:
+  group: perf-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  ##############################################################################
+  # LIGHTHOUSE CI
+  ##############################################################################
+  lighthouse:
+    name: Lighthouse Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+
+      - name: Build Application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/portfolio_lh"
+
+      - name: Start Preview Server
+        run: |
+          npm run start &
+          npx wait-on http://localhost:3000 --timeout 30000
+
+      - name: Run Lighthouse CI
+        run: |
+          mkdir -p lighthouse-report
+          URLS="${{ github.event.inputs.urls || '/,/about,/portfolio,/services,/blog,/contact,/resume,/admin/login' }}"
+          IFS=',' read -ra PAGES <<< "$URLS"
+          for page in "${PAGES[@]}"; do
+            page_clean=$(echo "$page" | tr '/' '_' | sed 's/^_//' || echo "home")
+            echo "🔍 Auditing: $page"
+            npx lighthouse http://localhost:3000$page \
+              --output=json \
+              --output=html \
+              --output-path=./lighthouse-report/$page_clean \
+              --chrome-flags="--headless=new --no-sandbox --disable-gpu" \
+              --quiet \
+              --preset=desktop \
+              --budget-file=./lighthouse-budget.json 2>/dev/null || \
+            echo "⚠️ Lighthouse audit for $page encountered issues"
+          done
+
+      - name: Parse Lighthouse Scores
+        run: |
+          echo "## 📊 Lighthouse Performance Report" > lighthouse-report/summary.md
+          echo "" >> lighthouse-report/summary.md
+          echo "| Page | Performance | Accessibility | Best Practices | SEO | LCP | CLS |" >> lighthouse-report/summary.md
+          echo "|------|-------------|---------------|----------------|-----|-----|-----|" >> lighthouse-report/summary.md
+          for file in lighthouse-report/*.json; do
+            if [ -f "$file" ]; then
+              page=$(basename "$file" .json)
+              perf=$(jq -r '.categories.performance.score * 100 // "N/A"' "$file" 2>/dev/null)
+              a11y=$(jq -r '.categories.accessibility.score * 100 // "N/A"' "$file" 2>/dev/null)
+              bp=$(jq -r '.["categories"]["best-practices"].score * 100 // "N/A"' "$file" 2>/dev/null)
+              seo=$(jq -r '.categories.seo.score * 100 // "N/A"' "$file" 2>/dev/null)
+              lcp=$(jq -r '.audits["largest-contentful-paint"].numericValue / 1000 | tostring + "s" // "N/A"' "$file" 2>/dev/null)
+              cls=$(jq -r '.audits["cumulative-layout-shift"].numericValue // "N/A"' "$file" 2>/dev/null)
+              echo "| $page | $perf | $a11y | $bp | $seo | $lcp | $cls |" >> lighthouse-report/summary.md
+            fi
+          done
+          cat lighthouse-report/summary.md
+
+      - name: Upload Lighthouse Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: lighthouse-report/
+          retention-days: 30
+
+      - name: Stop Preview Server
+        if: always()
+        run: kill $(lsof -t -i:3000) 2>/dev/null || true
+
+  ##############################################################################
+  # VITEST PERFORMANCE TESTS
+  ##############################################################################
+  vitest-perf:
+    name: Performance Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Performance Tests
+        run: npx vitest run tests/performance/ --reporter=junit --outputFile=reports/junit-performance.xml
+      - uses: ./.github/actions/test-reporter
+        with:
+          coverage: "false"
+          lighthouse: "false"
+
+  ##############################################################################
+  # BUNDLE ANALYSIS
+  ##############################################################################
+  bundle:
+    name: Bundle Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
+      - name: Build with Stats
+        run: ANALYZE=true npm run build 2>/dev/null || npm run build
+      - name: Analyze Bundle
+        run: |
+          echo "## 📦 Bundle Analysis" > bundle-report.md
+          echo "" >> bundle-report.md
+          echo "Checking bundle sizes..." >> bundle-report.md
+          if [ -f ".next/build-manifest.json" ]; then
+            du -sh .next/ >> bundle-report.md
+            du -sh .next/static/ >> bundle-report.md
+          fi
+          cat bundle-report.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis
+          path: bundle-report.md
+          retention-days: 14
+
+  ##############################################################################
+  # SUMMARY
+  ##############################################################################
+  summary:
+    name: Performance Summary
+    if: always()
+    needs: [lighthouse, vitest-perf, bundle]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate Performance Results
+        run: |
+          echo "📊 Performance Results:"
+          echo "  Lighthouse: ${{ needs.lighthouse.result }}"
+          echo "  Performance Tests: ${{ needs.vitest-perf.result }}"
+          echo "  Bundle Analysis: ${{ needs.bundle.result }}"
+          echo "✅ Performance checks completed"

@@ -2,12 +2,12 @@
 
 import { motion } from "framer-motion";
 import { Download, MapPin, Mail, Briefcase, GraduationCap, Award, CheckCircle2 } from "lucide-react";
-import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Timeline } from "@/components/shared/Timeline";
 import { SkillBar } from "@/components/ui/SkillBar";
+import { useTranslations } from "@/lib/i18n";
 import resume from "@/data/resume.json";
 import skills from "@/data/skills.json";
-import { siteConfig } from "@/data/site-config";
+import { useSiteSettings } from "@/components/settings/SiteSettingsProvider";
 
 const timelineItems = resume.experience.map((exp) => ({
   id: exp.id,
@@ -18,28 +18,30 @@ const timelineItems = resume.experience.map((exp) => ({
 }));
 
 export function ResumeContent() {
+  const t = useTranslations("resume");
+  const settings = useSiteSettings();
   return (
     <div>
       {/* Header */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white">
-            {siteConfig.name}
+            {settings.siteName}
           </h1>
-          <p className="mt-1 text-lg text-zinc-600 dark:text-zinc-400">
-            {siteConfig.title}
+          <p className="mt-1 text-lg text-muted-foreground dark:text-zinc-400">
+            {settings.tagline}
           </p>
           <div className="mt-3 flex flex-wrap gap-4 text-sm text-zinc-500 dark:text-zinc-400">
             <span className="flex items-center gap-1.5">
               <MapPin className="h-4 w-4" />
-              {siteConfig.location}
+              {settings.address}
             </span>
             <a
-              href={`mailto:${siteConfig.links.email}`}
+              href={`mailto:${settings.email}`}
               className="flex items-center gap-1.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
             >
               <Mail className="h-4 w-4" />
-              {siteConfig.links.email}
+              {settings.email}
             </a>
           </div>
         </div>
@@ -49,13 +51,12 @@ export function ResumeContent() {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            // In production, generate a PDF resume
             window.print();
           }}
           className="inline-flex h-11 items-center gap-2 rounded-xl bg-zinc-900 px-5 text-sm font-medium text-white transition-all hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
           <Download className="h-4 w-4" />
-          Download CV
+          {t("downloadCV")}
         </motion.a>
       </div>
 
@@ -68,9 +69,9 @@ export function ResumeContent() {
       >
         <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-900 dark:text-white">
           <Briefcase className="h-5 w-5 text-blue-600" />
-          Professional Summary
+          {t("professionalSummary")}
         </h2>
-        <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <p className="mt-3 leading-relaxed text-muted-foreground dark:text-zinc-400">
           {resume.summary}
         </p>
       </motion.div>
@@ -79,7 +80,7 @@ export function ResumeContent() {
       <div className="mt-16">
         <h2 className="flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-white">
           <Briefcase className="h-5 w-5 text-blue-600" />
-          Work Experience
+          {t("workExperience")}
         </h2>
         <div className="mt-8">
           <Timeline items={timelineItems} />
@@ -90,7 +91,7 @@ export function ResumeContent() {
       <div className="mt-16">
         <h2 className="flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-white">
           <Award className="h-5 w-5 text-blue-600" />
-          Technical Skills
+          {t("technicalSkills")}
         </h2>
         <div className="mt-8 grid gap-8 md:grid-cols-2">
           {skills.map((category) => (
@@ -119,7 +120,7 @@ export function ResumeContent() {
       <div className="mt-16">
         <h2 className="flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-white">
           <GraduationCap className="h-5 w-5 text-blue-600" />
-          Education
+          {t("education")}
         </h2>
         <div className="mt-8 space-y-6">
           {resume.education.map((edu) => (
@@ -130,12 +131,12 @@ export function ResumeContent() {
               <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
                 {edu.degree}
               </h3>
-              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="mt-1 text-sm text-muted-foreground dark:text-zinc-400">
                 {edu.institution} • {edu.location}
               </p>
               <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                 {edu.startDate} - {edu.endDate}
-                {edu.gpa && <> • GPA: {edu.gpa}</>}
+                {edu.gpa && <> • {t("gpa")} {edu.gpa}</>}
               </p>
             </div>
           ))}
@@ -146,7 +147,7 @@ export function ResumeContent() {
       <div className="mt-16">
         <h2 className="flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-white">
           <Award className="h-5 w-5 text-blue-600" />
-          Certifications
+          {t("certifications")}
         </h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {resume.certifications.map((cert) => (

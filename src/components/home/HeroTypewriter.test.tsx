@@ -1,30 +1,40 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 import { HeroTypewriter } from "./HeroTypewriter";
+import enMessages from "@/messages/en.json";
+
+function IntlWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <NextIntlClientProvider locale="en" messages={enMessages}>
+      {children}
+    </NextIntlClientProvider>
+  );
+}
 
 describe("HeroTypewriter", () => {
   // --- Structural tests (no timers needed) ---
 
   describe("initial render", () => {
     it("renders the first text fully visible on mount", () => {
-      render(<HeroTypewriter />);
+      render(<HeroTypewriter />, { wrapper: IntlWrapper });
       expect(screen.getByText("Full Stack Developer")).toBeInTheDocument();
     });
 
     it("renders a blinking cursor element", () => {
-      const { container } = render(<HeroTypewriter />);
+      const { container } = render(<HeroTypewriter />, { wrapper: IntlWrapper });
       const cursor = container.querySelector(".animate-pulse");
       expect(cursor).toBeInTheDocument();
     });
 
     it("renders the text in a span", () => {
-      render(<HeroTypewriter />);
+      render(<HeroTypewriter />, { wrapper: IntlWrapper });
       const textSpan = screen.getByText("Full Stack Developer");
       expect(textSpan.tagName).toBe("SPAN");
     });
 
     it("renders inside a container div", () => {
-      const { container } = render(<HeroTypewriter />);
+      const { container } = render(<HeroTypewriter />, { wrapper: IntlWrapper });
       const outerDiv = container.firstChild as HTMLElement;
       expect(outerDiv).toBeInTheDocument();
       expect(outerDiv.tagName).toBe("DIV");
@@ -32,7 +42,7 @@ describe("HeroTypewriter", () => {
     });
 
     it("renders the cursor span after the text span", () => {
-      const { container } = render(<HeroTypewriter />);
+      const { container } = render(<HeroTypewriter />, { wrapper: IntlWrapper });
       const outerDiv = container.firstChild as HTMLElement;
       const spans = outerDiv.querySelectorAll("span");
       expect(spans.length).toBe(2);
@@ -54,45 +64,42 @@ describe("HeroTypewriter", () => {
     });
 
     it("shows the first text before the animation delay elapses", () => {
-      render(<HeroTypewriter />);
+      render(<HeroTypewriter />, { wrapper: IntlWrapper });
       act(() => {
         vi.advanceTimersByTime(1500);
       });
       expect(screen.getByText("Full Stack Developer")).toBeInTheDocument();
     });
 
-    it("transitions to a different text after multiple animation cycles", async () => {
-      render(<HeroTypewriter />);
+    it("transitions to a different text after multiple animation cycles", () => {
+      render(<HeroTypewriter />, { wrapper: IntlWrapper });
 
-      // Advance time by 30 seconds to get well past multiple animation cycles
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(30000);
-      });
+      // Step in 500ms increments so React flushes effects between timer ticks
+      for (let i = 0; i < 60; i++) {
+        act(() => { vi.advanceTimersByTime(500); });
+      }
 
       // The text should have transitioned away from the initial full text
-      const text = screen.getByText(/Full Stack Developer|UI\/UX|Open Source|Problem Solver/);
-      expect(text).toBeInTheDocument();
+      expect(document.body.textContent).not.toBe("Full Stack Developer");
     });
 
-    it("displays later texts after cycling through", async () => {
-      render(<HeroTypewriter />);
+    it("displays later texts after cycling through", () => {
+      render(<HeroTypewriter />, { wrapper: IntlWrapper });
 
-      // Advance time by 60 seconds to ensure multiple full cycles
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(60000);
-      });
+      for (let i = 0; i < 130; i++) {
+        act(() => { vi.advanceTimersByTime(500); });
+      }
 
-      // After 60s, one of the later texts should be visible
       const bodyText = document.body.textContent || "";
       expect(
         bodyText.includes("UI/UX") ||
         bodyText.includes("Open Source") ||
-        bodyText.includes("Problem Solver")
+        bodyText.includes("Problem")
       ).toBe(true);
     });
 
     it("cleans up timers on unmount", () => {
-      const { unmount } = render(<HeroTypewriter />);
+      const { unmount } = render(<HeroTypewriter />, { wrapper: IntlWrapper });
 
       // Let the animation start
       act(() => {

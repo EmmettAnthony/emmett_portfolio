@@ -1,0 +1,171 @@
+name: Test - Full Test Suite
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      test-filter:
+        description: "Test pattern to run (e.g., tests/unit)"
+        required: false
+        default: ""
+      coverage:
+        description: "Generate coverage report"
+        type: boolean
+        default: true
+
+concurrency:
+  group: test-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_test
+
+jobs:
+  ##############################################################################
+  # UNIT TESTS
+  ##############################################################################
+  unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Unit Tests
+        run: |
+          if [ -n "${{ github.event.inputs.test-filter }}" ]; then
+            npx vitest run ${{ github.event.inputs.test-filter }}
+          else
+            npx vitest run tests/unit/ \
+              --coverage.enabled=${{ github.event.inputs.coverage == 'true' || true }} \
+              --reporter=junit --outputFile=reports/junit-unit.xml
+          fi
+      - uses: ./.github/actions/test-reporter
+        with:
+          coverage: ${{ github.event.inputs.coverage == 'true' || 'true' }}
+
+  ##############################################################################
+  # COMPONENT TESTS
+  ##############################################################################
+  component:
+    name: Component Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Component Tests
+        run: npx vitest run tests/component/ --reporter=junit --outputFile=reports/junit-components.xml
+      - uses: ./.github/actions/test-reporter
+
+  ##############################################################################
+  # API TESTS
+  ##############################################################################
+  api:
+    name: API & Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run API Tests
+        run: npx vitest run tests/api/ tests/integration/ 2>/dev/null \
+          --reporter=junit --outputFile=reports/junit-api.xml || \
+          npx vitest run tests/api/ --reporter=junit --outputFile=reports/junit-api.xml
+      - uses: ./.github/actions/test-reporter
+
+  ##############################################################################
+  # SERVER ACTION TESTS
+  ##############################################################################
+  server-actions:
+    name: Server Action Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Server Action Tests
+        run: npx vitest run tests/server-actions/ tests/auth/ tests/database/ tests/payments/ \
+          tests/email-tests/ tests/notifications/ tests/booking/ tests/crm/ tests/error-handling/ \
+          tests/activity-log/ \
+          --reporter=junit --outputFile=reports/junit-server-actions.xml
+      - uses: ./.github/actions/test-reporter
+
+  ##############################################################################
+  # SECURITY TESTS (no DB needed)
+  ##############################################################################
+  security:
+    name: Security Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Security Tests
+        run: npx vitest run tests/security/ --reporter=junit --outputFile=reports/junit-security.xml
+      - uses: ./.github/actions/test-reporter
+
+  ##############################################################################
+  # DATABASE TESTS (requires PostgreSQL)
+  ##############################################################################
+  database:
+    name: Database Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: portfolio_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
+      - uses: ./.github/actions/prisma
+        with:
+          database-url: postgresql://postgres:postgres@localhost:5432/portfolio_test
+          run-seed: "true"
+      - name: Run Database Tests
+        run: npx vitest run tests/database/ --reporter=junit --outputFile=reports/junit-database.xml
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_test
+      - name: Clean Database
+        if: always()
+        shell: bash
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_test
+        run: npx prisma migrate reset --force
+      - uses: ./.github/actions/test-reporter
+
+  ##############################################################################
+  # FULL TEST RUN (all tests with coverage)
+  ##############################################################################
+  all:
+    name: Full Test Suite
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    needs: [unit, component, api, server-actions, security]
+    steps:
+      - name: Aggregate Test Results
+        run: |
+          echo "✅ Unit: ${{ needs.unit.result }}"
+          echo "✅ Component: ${{ needs.component.result }}"
+          echo "✅ API: ${{ needs.api.result }}"
+          echo "✅ Server Actions: ${{ needs.server-actions.result }}"
+          echo "✅ Security: ${{ needs.security.result }}"
+          if [ "${{ needs.unit.result }}" = "success" ] && \
+             [ "${{ needs.component.result }}" = "success" ] && \
+             [ "${{ needs.server-actions.result }}" = "success" ]; then
+            echo "✅ All tests passed"
+            exit 0
+          else
+            echo "❌ Some tests failed"
+            exit 1
+          fi

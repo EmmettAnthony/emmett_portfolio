@@ -1,27 +1,49 @@
 "use client";
 
 import { Timeline } from "@/components/shared/Timeline";
+import { useTranslations } from "@/lib/i18n";
 import { SectionHeader } from "@/components/shared/SectionHeader";
-import resume from "@/data/resume.json";
 
-const timelineItems = resume.experience.map((exp) => ({
-  id: exp.id,
-  title: exp.position,
-  subtitle: `${exp.company} • ${exp.location}`,
-  date: `${exp.startDate} - ${exp.current ? "Present" : exp.endDate}`,
-  description: exp.description,
-}));
+interface ExperienceItem {
+  id: string;
+  jobTitle: string;
+  company: string;
+  location: string | null;
+  startDate: Date;
+  endDate: Date | null;
+  current: boolean;
+  responsibilities: string[];
+}
 
-export function TimelineSection() {
+interface TimelineSectionProps {
+  experiences?: ExperienceItem[];
+}
+
+export function TimelineSection({ experiences = [] }: TimelineSectionProps) {
+  const t = useTranslations();
+  const timelineItems = experiences.map((exp) => ({
+    id: exp.id,
+    title: exp.jobTitle,
+    subtitle: `${exp.company}${exp.location ? ` • ${exp.location}` : ""}`,
+    date: `${formatDate(exp.startDate)} - ${exp.current ? t("about.timeline.present") : exp.endDate ? formatDate(exp.endDate) : ""}`,
+    description: exp.responsibilities,
+  }));
+
   return (
     <div className="mt-24">
       <SectionHeader
-        title="Career Journey"
-        subtitle="My professional experience and growth over the years."
+        title={t("about.timeline.title")}
+        subtitle={t("about.timeline.subtitle")}
       />
       <div className="mx-auto mt-16 max-w-2xl">
         <Timeline items={timelineItems} />
       </div>
     </div>
   );
+}
+
+function formatDate(d: Date): string {
+  const date = new Date(d);
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return `${months[date.getMonth()]} ${date.getFullYear()}`;
 }

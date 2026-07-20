@@ -3,8 +3,18 @@ import { notFound } from "next/navigation";
 import { ArrowUpRight, Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import blog from "@/data/blog.json";
 import { formatDate, readTime } from "@/lib/utils";
+
+function getInitials(name: string): string {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -36,6 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPost({ params }: Props) {
+  const t = await getTranslations("blog");
   const { slug } = await params;
   const post = blog.find((p) => p.slug === slug);
 
@@ -51,15 +62,15 @@ export default async function BlogPost({ params }: Props) {
         {/* Back link */}
         <Link
           href="/blog"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Blog
+          {t("backToBlog")}
         </Link>
 
         {/* Header */}
         <header>
-          <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground dark:text-zinc-400">
             <span className="rounded-lg bg-zinc-100 px-3 py-1 font-medium dark:bg-zinc-800">
               {post.category}
             </span>
@@ -69,7 +80,7 @@ export default async function BlogPost({ params }: Props) {
             </span>
             <span className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
-              {readTime(post.content)} min read
+              {readTime(post.content)} {t("minutesRead")}
             </span>
           </div>
 
@@ -77,13 +88,13 @@ export default async function BlogPost({ params }: Props) {
             {post.title}
           </h1>
 
-          <p className="mt-4 text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground dark:text-zinc-400">
             {post.excerpt}
           </p>
 
-          <div className="mt-6 flex items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+            <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground dark:text-zinc-400">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-xs font-bold text-white">
-              EA
+              {getInitials(post.author)}
             </div>
             <span>{post.author}</span>
           </div>
@@ -104,7 +115,7 @@ export default async function BlogPost({ params }: Props) {
         </div>
 
         {/* Content */}
-        <div className="prose prose-zinc mt-12 max-w-none dark:prose-invert prose-headings:text-zinc-900 prose-p:text-zinc-600 prose-p:leading-relaxed prose-strong:text-zinc-900 dark:prose-headings:text-white dark:prose-p:text-zinc-400 dark:prose-strong:text-white">
+        <div className="prose prose-zinc mt-12 max-w-none dark:prose-invert prose-headings:text-zinc-900 prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-zinc-900 dark:prose-headings:text-white dark:prose-p:text-zinc-400 dark:prose-strong:text-white">
           {paragraphs.map((para, i) => {
             if (para.startsWith("## ")) {
               return (
@@ -128,7 +139,7 @@ export default async function BlogPost({ params }: Props) {
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm font-medium text-muted-foreground dark:bg-zinc-800 dark:text-zinc-400"
               >
                 {tag}
               </span>
@@ -140,18 +151,18 @@ export default async function BlogPost({ params }: Props) {
         <div className="mt-12 flex items-center justify-between border-t border-zinc-200 pt-8 dark:border-zinc-800">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           >
             <ArrowLeft className="h-4 w-4" />
-            All Articles
+            {t("allArticles")}
           </Link>
           <a
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://emmettanthony.dev/blog/${post.slug}`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 transition-colors hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400"
           >
-            Share on Twitter
+            {t("shareOnTwitter")}
             <ArrowUpRight className="h-4 w-4" />
           </a>
         </div>

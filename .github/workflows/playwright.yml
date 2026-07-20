@@ -1,0 +1,202 @@
+name: Playwright - End-to-End Tests
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "src/**"
+      - "e2e/**"
+      - "playwright.config.ts"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "e2e/**"
+      - "playwright.config.ts"
+  schedule:
+    - cron: "0 6 * * 1" # Every Monday at 6 AM UTC
+  workflow_dispatch:
+    inputs:
+      browsers:
+        description: "Browsers to test (comma-separated)"
+        required: false
+        default: "chromium,firefox,webkit"
+      shard-index:
+        description: "Shard index (0-based)"
+        required: false
+        default: "0"
+      shard-count:
+        description: "Total shards"
+        required: false
+        default: "1"
+
+concurrency:
+  group: playwright-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
+  NEXTAUTH_SECRET: e2e-test-secret-not-for-production
+  NEXTAUTH_URL: http://localhost:3000
+  NEXT_PUBLIC_APP_URL: http://localhost:3000
+  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+jobs:
+  ##############################################################################
+  # E2E TESTS
+  ##############################################################################
+  e2e:
+    name: E2E - ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.repository == github.event.repository.full_name
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chromium
+          - firefox
+          - webkit
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: portfolio_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+        with:
+          install-playwright: "true"
+          playwright-browsers: ${{ matrix.browser }}
+          prisma-generate: "true"
+
+      - uses: ./.github/actions/prisma
+        with:
+          database-url: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
+          run-seed: "true"
+
+      - name: Build Application
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+      - name: Run Playwright Tests
+        run: |
+          SHARD_PARAMS=""
+          if [ "${{ github.event.inputs.shard-count }}" != "1" ]; then
+            SHARD_PARAMS="--shard=${{ github.event.inputs.shard-index }}/${{ github.event.inputs.shard-count }}"
+          fi
+          npx playwright test \
+            --project=${{ matrix.browser }} \
+            --reporter=list,html \
+            $SHARD_PARAMS
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
+          TEST_ADMIN_EMAIL: ${{ secrets.TEST_ADMIN_EMAIL || 'admin@test.com' }}
+          TEST_ADMIN_PASSWORD: ${{ secrets.TEST_ADMIN_PASSWORD || 'password123' }}
+          PWTEST_BROWSER: ${{ matrix.browser }}
+          HOME: /root
+
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.browser }}
+          path: test-results/
+          retention-days: 14
+
+      - name: Clean Database
+        if: always()
+        shell: bash
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
+        run: npx prisma migrate reset --force || true
+
+  ##############################################################################
+  # SCHEDULED FULL BROWSER MATRIX
+  ##############################################################################
+  scheduled-e2e:
+    name: Scheduled Full E2E
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chromium
+          - firefox
+          - webkit
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: portfolio_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          install-playwright: "true"
+          playwright-browsers: ${{ matrix.browser }}
+          prisma-generate: "true"
+      - uses: ./.github/actions/prisma
+        with:
+          database-url: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
+          run-seed: "true"
+      - name: Build Application
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
+      - name: Run Playwright Tests
+        run: npx playwright test --project=${{ matrix.browser }} --reporter=list,html
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
+      - uses: ./.github/actions/test-reporter
+        with:
+          coverage: "false"
+          playwright: "true"
+
+  ##############################################################################
+  # E2E SUMMARY
+  ##############################################################################
+  summary:
+    name: E2E Summary
+    if: always()
+    needs: [e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate E2E Results
+        run: |
+          echo "📊 E2E Test Results:"
+          echo "  Chromium: ${{ needs.e2e.outputs.chromium-result || needs.e2e.result }}"
+          echo "  Firefox: ${{ needs.e2e.outputs.firefox-result || needs.e2e.result }}"
+          echo "  Webkit: ${{ needs.e2e.outputs.webkit-result || needs.e2e.result }}"
+          echo "✅ E2E test suite completed"

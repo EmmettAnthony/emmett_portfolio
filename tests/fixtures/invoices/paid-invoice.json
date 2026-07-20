@@ -1,0 +1,26 @@
+{
+  "id": "inv-paid-1",
+  "invoiceNumber": "INV-2024-001",
+  "customerId": "cust-001",
+  "customerName": "Acme Corporation",
+  "customerEmail": "billing@acme.com",
+  "customerCompany": "Acme Corp",
+  "status": "PAID",
+  "items": [
+    { "description": "Website Development", "quantity": 1, "unitPrice": 5000, "taxRate": 0, "discount": 0, "total": 5000 },
+    { "description": "Hosting Setup", "quantity": 1, "unitPrice": 200, "taxRate": 0, "discount": 0, "total": 200 }
+  ],
+  "subtotal": 5200,
+  "taxTotal": 0,
+  "discountTotal": 0,
+  "total": 5200,
+  "amountPaid": 5200,
+  "balanceDue": 0,
+  "currency": "USD",
+  "dueDate": "2024-05-15T00:00:00.000Z",
+  "issuedDate": "2024-04-15T00:00:00.000Z",
+  "paidAt": "2024-05-10T00:00:00.000Z",
+  "notes": "Paid via wire transfer",
+  "createdAt": "2024-04-15T00:00:00.000Z",
+  "updatedAt": "2024-05-10T00:00:00.000Z"
+}

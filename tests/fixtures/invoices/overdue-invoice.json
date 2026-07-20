@@ -1,0 +1,26 @@
+{
+  "id": "inv-overdue-1",
+  "invoiceNumber": "INV-2024-002",
+  "customerId": "cust-002",
+  "customerName": "Beta Industries",
+  "customerEmail": "ap@beta.com",
+  "customerCompany": "Beta Industries Inc.",
+  "status": "OVERDUE",
+  "items": [
+    { "description": "Consulting Services", "quantity": 10, "unitPrice": 150, "taxRate": 0, "discount": 0, "total": 1500 },
+    { "description": "Software License", "quantity": 5, "unitPrice": 100, "taxRate": 0, "discount": 0, "total": 500 }
+  ],
+  "subtotal": 2000,
+  "taxTotal": 0,
+  "discountTotal": 0,
+  "total": 2000,
+  "amountPaid": 0,
+  "balanceDue": 2000,
+  "currency": "USD",
+  "dueDate": "2024-05-01T00:00:00.000Z",
+  "issuedDate": "2024-04-01T00:00:00.000Z",
+  "paidAt": null,
+  "notes": "Second reminder sent",
+  "createdAt": "2024-04-01T00:00:00.000Z",
+  "updatedAt": "2024-06-01T00:00:00.000Z"
+}

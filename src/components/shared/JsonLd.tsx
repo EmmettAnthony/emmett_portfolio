@@ -1,32 +1,44 @@
-import { siteConfig } from "@/data/site-config";
-import resume from "@/data/resume.json";
+import { getSiteSettings } from "@/lib/get-site-settings";
+import { getPrisma } from "@/lib/db";
 
-export function JsonLd() {
+export async function JsonLd() {
+  const settings = await getSiteSettings();
+
+  let alumniOf: Array<{ "@type": string; name: string }> = [];
+  try {
+    const prisma = getPrisma();
+    const profile = await prisma.resumeProfile.findFirst({
+      include: { education: true },
+    });
+    if (profile) {
+      alumniOf = profile.education.map((edu) => ({
+        "@type": "EducationalOrganization" as const,
+        name: edu.institution,
+      }));
+    }
+  } catch {}
+
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: siteConfig.name,
-    givenName: siteConfig.name.split(" ")[0],
-    familyName: siteConfig.name.split(" ")[1],
-    jobTitle: siteConfig.title,
-    description: siteConfig.description,
-    url: siteConfig.url,
+    name: settings.siteName,
+    givenName: settings.siteName.split(" ")[0],
+    familyName: settings.siteName.split(" ")[1],
+    description: settings.description,
+    url: settings.url,
     sameAs: [
-      siteConfig.links.github,
-      siteConfig.links.linkedin,
-      siteConfig.links.twitter,
+      settings.social.github,
+      settings.social.linkedin,
+      settings.social.twitter,
     ],
-    email: siteConfig.links.email,
-    knowsAbout: siteConfig.keywords,
-    alumniOf: resume.education.map((edu) => ({
-      "@type": "EducationalOrganization",
-      name: edu.institution,
-    })),
+    email: settings.email,
+    knowsAbout: settings.keywords,
+    alumniOf,
     workLocation: {
       "@type": "Place",
       address: {
         "@type": "PostalAddress",
-        addressLocality: siteConfig.location,
+        addressLocality: settings.address,
       },
     },
   };
@@ -34,9 +46,9 @@ export function JsonLd() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: `${siteConfig.name} | ${siteConfig.title}`,
-    url: siteConfig.url,
-    description: siteConfig.description,
+    name: `${settings.siteName}`,
+    url: settings.url,
+    description: settings.description,
   };
 
   return (

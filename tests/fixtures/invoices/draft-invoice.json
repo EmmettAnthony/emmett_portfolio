@@ -1,0 +1,25 @@
+{
+  "id": "inv-draft-1",
+  "invoiceNumber": "INV-2024-003",
+  "customerId": "cust-003",
+  "customerName": "Gamma LLC",
+  "customerEmail": "info@gamma.com",
+  "customerCompany": "Gamma LLC",
+  "status": "DRAFT",
+  "items": [
+    { "description": "UI/UX Design", "quantity": 20, "unitPrice": 75, "taxRate": 0, "discount": 10, "total": 1350 }
+  ],
+  "subtotal": 1500,
+  "taxTotal": 0,
+  "discountTotal": 150,
+  "total": 1350,
+  "amountPaid": 0,
+  "balanceDue": 1350,
+  "currency": "USD",
+  "dueDate": "2024-07-01T00:00:00.000Z",
+  "issuedDate": "2024-06-01T00:00:00.000Z",
+  "paidAt": null,
+  "notes": null,
+  "createdAt": "2024-06-01T00:00:00.000Z",
+  "updatedAt": "2024-06-01T00:00:00.000Z"
+}

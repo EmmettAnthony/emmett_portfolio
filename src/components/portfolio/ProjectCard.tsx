@@ -76,14 +76,14 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
           {project.title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-2">
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground dark:text-zinc-400 line-clamp-2">
           {project.description}
         </p>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+              className="inline-flex rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-muted-foreground dark:bg-zinc-800 dark:text-zinc-400"
             >
               {tag}
             </span>

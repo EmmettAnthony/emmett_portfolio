@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { HeroSection } from "@/components/home/HeroSection";
+import { getHomepageData } from "@/components/home/HomepageDataProvider";
 
 // Dynamically import below-the-fold sections to defer framer-motion JS
 const FeaturedProjects = dynamic(
@@ -32,10 +33,21 @@ const ContactCTA = dynamic(
   { ssr: true }
 );
 
-export default function Home() {
+export default async function Home() {
+  const data = await getHomepageData();
+  const hero = data.homepage;
+
   return (
     <>
-      <HeroSection />
+      <HeroSection
+        headline={hero?.heroHeadline}
+        description={hero?.heroDescription}
+        primaryCta={hero?.heroPrimaryCta}
+        primaryLink={hero?.heroPrimaryLink}
+        secondaryCta={hero?.heroSecondaryCta}
+        secondaryLink={hero?.heroSecondaryLink}
+        heroTypewriterTexts={hero?.heroTypewriterTexts}
+      />
       <FeaturedProjects />
       <SkillsOverview />
       <ServicesOverview />

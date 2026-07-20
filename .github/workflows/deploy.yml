@@ -12,20 +12,20 @@ on:
         default: "preview"
         type: choice
         options:
-      - preview
-      - production
-  commit-sha:
-    description: "Commit SHA to deploy (leave empty for latest)"
-    required: false
-    default: ""
-  rollback:
-    description: "Rollback to previous deployment"
-    required: false
-    default: "false"
-    type: choice
-    options:
-      - "false"
-      - "true"
+          - preview
+          - production
+      commit-sha:
+        description: "Commit SHA to deploy (leave empty for latest)"
+        required: false
+        default: ""
+      rollback:
+        description: "Rollback to previous deployment"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 concurrency:
   group: deploy-${{ github.ref_name }}-${{ github.event.inputs.environment || (github.ref_name == 'main' && 'production' || 'preview') }}

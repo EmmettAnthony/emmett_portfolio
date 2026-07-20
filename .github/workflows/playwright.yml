@@ -34,7 +34,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: "20"
+  NODE_VERSION: "22"
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_e2e
   NEXTAUTH_SECRET: e2e-test-secret-not-for-production
   NEXTAUTH_URL: http://localhost:3000

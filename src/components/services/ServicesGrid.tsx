@@ -9,6 +9,7 @@ import {
   Lightbulb,
   Building2,
 } from "lucide-react";
+import { useTranslations } from "@/lib/i18n";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import services from "@/data/services.json";
 
@@ -22,11 +23,12 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export function ServicesGrid() {
+  const t = useTranslations();
   return (
     <div>
       <SectionHeader
-        title="Services"
-        subtitle="Comprehensive development services to bring your ideas to life."
+        title={t("services.title")}
+        subtitle={t("services.subtitle")}
       />
 
       <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -46,14 +48,14 @@ export function ServicesGrid() {
             <h3 className="mt-5 text-xl font-semibold text-zinc-900 dark:text-white">
               {service.title}
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground dark:text-zinc-400">
               {service.description}
             </p>
             <ul className="mt-6 space-y-2">
               {service.features.map((feature) => (
                 <li
                   key={feature}
-                  className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400"
+                  className="flex items-center gap-2 text-sm text-muted-foreground dark:text-zinc-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
                   {feature}

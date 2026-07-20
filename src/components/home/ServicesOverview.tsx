@@ -10,9 +10,9 @@ import {
   Building2,
 } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "@/lib/i18n";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import services from "@/data/services.json";
-import { cn } from "@/lib/utils";
 
 const iconMap: Record<string, React.ReactNode> = {
   Globe: <Globe className="h-6 w-6" />,
@@ -24,12 +24,13 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export function ServicesOverview() {
+  const t = useTranslations();
   return (
     <section className="py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title="Services I Offer"
-          subtitle="Professional services to help you build and grow your digital presence."
+          title={t("home.services.title")}
+          subtitle={t("home.services.subtitle")}
         />
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -48,7 +49,7 @@ export function ServicesOverview() {
               <h3 className="mt-4 text-lg font-semibold text-zinc-900 dark:text-white">
                 {service.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground dark:text-zinc-400">
                 {service.description}
               </p>
             </motion.div>
@@ -66,7 +67,7 @@ export function ServicesOverview() {
             href="/services"
             className="inline-flex h-11 items-center gap-2 rounded-xl bg-zinc-900 px-5 text-sm font-medium text-white transition-all hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
-            View All Services
+            {t("common.viewAll")}
           </Link>
         </motion.div>
       </div>

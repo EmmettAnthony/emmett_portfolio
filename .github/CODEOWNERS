@@ -1,0 +1,20 @@
+# Default owners for everything in the repo
+* @emmett
+
+# CI/CD workflows — owned by the DevOps team
+.github/workflows/* @emmett
+.github/actions/* @emmett
+
+# Source code
+src/** @emmett
+
+# Prisma schema and migrations
+prisma/** @emmett
+
+# Tests
+tests/** @emmett
+e2e/** @emmett
+
+# Configuration files
+*.config.* @emmett
+*rc @emmett

@@ -1,0 +1,43 @@
+name: "Prisma Database Setup"
+description: "Configure PostgreSQL service, run migrations, and seed data"
+
+inputs:
+  database-url:
+    description: "PostgreSQL connection string"
+    required: true
+  run-seed:
+    description: "Run database seed after migrations"
+    required: false
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Generate Prisma Client
+      shell: bash
+      run: npx prisma generate
+
+    - name: Validate Prisma Schema
+      shell: bash
+      run: npx prisma validate
+
+    - name: Run Database Migrations
+      shell: bash
+      env:
+        DATABASE_URL: ${{ inputs.database-url }}
+      run: npx prisma migrate deploy
+
+    - name: Seed Test Data
+      if: inputs.run-seed == 'true'
+      shell: bash
+      env:
+        DATABASE_URL: ${{ inputs.database-url }}
+      run: npm run db:seed
+
+    - name: Verify Database Connection
+      shell: bash
+      env:
+        DATABASE_URL: ${{ inputs.database-url }}
+      run: |
+        npx prisma db execute --stdin <<< "SELECT 1 AS health_check;"
+        echo "Database connection verified"

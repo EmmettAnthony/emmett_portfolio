@@ -10,15 +10,20 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
 # next.js
 /.next/
 /out/
+/build
 
 # production
-/build
+/next-env.d.ts
+
+# testing
+/coverage
+/coverage_output.txt
+/test-results/
+/playwright-report/
+/playwright/.cache/
 
 # misc
 .DS_Store
@@ -31,7 +36,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env.*
 !.env.example
 
 # vercel
@@ -39,4 +45,32 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+*.tsbuildinfo.*
 next-env.d.ts
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+logs/
+*.log
+
+# Database
+prisma/db.sqlite
+prisma/db.sqlite-journal
+uploads/
+
+# Reports
+reports/
+lint_output.json
+lint_report.json
+dev.log

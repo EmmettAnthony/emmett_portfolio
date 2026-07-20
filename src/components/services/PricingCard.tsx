@@ -53,7 +53,7 @@ export function PricingCard({ plan, index }: PricingCardProps) {
             "mt-2 text-sm leading-relaxed",
             plan.highlighted
               ? "text-blue-100"
-              : "text-zinc-600 dark:text-zinc-400"
+              : "text-muted-foreground dark:text-zinc-400"
           )}
         >
           {plan.description}
@@ -98,7 +98,7 @@ export function PricingCard({ plan, index }: PricingCardProps) {
                   "text-sm",
                   plan.highlighted
                     ? "text-blue-100"
-                    : "text-zinc-600 dark:text-zinc-400"
+                    : "text-muted-foreground dark:text-zinc-400"
                 )}
               >
                 {feature}

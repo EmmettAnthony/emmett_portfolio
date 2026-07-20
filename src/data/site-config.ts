@@ -12,6 +12,8 @@ export const siteConfig = {
     twitter: "https://twitter.com/emmettanthony",
     email: "hello@emmettanthony.dev",
   },
+  whatsapp: "+1234567890",
+  phone: "+1234567890",
   location: "San Francisco, CA",
   keywords: [
     "Software Developer",

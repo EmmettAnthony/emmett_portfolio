@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "@/lib/i18n";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { SkillBar } from "@/components/ui/SkillBar";
 import skills from "@/data/skills.json";
@@ -15,12 +16,13 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export function SkillsOverview() {
+  const t = useTranslations();
   return (
     <section className="bg-zinc-50 py-20 dark:bg-zinc-900/50 md:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title="Skills & Expertise"
-          subtitle="Technologies and tools I work with on a daily basis."
+          title={t("home.skills.title")}
+          subtitle={t("home.skills.subtitle")}
         />
 
         <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">

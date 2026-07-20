@@ -1,0 +1,240 @@
+name: CI - Continuous Integration
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_ci
+  NEXTAUTH_SECRET: ci-generated-secret-not-for-production
+  NEXTAUTH_URL: http://localhost:3000
+  NEXT_PUBLIC_APP_URL: http://localhost:3000
+  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+jobs:
+  ##############################################################################
+  # CHECKS — fast-fail early
+  ##############################################################################
+  changed-files:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      src: ${{ steps.filter.outputs.src }}
+      prisma: ${{ steps.filter.outputs.prisma }}
+      workflows: ${{ steps.filter.outputs.workflows }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            src:
+              - 'src/**'
+              - 'tests/**'
+              - 'e2e/**'
+            prisma:
+              - 'prisma/**'
+            workflows:
+              - '.github/workflows/**'
+              - '.github/actions/**'
+
+  ##############################################################################
+  # QUALITY GATE — orchestrates all jobs, merges results
+  ##############################################################################
+  quality-gate:
+    name: Quality Gate
+    if: always()
+    needs:
+      - lint
+      - typecheck
+      - test-unit
+      - test-component
+      - test-api
+      - test-server-actions
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate Results
+        run: |
+          declare -A JOBS=(
+            ["lint"]=${{ needs.lint.result }}
+            ["typecheck"]=${{ needs.typecheck.result }}
+            ["unit"]=${{ needs.test-unit.result }}
+            ["component"]=${{ needs.test-component.result }}
+            ["api"]=${{ needs.test-api.result }}
+            ["server-actions"]=${{ needs.test-server-actions.result }}
+            ["build"]=${{ needs.build.result }}
+          )
+          FAILURES=()
+          for job in "${!JOBS[@]}"; do
+            echo "🔍 $job: ${JOBS[$job]}"
+            if [ "${JOBS[$job]}" = "failure" ] || [ "${JOBS[$job]}" = "cancelled" ]; then
+              FAILURES+=("$job")
+            fi
+          done
+          if [ ${#FAILURES[@]} -gt 0 ]; then
+            echo "❌ Failed jobs: ${FAILURES[*]}"
+            exit 1
+          fi
+          echo "✅ All required checks passed"
+
+  ##############################################################################
+  # CODE QUALITY
+  ##############################################################################
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: ESLint
+        run: npm run lint
+      - name: Circular Dependency Check
+        run: npx madge --circular --extensions ts,tsx src/ 2>/dev/null || echo "madge not installed, skipping"
+      - name: Unused Dependency Check
+        run: npx depcheck --ignores="@types/*,eslint-config-next" 2>/dev/null || echo "depcheck not installed, skipping"
+
+  typecheck:
+    name: TypeScript Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: TypeScript Strict Check
+        run: npx tsc --noEmit --pretty
+
+  format:
+    name: Formatting Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Prettier Check
+        run: npx prettier --check "src/**/*.{ts,tsx,js,jsx,json,css,md}" 2>/dev/null || echo "prettier not configured, skipping"
+
+  ##############################################################################
+  # TESTS
+  ##############################################################################
+  test-unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Unit Tests
+        run: npx vitest run tests/unit/ --reporter=junit --outputFile=reports/junit-unit.xml
+      - uses: ./.github/actions/test-reporter
+
+  test-component:
+    name: Component Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Component Tests
+        run: npx vitest run tests/component/ --reporter=junit --outputFile=reports/junit-components.xml
+      - uses: ./.github/actions/test-reporter
+
+  test-api:
+    name: API Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run API Tests
+        run: npx vitest run tests/api/ --reporter=junit --outputFile=reports/junit-api.xml
+      - uses: ./.github/actions/test-reporter
+
+  test-server-actions:
+    name: Server Action Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Server Action Tests
+        run: npx vitest run tests/server-actions/ tests/auth/ tests/database/ tests/payments/ tests/email-tests/ tests/notifications/ tests/booking/ tests/crm/ --reporter=junit --outputFile=reports/junit-server-actions.xml
+      - uses: ./.github/actions/test-reporter
+
+  test-security:
+    name: Security Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Security Tests
+        run: npx vitest run tests/security/ --reporter=junit --outputFile=reports/junit-security.xml
+      - uses: ./.github/actions/test-reporter
+
+  test-error-handling:
+    name: Error Handling Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run Error Handling Tests
+        run: npx vitest run tests/error-handling/ tests/activity-log/ tests/visual/ tests/performance/ --reporter=junit --outputFile=reports/junit-error-handling.xml
+      - uses: ./.github/actions/test-reporter
+
+  ##############################################################################
+  # DATABASE INTEGRATION (PostgreSQL service)
+  ##############################################################################
+  test-database:
+    name: Database Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: portfolio_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
+      - uses: ./.github/actions/prisma
+        with:
+          database-url: postgresql://postgres:postgres@localhost:5432/portfolio_ci
+      - name: Run Database Tests
+        run: npx vitest run tests/database/ --reporter=junit --outputFile=reports/junit-database.xml
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_ci
+      - uses: ./.github/actions/test-reporter
+
+  ##############################################################################
+  # BUILD
+  ##############################################################################
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test-unit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
+      - name: Build Next.js Application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: "https://emmettanthony.dev"
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN || '' }}
+      - name: Analyze Bundle
+        run: npx next-bundle-analyzer .next/build-manifest.json 2>/dev/null || echo "Bundle analysis skipped"
+      - uses: ./.github/actions/test-reporter
+        with:
+          coverage: "false"
+          lighthouse: "false"

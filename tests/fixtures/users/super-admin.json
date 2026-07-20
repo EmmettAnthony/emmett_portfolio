@@ -1,0 +1,10 @@
+{
+  "id": "user-sa-1",
+  "name": "Super Admin",
+  "email": "superadmin@invoicehub.com",
+  "role": "SUPER_ADMIN",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=superadmin",
+  "emailVerified": "2024-01-01T00:00:00.000Z",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-06-15T00:00:00.000Z"
+}

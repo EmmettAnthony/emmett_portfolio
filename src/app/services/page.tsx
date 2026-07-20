@@ -1,13 +1,17 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { ServicesGrid } from "@/components/services/ServicesGrid";
 import { PricingSection } from "@/components/services/PricingSection";
+import { NewsletterSection } from "@/components/home/NewsletterSection";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Services | Emmett Anthony",
-  description:
-    "Professional web development, software development, e-commerce, and consulting services offered by Emmett Anthony.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("services.meta");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default function Services() {
   return (
@@ -23,6 +27,8 @@ export default function Services() {
           <PricingSection />
         </div>
       </div>
+
+      <NewsletterSection />
     </main>
   );
 }

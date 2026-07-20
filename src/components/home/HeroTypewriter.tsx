@@ -1,24 +1,24 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useTranslations } from "@/lib/i18n";
 
-const typingTexts = [
-  "Full Stack Developer",
-  "UI/UX Enthusiast",
-  "Open Source Contributor",
-  "Problem Solver",
-];
-
-export function HeroTypewriter() {
+export function HeroTypewriter({ texts }: { texts?: string[] }) {
+  const t = useTranslations("home.hero");
+  const defaultTexts = [
+    t("typewriter1"),
+    t("typewriter2"),
+    t("typewriter3"),
+    t("typewriter4"),
+  ];
+  const typingTexts = (texts && texts.length > 0) ? texts : defaultTexts;
   const [textIndex, setTextIndex] = useState(0);
-  // Start with first text fully visible so it's never empty
   const [charIndex, setCharIndex] = useState(typingTexts[0].length);
   const [isDeleting, setIsDeleting] = useState(false);
   const [started, setStarted] = useState(false);
 
   const pauseRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  // Delay the start of the animation cycle so the user sees the first text
   useEffect(() => {
     const t = setTimeout(() => setStarted(true), 2000);
     return () => clearTimeout(t);
@@ -56,7 +56,7 @@ export function HeroTypewriter() {
       clearTimeout(timeout);
       clearTimeout(pauseRef.current);
     };
-  }, [charIndex, isDeleting, textIndex, started]);
+  }, [charIndex, isDeleting, textIndex, started, typingTexts]);
 
   return (
     <div className="mt-4 h-10">

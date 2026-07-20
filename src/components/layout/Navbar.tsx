@@ -1,28 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { siteConfig } from "@/data/site-config";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { useSiteSettings } from "@/components/settings/SiteSettingsProvider";
+import { useTranslations } from "@/lib/i18n";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/services", label: "Services" },
-  { href: "/resume", label: "Resume" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
-];
+const i18nKeyMap: Record<string, string> = {
+  "/": "navigation.home",
+  "/about": "navigation.about",
+  "/portfolio": "navigation.portfolio",
+  "/services": "navigation.services",
+  "/resume": "navigation.resume",
+  "/blog": "navigation.blog",
+  "/contact": "navigation.contact",
+};
 
-export function Navbar() {
+export function Navbar({ hidden }: { hidden?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const translate = useTranslations();
+  const settings = useSiteSettings();
+
+  // Track pathname changes to close mobile menu
+  const prevPathname = useRef(pathname);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -31,8 +38,15 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    setIsOpen(false);
+    if (pathname !== prevPathname.current) {
+      prevPathname.current = pathname;
+      setIsOpen(false);
+    }
   }, [pathname]);
+
+  if (hidden) return null;
+
+  const navLinks = settings.navigationLinks;
 
   return (
     <header
@@ -48,38 +62,44 @@ export function Navbar() {
           href="/"
           className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white"
         >
-          {siteConfig.name.split(" ")[0]}
+          {settings.siteName.split(" ")[0]}
           <span className="text-blue-700">.</span>
         </Link>
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200",
-                pathname === link.href
-                  ? "text-zinc-900 dark:text-white"
-                  : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className="ml-2 pl-2 border-l border-zinc-200 dark:border-zinc-800">
+          {navLinks.map((link) => {
+            const i18nKey = i18nKeyMap[link.href];
+            const displayLabel = (i18nKey && translate(i18nKey)) || link.label;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200",
+                  pathname === link.href
+                    ? "text-zinc-900 dark:text-white"
+                    : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                )}
+              >
+                {displayLabel}
+              </Link>
+            );
+          })}
+          <div className="ml-2 pl-2 border-l border-zinc-200 dark:border-zinc-800 flex items-center gap-1">
+            <LanguageSwitcher variant="minimal" />
             <ThemeToggle />
           </div>
         </div>
 
         {/* Mobile menu button */}
         <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher variant="minimal" />
           <ThemeToggle />
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-            aria-label="Toggle menu"
+            aria-label={translate("navigation.toggleMenu")}
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -97,20 +117,24 @@ export function Navbar() {
             className="overflow-hidden border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950"
           >
             <div className="space-y-1 px-4 pb-4 pt-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                    pathname === link.href
-                      ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white"
-                      : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/50"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const i18nKey = i18nKeyMap[link.href];
+                const displayLabel = (i18nKey && translate(i18nKey)) || link.label;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={cn(
+                      "block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                      pathname === link.href
+                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white"
+                        : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/50"
+                    )}
+                  >
+                    {displayLabel}
+                  </Link>
+                );
+              })}
             </div>
           </motion.div>
         )}

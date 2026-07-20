@@ -3,79 +3,72 @@
 import Image from "next/image";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { siteConfig } from "@/data/site-config";
+import { useTranslations } from "@/lib/i18n";
+import { useSiteSettings } from "@/components/settings/SiteSettingsProvider";
 import { GithubIcon, LinkedInIcon, TwitterIcon } from "@/components/ui/SocialIcons";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { HeroTypewriter } from "@/components/home/HeroTypewriter";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  headline?: string | null;
+  description?: string | null;
+  primaryCta?: string | null;
+  primaryLink?: string | null;
+  secondaryCta?: string | null;
+  secondaryLink?: string | null;
+  heroTypewriterTexts?: string[];
+}
 
+export function HeroSection({ headline, description, primaryCta, primaryLink, secondaryCta, secondaryLink, heroTypewriterTexts }: HeroSectionProps) {
+  const t = useTranslations();
   return (
     <section className="relative flex min-h-[90vh] items-center overflow-hidden pt-16">
       {/* Background gradient */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-50 via-white to-white dark:from-blue-950/20 dark:via-zinc-950 dark:to-zinc-950" />
-        <div className="absolute right-0 top-0 h-[500px] w-[500px] -translate-y-1/4 translate-x-1/4 rounded-full bg-blue-500/10 blur-[120px]" />
-        <div className="absolute bottom-0 left-0 h-[400px] w-[400px] -translate-x-1/4 translate-y-1/4 rounded-full bg-purple-500/10 blur-[100px]" />
+        <div className="absolute right-0 top-0 h-[250px] w-[250px] -translate-y-1/4 translate-x-1/4 rounded-full bg-blue-500/10 blur-[120px] sm:h-[500px] sm:w-[500px]" />
+        <div className="absolute bottom-0 left-0 h-[200px] w-[200px] -translate-x-1/4 translate-y-1/4 rounded-full bg-purple-500/10 blur-[100px] sm:h-[400px] sm:w-[400px]" />
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">            {/* Left content - statically rendered for fast LCP */}
           <div>
             <p className="text-sm font-medium text-blue-700 dark:text-blue-400">
-              Hello, I&apos;m
+              {t("home.hero.hello")}
             </p>
             <h1 className="mt-2 text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl lg:text-6xl">
-              {siteConfig.name.split(" ")[0]}{" "}
-              <span className="text-blue-700 dark:text-blue-400">{siteConfig.name.split(" ")[1]}</span>
+              {headline ?? t("home.hero.headlineFallback")}
             </h1>
             {/* Typing effect - extracted into lightweight client component */}
-            <HeroTypewriter />
+            <HeroTypewriter texts={heroTypewriterTexts} />
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-700 dark:text-zinc-400">
-              {siteConfig.description}
+              {description ?? t("home.hero.descriptionFallback")}
             </p>
 
             {/* CTA buttons */}
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
-                href="/contact"
+                href={primaryLink ?? "/contact"}
                 className="inline-flex h-12 items-center gap-2 rounded-xl bg-zinc-900 px-6 text-sm font-medium text-white transition-all hover:bg-zinc-800 hover:shadow-lg dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
               >
-                Hire Me
+                {primaryCta ?? t("home.hero.hireMe")}
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/portfolio"
+                href={secondaryLink ?? "/portfolio"}
                 className="inline-flex h-12 items-center gap-2 rounded-xl border border-zinc-300 bg-transparent px-6 text-sm font-medium text-zinc-900 transition-all hover:bg-zinc-100 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800"
               >
-                View Projects
+                {secondaryCta ?? t("home.hero.viewProjects")}
               </Link>
             </div>
 
             {/* Social links */}
             <div className="mt-8 flex items-center gap-4">
               <span className="text-xs font-medium uppercase tracking-widest text-zinc-500">
-                Connect
+                {t("home.hero.connect")}
               </span>
               <span className="h-px w-8 bg-zinc-300 dark:bg-zinc-700" />
-              <div className="flex gap-3">
-                {[
-                  { icon: GithubIcon, href: siteConfig.links.github, label: "GitHub" },
-                  { icon: LinkedInIcon, href: siteConfig.links.linkedin, label: "LinkedIn" },
-                  { icon: TwitterIcon, href: siteConfig.links.twitter, label: "Twitter" },
-                ].map(({ icon: Icon, href, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-300 text-zinc-600 transition-all hover:border-zinc-900 hover:text-zinc-900 hover:shadow-md dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-100 dark:hover:text-zinc-100"
-                    aria-label={label}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </a>
-                ))}
-              </div>
+              <HeroSocialLinks />
             </div>
           </div>
 
@@ -87,7 +80,7 @@ export function HeroSection() {
                 <div className="relative h-full w-full">
                   <Image
                     src="/avatar.png"
-                    alt={siteConfig.name}
+                    alt="Emmett Anthony"
                     className="h-full w-full rounded-2xl object-cover shadow-xl ring-4 ring-white/80 dark:ring-zinc-800/80"
                     width={160}
                     height={160}
@@ -157,7 +150,7 @@ export function HeroSection() {
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                   </span>
                   <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    Available for work
+                    {t("home.hero.availableForWork")}
                   </span>
                 </div>
               </GlassCard>
@@ -165,7 +158,7 @@ export function HeroSection() {
                 <div className="flex items-center gap-2">
                   <span className="text-lg">🚀</span>
                   <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    Ship fast
+                    {t("home.hero.shipFast")}
                   </span>
                 </div>
               </GlassCard>
@@ -177,12 +170,38 @@ export function HeroSection() {
         <div className="mt-16 flex justify-center">
           <div className="animate-bounce flex flex-col items-center gap-2 text-zinc-500">
             <span className="text-xs font-medium uppercase tracking-widest">
-              Scroll
+              {t("home.hero.scroll")}
             </span>
             <ArrowDown className="h-4 w-4" />
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function HeroSocialLinks() {
+  const t = useTranslations("home.hero");
+  const settings = useSiteSettings();
+  const links = [
+    { icon: GithubIcon, href: settings.social.github, label: t("github") },
+    { icon: LinkedInIcon, href: settings.social.linkedin, label: t("linkedin") },
+    { icon: TwitterIcon, href: settings.social.twitter, label: t("twitter") },
+  ];
+  return (
+    <div className="flex gap-3">
+      {links.map(({ icon: Icon, href, label }) => (
+        <a
+          key={label}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-300 text-muted-foreground transition-all hover:border-zinc-900 hover:text-zinc-900 hover:shadow-md dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-100 dark:hover:text-zinc-100"
+          aria-label={label}
+        >
+          <Icon className="h-4 w-4" />
+        </a>
+      ))}
+    </div>
   );
 }

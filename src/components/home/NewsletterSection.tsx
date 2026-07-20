@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, ArrowRight, CheckCircle2 } from "lucide-react";
-import { SectionHeader } from "@/components/shared/SectionHeader";
+import { useTranslations } from "next-intl";
 
 export function NewsletterSection() {
+  const t = useTranslations("home");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "success">("idle");
 
@@ -32,17 +33,17 @@ export function NewsletterSection() {
             <Mail className="h-6 w-6" />
           </div>
           <h2 className="mt-4 text-2xl font-bold text-zinc-900 dark:text-white sm:text-3xl">
-            Stay Updated
+            {t("newsletter.title")}
           </h2>
-          <p className="mt-3 text-zinc-600 dark:text-zinc-400">
-            Get the latest articles and tutorials delivered to your inbox.
+          <p className="mt-3 text-muted-foreground dark:text-zinc-400">
+            {t("newsletter.description")}
           </p>
-          <form onSubmit={handleSubmit} className="mt-8 flex gap-3">
+          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-3">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={t("newsletter.placeholder")}
               className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:placeholder:text-zinc-500"
               required
             />
@@ -54,11 +55,11 @@ export function NewsletterSection() {
               {status === "success" ? (
                 <>
                   <CheckCircle2 className="h-4 w-4" />
-                  Subscribed
+                  {t("newsletter.success")}
                 </>
               ) : (
                 <>
-                  Subscribe
+                  {t("newsletter.button")}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}

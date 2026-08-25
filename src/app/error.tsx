@@ -23,7 +23,7 @@ export default function Error({
       <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
         {t("error.title")}
       </h1>
-      <p className="max-w-sm text-center text-sm text-zinc-500 dark:text-zinc-500">
+      <p className="max-w-sm text-center text-sm text-zinc-500 dark:text-zinc-400">
         {error.message || t("error.title")}
       </p>
       <div className="flex items-center gap-3">

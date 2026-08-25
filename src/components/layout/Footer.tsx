@@ -111,7 +111,7 @@ export function Footer({ hidden }: { hidden?: boolean }) {
         </div>
 
         <div className="mt-16 border-t border-zinc-200 pt-8 dark:border-zinc-800">
-          <p className="text-center text-sm text-zinc-500 dark:text-zinc-500">
+          <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
             &copy; {new Date().getFullYear()} {settings.siteName}. {t("footer.copyright")}
           </p>
         </div>

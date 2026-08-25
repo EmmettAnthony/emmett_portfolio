@@ -71,7 +71,7 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
           <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
             {project.category}
           </span>
-          <span className="text-xs text-zinc-500">{project.year}</span>
+          <span className="text-xs text-zinc-500 dark:text-zinc-400">{project.year}</span>
         </div>
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
           {project.title}

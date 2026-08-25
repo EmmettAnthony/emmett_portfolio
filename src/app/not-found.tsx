@@ -21,7 +21,7 @@ export default function NotFound() {
       <p className="text-xl font-medium text-zinc-700 dark:text-muted-foreground">
         {t("notFound.title")}
       </p>
-      <p className="max-w-sm text-center text-sm text-zinc-500 dark:text-zinc-500">
+      <p className="max-w-sm text-center text-sm text-zinc-500 dark:text-zinc-400">
         {t("notFound.description")}
       </p>
       <Link

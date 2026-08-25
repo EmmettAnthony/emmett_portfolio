@@ -38,6 +38,7 @@ jobs:
         with:
           coverage: "false"
           lighthouse: "false"
+          build-logs: "false"
 
   ##############################################################################
   # PLAYWRIGHT ACCESSIBILITY AUDIT
@@ -61,14 +62,7 @@ jobs:
           npm run start &
           npx wait-on http://localhost:3000 --timeout 30000
       - name: Run A11y Scans
-        run: |
-          mkdir -p a11y-reports
-          PAGES=("/" "/about" "/portfolio" "/services" "/blog" "/contact" "/resume" "/admin/login" "/book" "/support")
-          for page in "${PAGES[@]}"; do
-            name=$(echo "$page" | tr '/' '_' | sed 's/^_//' || echo "home")
-            echo "🔍 Scanning: $page"
-            npx playwright test --grep "@a11y" 2>/dev/null || true
-          done
+        run: npx playwright test e2e/a11y.spec.ts --project=chromium --reporter=list
       - name: Stop Server
         if: always()
         run: kill $(lsof -t -i:3000) 2>/dev/null || true
@@ -87,18 +81,26 @@ jobs:
           echo "" >> a11y-report.md
           echo "### ARIA Attribute Check" >> a11y-report.md
           echo 'Checking for common ARIA issues...' >> a11y-report.md
-          if grep -r "aria-label=\"\"" src/components/ --include="*.tsx" 2>/dev/null; then
-            echo "⚠️ Found empty aria-labels" >> a11y-report.md
+          EMPTY_ARIA=$(grep -r 'aria-label=""' src/components/ --include="*.tsx" 2>/dev/null || true)
+          if [ -n "$EMPTY_ARIA" ]; then
+            echo "⚠️ Found empty aria-labels:" >> a11y-report.md
+            echo "$EMPTY_ARIA" >> a11y-report.md
           else
             echo "✅ No empty aria-labels found" >> a11y-report.md
           fi
-          if grep -r "role=" src/components/ --include="*.tsx" 2>/dev/null | head -20; then
-            echo "✅ ARIA roles found in components" >> a11y-report.md
+          ARIA_ROLES=$(grep -r 'role=' src/components/ --include="*.tsx" 2>/dev/null | head -20 || true)
+          if [ -n "$ARIA_ROLES" ]; then
+            echo "✅ ARIA roles found in components:" >> a11y-report.md
+            echo "$ARIA_ROLES" >> a11y-report.md
           fi
           echo "" >> a11y-report.md
           echo "### Alt Text Check" >> a11y-report.md
-          if grep -r "alt={\"\"}" src/components/ --include="*.tsx" 2>/dev/null; then
-            echo "⚠️ Found decorative images without proper alt text" >> a11y-report.md
+          EMPTY_ALT=$(grep -r 'alt={""}' src/components/ --include="*.tsx" 2>/dev/null || true)
+          if [ -n "$EMPTY_ALT" ]; then
+            echo "⚠️ Found decorative images without proper alt text:" >> a11y-report.md
+            echo "$EMPTY_ALT" >> a11y-report.md
+          else
+            echo "✅ No empty alt text found" >> a11y-report.md
           fi
           cat a11y-report.md
 
@@ -112,16 +114,24 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check Keyboard Accessibility
         run: |
-          echo "## ⌨️ Keyboard Navigation Check" >> a11y-report.md
+          echo "## ⌨️ Keyboard Navigation Check" > a11y-report.md
           echo "" >> a11y-report.md
           echo "Checking for keyboard accessibility patterns..." >> a11y-report.md
-          if grep -r "onKeyDown\|onKeyPress\|tabIndex" src/components/ --include="*.tsx" 2>/dev/null | head -20; then
-            echo "✅ Keyboard event handlers found" >> a11y-report.md
+          KB_EVENTS=$(grep -r 'onKeyDown\|onKeyPress\|tabIndex' src/components/ --include="*.tsx" 2>/dev/null | head -20 || true)
+          if [ -n "$KB_EVENTS" ]; then
+            echo "✅ Keyboard event handlers found:" >> a11y-report.md
+            echo "$KB_EVENTS" >> a11y-report.md
+          else
+            echo "⚠️ No keyboard event handlers found" >> a11y-report.md
           fi
           echo "" >> a11y-report.md
           echo "### Focus Management" >> a11y-report.md
-          if grep -r "focus\|useRef" src/components/ui/ --include="*.tsx" 2>/dev/null | head -10; then
-            echo "✅ Focus management patterns found" >> a11y-report.md
+          FOCUS=$(grep -r 'focus\|useRef' src/components/ui/ --include="*.tsx" 2>/dev/null | head -10 || true)
+          if [ -n "$FOCUS" ]; then
+            echo "✅ Focus management patterns found:" >> a11y-report.md
+            echo "$FOCUS" >> a11y-report.md
+          else
+            echo "⚠️ No focus management patterns found" >> a11y-report.md
           fi
           cat a11y-report.md
 
@@ -135,11 +145,25 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate Color Contrast
         run: |
-          echo "## 🎨 Color Contrast Check" >> a11y-report.md
+          echo "## 🎨 Color Contrast Check" > a11y-report.md
           echo "" >> a11y-report.md
           echo "Checking Tailwind config for accessible colors..." >> a11y-report.md
+          # Tailwind v4 uses CSS-based config (no JS config file)
           if [ -f "tailwind.config.ts" ] || [ -f "tailwind.config.js" ]; then
-            echo "✅ Tailwind config found" >> a11y-report.md
+            echo "✅ Tailwind JS config found" >> a11y-report.md
+          elif grep -q '@import "tailwindcss"' src/app/globals.css 2>/dev/null; then
+            echo "✅ Tailwind v4 CSS-based config detected" >> a11y-report.md
+          else
+            echo "⚠️ No Tailwind config found" >> a11y-report.md
+          fi
+          echo "" >> a11y-report.md
+          echo "### Dark mode color contrast spot-check" >> a11y-report.md
+          LOW_CONTRAST=$(grep -rn 'text-zinc-500 dark:text-zinc-500' src/ --include="*.tsx" 2>/dev/null || true)
+          if [ -n "$LOW_CONTRAST" ]; then
+            echo "⚠️ Found text-zinc-500 dark:text-zinc-500 (may fail dark-mode contrast):" >> a11y-report.md
+            echo "$LOW_CONTRAST" >> a11y-report.md
+          else
+            echo "✅ No known low-contrast patterns found" >> a11y-report.md
           fi
           cat a11y-report.md
 

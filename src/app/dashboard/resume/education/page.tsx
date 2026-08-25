@@ -22,7 +22,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/toast";
-import type { EducationFormData } from "@/lib/validations/resume";
 
 interface Education {
   id: string;

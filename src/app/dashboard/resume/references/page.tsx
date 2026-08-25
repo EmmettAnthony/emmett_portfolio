@@ -16,7 +16,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/toast";
-import type { ReferenceFormData } from "@/lib/validations/resume";
 
 interface Reference {
   id: string;

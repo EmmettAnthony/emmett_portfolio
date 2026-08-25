@@ -14,7 +14,6 @@ import {
   TYPE_LABELS
 } from "@/types/notifications";
 import { useToast } from "@/components/ui/toast";
-import type { NotificationType, NotificationCategory, NotificationPriority, NotificationData } from "@/types/notifications";
 
 const typeIcons: Record<NotificationType, typeof Bell> = {
   INFO: Info,

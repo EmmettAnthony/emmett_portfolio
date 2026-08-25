@@ -27,12 +27,30 @@ jobs:
     name: Lighthouse Audit
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: portfolio_lh
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup
         with:
           prisma-generate: "true"
+
+      - uses: ./.github/actions/prisma
+        with:
+          database-url: postgresql://postgres:postgres@localhost:5432/portfolio_lh
 
       - name: Build Application
         run: npm run build

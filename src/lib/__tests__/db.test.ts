@@ -11,15 +11,8 @@ vi.mock("@prisma/client", () => ({
   PrismaClient: MockPrismaClient,
 }));
 
-const MockPrismaPg = vi.hoisted(() => vi.fn());
-
-vi.mock("@prisma/adapter-pg", () => ({
-  PrismaPg: MockPrismaPg,
-}));
-
 beforeEach(() => {
   MockPrismaClient.mockClear();
-  MockPrismaPg.mockClear();
   vi.resetModules();
   delete (globalThis as any).prisma;
   delete process.env.DATABASE_URL;
@@ -35,14 +28,12 @@ describe("getPrisma", () => {
   });
 
   it("creates new PrismaClient when DATABASE_URL is set and no existing instance", async () => {
-    process.env.DATABASE_URL = "postgresql://localhost/mydb";
+    process.env.DATABASE_URL = "file:./dev.db";
     const { getPrisma } = await import("../db");
     const instance = getPrisma();
     expect(instance).toBe(mockPrismaInstance);
     const { PrismaClient } = await import("@prisma/client");
-    const { PrismaPg } = await import("@prisma/adapter-pg");
     expect(PrismaClient).toHaveBeenCalledTimes(1);
-    expect(PrismaPg).toHaveBeenCalledWith({ connectionString: "postgresql://localhost/mydb" });
   });
 
   it("throws when DATABASE_URL is not set", async () => {
@@ -53,7 +44,7 @@ describe("getPrisma", () => {
   });
 
   it("returns same instance on subsequent calls (singleton)", async () => {
-    process.env.DATABASE_URL = "postgresql://localhost/mydb";
+    process.env.DATABASE_URL = "file:./dev.db";
     const { getPrisma } = await import("../db");
     const instance1 = getPrisma();
     const instance2 = getPrisma();
@@ -65,7 +56,7 @@ describe("getPrisma", () => {
 
 describe("prisma proxy", () => {
   it("forwards property access to getPrisma()", async () => {
-    process.env.DATABASE_URL = "postgresql://localhost/mydb";
+    process.env.DATABASE_URL = "file:./dev.db";
     const { prisma } = await import("../db");
     expect(prisma.$connect).toBe(mockPrismaInstance.$connect);
     const { PrismaClient } = await import("@prisma/client");

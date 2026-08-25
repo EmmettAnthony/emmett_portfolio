@@ -22,10 +22,10 @@ export async function GET(req: NextRequest) {
       const where: Record<string, unknown> = {};
       if (search) {
         where.OR = [
-          { email: { contains: search, mode: "insensitive" as const } },
-          { firstName: { contains: search, mode: "insensitive" as const } },
-          { lastName: { contains: search, mode: "insensitive" as const } },
-          { company: { contains: search, mode: "insensitive" as const } },
+          { email: { contains: search } },
+          { firstName: { contains: search } },
+          { lastName: { contains: search } },
+          { company: { contains: search } },
         ];
       }
       if (status) where.status = status;
@@ -68,10 +68,10 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = {};
     if (search) {
       where.OR = [
-        { email: { contains: search, mode: "insensitive" as const } },
-        { firstName: { contains: search, mode: "insensitive" as const } },
-        { lastName: { contains: search, mode: "insensitive" as const } },
-        { company: { contains: search, mode: "insensitive" as const } },
+        { email: { contains: search } },
+        { firstName: { contains: search } },
+        { lastName: { contains: search } },
+        { company: { contains: search } },
       ];
     }
     if (status) where.status = status;
@@ -338,7 +338,7 @@ export async function POST(req: NextRequest) {
         if (toCreate.length > 0) {
           for (let i = 0; i < toCreate.length; i += CHUNK_SIZE) {
             const chunk = toCreate.slice(i, i + CHUNK_SIZE);
-            await tx.contactListMember.createMany({ data: chunk, skipDuplicates: true });
+            await tx.contactListMember.createMany({ data: chunk });
           }
         }
 

@@ -148,20 +148,14 @@ async function processAbTestWinnerPromotion() {
 
   for (const campaign of campaigns) {
     try {
-      const [aOpens, bOpens, aSent, bSent] = await Promise.all([
-        prisma.campaignEvent.count({
-          where: { campaignId: campaign.id, eventType: "opened", metadata: { path: ["variant"], equals: "A" } },
-        }),
-        prisma.campaignEvent.count({
-          where: { campaignId: campaign.id, eventType: "opened", metadata: { path: ["variant"], equals: "B" } },
-        }),
-        prisma.campaignEvent.count({
-          where: { campaignId: campaign.id, eventType: "sent", metadata: { path: ["variant"], equals: "A" } },
-        }),
-        prisma.campaignEvent.count({
-          where: { campaignId: campaign.id, eventType: "sent", metadata: { path: ["variant"], equals: "B" } },
-        }),
-      ] as const);
+      const allEvents = await prisma.campaignEvent.findMany({
+        where: { campaignId: campaign.id },
+        select: { eventType: true, metadata: true },
+      });
+      const aOpens = allEvents.filter(e => e.eventType === "opened" && (e.metadata as Record<string, string> | null)?.variant === "A").length;
+      const bOpens = allEvents.filter(e => e.eventType === "opened" && (e.metadata as Record<string, string> | null)?.variant === "B").length;
+      const aSent = allEvents.filter(e => e.eventType === "sent" && (e.metadata as Record<string, string> | null)?.variant === "A").length;
+      const bSent = allEvents.filter(e => e.eventType === "sent" && (e.metadata as Record<string, string> | null)?.variant === "B").length;
 
       if (aSent === 0 && bSent === 0) continue;
 

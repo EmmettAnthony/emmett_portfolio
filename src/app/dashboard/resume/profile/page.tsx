@@ -88,8 +88,8 @@ export default function ProfilePage() {
         yearsOfExperience: r.yearsOfExperience ?? null,
         summary: r.summary ?? null,
         summaryTitle: r.summaryTitle ?? null,
-        specializations: r.specializations ?? [],
-        socialLinks: r.socialLinks ?? [],
+        specializations: Array.isArray(r.specializations) ? r.specializations as string[] : [],
+        socialLinks: Array.isArray(r.socialLinks) ? r.socialLinks : [],
         email: r.email ?? null,
         phone: r.phone ?? null,
         website: r.website ?? null,
@@ -99,8 +99,8 @@ export default function ProfilePage() {
         ogImage: r.ogImage ?? null,
         published: r.published ?? false,
       });
-      setSocialLinks(r.socialLinks ?? []);
-      setSpecializationsInput((r.specializations ?? []).join(", "));
+      setSocialLinks(Array.isArray(r.socialLinks) ? r.socialLinks : []);
+      setSpecializationsInput((Array.isArray(r.specializations) ? r.specializations as string[] : []).join(", "));
       if (r.visibility && typeof r.visibility === "object") {
         setVisibility(r.visibility as Record<string, boolean>);
       }

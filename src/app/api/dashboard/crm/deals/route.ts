@@ -21,8 +21,8 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { notes: { contains: search, mode: "insensitive" } },
+        { name: { contains: search } },
+        { notes: { contains: search } },
       ];
     }
     if (stage) where.stage = stage;

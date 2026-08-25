@@ -154,11 +154,11 @@ export default function EditServicePage() {
         categoryId: service.categoryId || "",
         icon: service.icon || "",
         featuredImage: service.featuredImage || "",
-        galleryImages: service.galleryImages || [],
-        features: service.features || [],
-        benefits: service.benefits || [],
-        technologies: service.technologies || [],
-        deliverables: service.deliverables || [],
+        galleryImages: Array.isArray(service.galleryImages) ? service.galleryImages as string[] : [],
+        features: Array.isArray(service.features) ? service.features as string[] : [],
+        benefits: Array.isArray(service.benefits) ? service.benefits as string[] : [],
+        technologies: Array.isArray(service.technologies) ? service.technologies as string[] : [],
+        deliverables: Array.isArray(service.deliverables) ? service.deliverables as string[] : [],
         estimatedTimeline: service.estimatedTimeline || "",
         startingPrice: service.startingPrice ? String(service.startingPrice) : "",
         featured: service.featured || false,
@@ -167,8 +167,8 @@ export default function EditServicePage() {
         metaDescription: service.metaDescription || "",
         ogImage: service.ogImage || "",
         canonicalUrl: service.canonicalUrl || "",
-        tags: service.tags || [],
-        testimonialIds: service.testimonialIds || [],
+        tags: Array.isArray(service.tags) ? service.tags as string[] : [],
+        testimonialIds: Array.isArray(service.testimonialIds) ? service.testimonialIds as string[] : [],
       });
     }
   }, [service, reset]);
@@ -373,7 +373,7 @@ export default function EditServicePage() {
     setEditPackage(pkg);
     setPkgForm({
       name: pkg.name, description: pkg.description ?? "", price: pkg.price.toString(),
-      features: pkg.features, deliveryTime: pkg.deliveryTime ?? "", revisions: pkg.revisions,
+      features: Array.isArray(pkg.features) ? pkg.features as string[] : [], deliveryTime: pkg.deliveryTime ?? "", revisions: pkg.revisions,
       supportDuration: pkg.supportDuration ?? "", isPopular: pkg.isPopular, order: pkg.order,
     });
     setPkgFormErrors({});

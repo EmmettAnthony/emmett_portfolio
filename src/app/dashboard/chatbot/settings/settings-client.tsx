@@ -237,8 +237,8 @@ export function SettingsClient({ settings }: { settings: SettingsData }) {
             { key: "enableAnalytics", label: t("analytics") },
           ].map(({ key, label }) => (
             <label key={key} className="flex items-center gap-3 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic form key access */}
-              <input type="checkbox" checked={(form as Record<string, unknown>)[key] as boolean} onChange={(e) => update(key as keyof SettingsData, e.target.checked)}
+              {}
+              <input type="checkbox" checked={(form as unknown as Record<string, unknown>)[key] as boolean} onChange={(e) => update(key as keyof SettingsData, e.target.checked)}
                 className="h-4 w-4 rounded border-zinc-300 text-blue-600" />
               <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{label}</span>
             </label>

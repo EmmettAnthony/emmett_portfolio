@@ -55,7 +55,7 @@ export function ConversationsClient({ initialData }: { initialData: Record<strin
   const t = useTranslations("dashboard.chatbotConversations");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [data] = useState<Record<string, unknown>>(initialData);
+  const [data] = useState<{ conversations: Conversation[]; total: number }>(initialData as { conversations: Conversation[]; total: number });
 
   const filtered = data.conversations.filter((c: Conversation) => {
     if (search && !c.visitorName?.toLowerCase().includes(search.toLowerCase()) && !c.visitorEmail?.toLowerCase().includes(search.toLowerCase())) return false;

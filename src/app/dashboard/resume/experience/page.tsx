@@ -103,9 +103,9 @@ export default function ExperiencePage() {
       startDate: exp.startDate ? exp.startDate.split("T")[0] : "",
       endDate: exp.endDate ? exp.endDate.split("T")[0] : null,
       current: exp.current,
-      responsibilities: exp.responsibilities,
-      achievements: exp.achievements,
-      technologies: exp.technologies,
+      responsibilities: Array.isArray(exp.responsibilities) ? exp.responsibilities as string[] : [],
+      achievements: Array.isArray(exp.achievements) ? exp.achievements as string[] : [],
+      technologies: Array.isArray(exp.technologies) ? exp.technologies as string[] : [],
       order: exp.order,
     });
     setEditingId(exp.id);

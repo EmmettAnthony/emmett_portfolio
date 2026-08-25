@@ -72,7 +72,7 @@ export function Biography({ about }: { about: AboutPageData | null }) {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="mt-8 grid gap-3 sm:grid-cols-2"
             >
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic field access */}
+              {}
               {(about?.whyWorkWithMe?.length ? about.whyWorkWithMe.map((w: Record<string, unknown>) => String(w.title ?? "")) : fallbackHighlights).map((item: string) => (
                 <div
                   key={item}

@@ -1,6 +1,16 @@
 const EMBEDDING_MODEL = "text-embedding-3-small";
 const EMBEDDING_DIMENSIONS = 1536;
 
+function cosineSimilarity(a: number[], b: number[]): number {
+  let dot = 0, magA = 0, magB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    magA += a[i] * a[i];
+    magB += b[i] * b[i];
+  }
+  return dot / (Math.sqrt(magA) * Math.sqrt(magB));
+}
+
 export async function generateEmbedding(text: string): Promise<number[] | null> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
@@ -34,15 +44,20 @@ export async function searchByVector(query: string, limit = 5): Promise<string[]
 
   try {
     const { prisma } = await import("@/lib/db");
-    const vectorStr = `[${embedding.join(",")}]`;
+    const entries = await prisma.knowledgeBase.findMany({
+      where: { enabled: true, embedding: { not: null } },
+      select: { id: true, title: true, content: true, embedding: true },
+    });
 
-    const results = await prisma.$queryRawUnsafe<{ id: string }[]>(
-      `SELECT id FROM "knowledge_base" WHERE enabled = true AND embedding IS NOT NULL ORDER BY embedding <=> $1::vector LIMIT $2`,
-      vectorStr,
-      limit
-    );
+    const scored = entries
+      .map((e) => {
+        const vec = JSON.parse(e.embedding!) as number[];
+        return { id: e.id, score: cosineSimilarity(embedding, vec) };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
 
-    return results.map((r) => r.id);
+    return scored.map((r) => r.id);
   } catch {
     return [];
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import type { NotificationBusEvent } from "@/lib/notifications/notification-bus";
+
 
 describe("NotificationBus", () => {
   it("offNotification removes a specific listener", async () => {

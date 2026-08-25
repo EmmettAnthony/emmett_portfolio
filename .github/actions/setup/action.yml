@@ -42,6 +42,10 @@ runs:
         restore-keys: |
           ${{ runner.os }}-node-
 
+    - name: Pin npm version
+      shell: bash
+      run: npm i -g npm@10
+
     - name: Install dependencies
       if: steps.npm-cache.outputs.cache-hit != 'true' && inputs.restore-cache-only != 'true'
       shell: bash

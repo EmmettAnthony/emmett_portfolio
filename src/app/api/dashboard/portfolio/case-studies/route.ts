@@ -42,6 +42,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
+    const { projectId } = body;
     const parsed = caseStudySchema.safeParse(body);
 
     if (!parsed.success) {
@@ -50,8 +51,6 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-
-
 
     if (!projectId) {
       return NextResponse.json(

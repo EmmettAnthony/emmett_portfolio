@@ -227,7 +227,7 @@ model ProjectDailyView {
   id        String           @id @default(cuid())
   projectId String
   project   PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  date      DateTime         @db.Date
+  date      DateTime
   count     Int              @default(1)
 
   @@unique([projectId, date])
@@ -781,7 +781,7 @@ model Availability {
 // ─── Date Exceptions (holidays, vacations, blocked dates) ─────────────────────
 model DateException {
   id          String   @id @default(cuid())
-  date        DateTime @db.Date
+  date        DateTime
   type        String   // HOLIDAY, VACATION, BLOCKED, SPECIAL_HOURS
   title       String?
   isAvailable Boolean  @default(false)
@@ -2277,7 +2277,7 @@ model ChatConversation {
   leadId          String?
   feedbackScore   Int?
   isHighPriority  Boolean        @default(false)
-  tags            String[]
+  tags            Json      @default("[]")
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   lastActivityAt  DateTime       @default(now())
@@ -2327,10 +2327,10 @@ model KnowledgeBase {
   content     String
   categoryId  String?
   category    KnowledgeCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  tags        String[]
+  tags        Json      @default("[]")
   source      String?
   sourceUrl   String?
-  embedding   Unsupported("vector(1536)")?
+  embedding   String?
   enabled     Boolean            @default(true)
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
@@ -2348,7 +2348,7 @@ model PromptTemplate {
   description String?
   prompt      String
   category    String
-  variables   String[]
+  variables   Json      @default("[]")
   isSystem    Boolean  @default(false)
   enabled     Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -2394,8 +2394,8 @@ model ChatSettings {
   maxTokens               Int      @default(4000)
   systemPrompt            String   @default("")
   welcomeMessage          String   @default("Hi! I'm Emmett's AI assistant. How can I help you today?")
-  suggestedQuestions      String[] @default([])
-  blockedWords            String[] @default([])
+  suggestedQuestions      Json     @default("[]")
+  blockedWords            Json     @default("[]")
   rateLimitPerMinute      Int      @default(10)
   rateLimitPerDay         Int      @default(500)
   maxConversationLength   Int      @default(100)
@@ -2688,7 +2688,7 @@ model SupportTicket {
 
 model SupportReply {
   id          String         @id @default(cuid())
-  body        String         @db.Text
+  body        String
   isInternal  Boolean        @default(false) // Staff-only notes
   isStaff     Boolean        @default(false)
   staffName   String?
@@ -2730,7 +2730,7 @@ model SupportMacro {
   id          String   @id @default(cuid())
   title       String
   slug        String   @unique
-  body        String   @db.Text
+  body        String
   category    String?  // welcome, password_reset, booking, payment, project_started, project_completed, general
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
@@ -2787,7 +2787,7 @@ model SupportKnowledgeArticle {
   title         String
   slug          String                   @unique
   excerpt       String?
-  content       String                   @db.Text
+  content       String
   imageUrl      String?
   videoUrl      String?
   readingTime   Int?                     // Minutes
@@ -2813,7 +2813,7 @@ model SupportKnowledgeArticle {
 model FAQ {
   id          String   @id @default(cuid())
   question    String
-  answer      String   @db.Text
+  answer      String
   category    String?  // general, billing, technical, account, support, other
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)

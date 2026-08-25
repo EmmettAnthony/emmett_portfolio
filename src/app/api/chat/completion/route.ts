@@ -66,9 +66,10 @@ export async function POST(request: NextRequest) {
 
     // ── Blocked words check ──────────────────────────────────────────────
     const userMessage = parsed.messages[parsed.messages.length - 1];
-    if (userMessage.role === "user" && settings?.blockedWords?.length) {
+    const blockedWords = Array.isArray(settings?.blockedWords) ? (settings.blockedWords as string[]) : [];
+    if (userMessage.role === "user" && blockedWords.length) {
       const lowerMsg = userMessage.content.toLowerCase();
-      const matchedBlocked = settings.blockedWords.find((word) =>
+      const matchedBlocked = blockedWords.find((word) =>
         lowerMsg.includes(word.toLowerCase())
       );
       if (matchedBlocked) {

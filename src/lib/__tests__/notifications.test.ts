@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockFindMany = vi.fn();
 const mockCount = vi.fn();
@@ -224,8 +224,8 @@ describe("notifications", () => {
       await getNotifications({ search: "test" });
       const where = mockFindMany.mock.calls[0][0].where;
       expect(where.OR).toEqual([
-        { title: { contains: "test", mode: "insensitive" } },
-        { message: { contains: "test", mode: "insensitive" } },
+        { title: { contains: "test" } },
+        { message: { contains: "test" } },
       ]);
     });
 
@@ -236,8 +236,8 @@ describe("notifications", () => {
       expect(where.AND).toBeDefined();
       expect(where.AND[0]).toEqual({ OR: [{ userId: "user-1" }, { userId: null }] });
       expect(where.AND[1]).toEqual({ OR: [
-        { title: { contains: "hello", mode: "insensitive" } },
-        { message: { contains: "hello", mode: "insensitive" } },
+        { title: { contains: "hello" } },
+        { message: { contains: "hello" } },
       ] });
     });
 

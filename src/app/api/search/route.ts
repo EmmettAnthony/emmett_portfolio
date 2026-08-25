@@ -22,9 +22,9 @@ export async function GET(request: NextRequest) {
         where: {
           published: true,
           OR: [
-            { title: { contains: query, mode: "insensitive" } },
-            { shortDescription: { contains: query, mode: "insensitive" } },
-            { fullDescription: { contains: query, mode: "insensitive" } },
+            { title: { contains: query } },
+            { shortDescription: { contains: query } },
+            { fullDescription: { contains: query } },
             { tags: { string_contains: query } },
           ],
         },
@@ -41,9 +41,9 @@ export async function GET(request: NextRequest) {
         where: {
           published: true,
           OR: [
-            { title: { contains: query, mode: "insensitive" } },
-            { excerpt: { contains: query, mode: "insensitive" } },
-            { tags: { contains: query, mode: "insensitive" } },
+            { title: { contains: query } },
+            { excerpt: { contains: query } },
+            { tags: { contains: query } },
           ],
         },
         select: {
@@ -59,9 +59,9 @@ export async function GET(request: NextRequest) {
         where: {
           published: true,
           OR: [
-            { title: { contains: query, mode: "insensitive" } },
-            { shortDescription: { contains: query, mode: "insensitive" } },
-            { fullDescription: { contains: query, mode: "insensitive" } },
+            { title: { contains: query } },
+            { shortDescription: { contains: query } },
+            { fullDescription: { contains: query } },
             { tags: { string_contains: query } },
           ],
         },

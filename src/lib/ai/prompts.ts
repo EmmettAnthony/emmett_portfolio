@@ -77,8 +77,8 @@ export async function getKnowledgeContext(query: string): Promise<string> {
     where: {
       enabled: true,
       OR: [
-        { title: { contains: query, mode: "insensitive" } },
-        { content: { contains: query, mode: "insensitive" } },
+        { title: { contains: query } },
+        { content: { contains: query } },
         { tags: { has: query.toLowerCase() } },
       ],
     },

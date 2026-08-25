@@ -175,9 +175,7 @@ describe("Notification Bus E2E: POST /api/dashboard/crm/leads → notifyCrmLeadC
       }),
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- non-standard second param
-const response = await (// eslint-disable-next-line @typescript-eslint/no-explicit-any -- NextRequest type compat
-POST as any)(request, { userId: "admin-1" });
+    const response = await (POST as any)(request, { userId: "admin-1" });
 
     expect(response.status).toBe(201);
 

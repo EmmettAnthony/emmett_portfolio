@@ -608,11 +608,11 @@ export async function searchTicketsAction(params: unknown) {
 
   if (parsed.search) {
     where.OR = [
-      { ticketNumber: { contains: parsed.search, mode: "insensitive" } },
-      { subject: { contains: parsed.search, mode: "insensitive" } },
-      { description: { contains: parsed.search, mode: "insensitive" } },
-      { fullName: { contains: parsed.search, mode: "insensitive" } },
-      { email: { contains: parsed.search, mode: "insensitive" } },
+      { ticketNumber: { contains: parsed.search } },
+      { subject: { contains: parsed.search } },
+      { description: { contains: parsed.search } },
+      { fullName: { contains: parsed.search } },
+      { email: { contains: parsed.search } },
     ];
   }
 
@@ -620,7 +620,7 @@ export async function searchTicketsAction(params: unknown) {
   if (parsed.priorityId) where.priorityId = parsed.priorityId;
   if (parsed.categoryId) where.categoryId = parsed.categoryId;
   if (parsed.assignedToId) where.assignedToId = parsed.assignedToId;
-  if (parsed.email) where.email = { contains: parsed.email, mode: "insensitive" };
+  if (parsed.email) where.email = { contains: parsed.email };
 
   const orderBy: Prisma.SupportTicketOrderByWithRelationInput =
     parsed.sort === "oldest" ? { createdAt: "asc" } : { createdAt: "desc" };
@@ -688,15 +688,10 @@ export async function getTicketStatsAction() {
     prisma.supportTicket.count({ where: { closedAt: { gte: todayStart } } }),
     prisma.supportRating.findMany({ select: { rating: true } }),
     prisma.supportTicket.aggregate({ _avg: { responseTime: true }, where: { responseTime: { not: null } } }),
-    prisma.supportTicket.aggregate({ _avg: { resolutionTime: true }, where: { resolutionTime: { not: null } } }),
     prisma.supportTicket.findMany({
       where: { createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
       select: { createdAt: true, category: { select: { name: true } } },
       orderBy: { createdAt: "asc" },
-    }),
-    prisma.supportCategory.findMany({
-      where: { isActive: true },
-      select: { name: true, _count: { select: { tickets: true } } },
     }),
     prisma.user.findMany({
       where: { assignedTickets: { some: {} } },

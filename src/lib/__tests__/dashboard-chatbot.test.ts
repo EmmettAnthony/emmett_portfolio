@@ -130,8 +130,8 @@ describe("getChatbotConversations", () => {
 
     const where = mockConvFindMany.mock.calls[0][0].where;
     expect(where.OR).toEqual([
-      { visitorName: { contains: "john", mode: "insensitive" } },
-      { visitorEmail: { contains: "john", mode: "insensitive" } },
+      { visitorName: { contains: "john" } },
+      { visitorEmail: { contains: "john" } },
     ]);
   });
 

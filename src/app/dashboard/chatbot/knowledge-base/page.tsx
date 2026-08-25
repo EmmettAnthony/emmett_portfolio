@@ -23,7 +23,7 @@ export default async function KnowledgeBasePage() {
     title: item.title,
     content: item.content,
     category: item.category ? { id: item.category.id, name: item.category.name, color: item.category.color } : null,
-    tags: item.tags,
+    tags: Array.isArray(item.tags) ? item.tags as string[] : [],
     source: item.source,
     enabled: item.enabled,
     createdAt: item.createdAt.toISOString(),

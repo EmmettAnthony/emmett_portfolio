@@ -24,7 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { UploadButton } from "@/lib/uploadthing-client";
 import { TestimonialSelector } from "@/components/services/TestimonialSelector";
-import type { PortfolioProjectForm, CaseStudyForm } from "@/lib/validations/portfolio";
+import { PortfolioProjectForm } from "@/lib/validations/portfolio";
 
 type Category = { id: string; name: string; slug: string };
 type Technology = { id: string; name: string; slug: string };
@@ -169,7 +169,7 @@ export default function EditPortfolioPage() {
         featuredImage: p.featuredImage || "",
         thumbnailImage: p.thumbnailImage || "",
         projectLogo: p.projectLogo || "",
-        galleryImages: Array.isArray(p.galleryImages) ? p.galleryImages : [],
+        galleryImages: Array.isArray(p.galleryImages) ? p.galleryImages as string[] : [],
         videoDemo: p.videoDemo || "",
         startDate: p.startDate ? p.startDate.split("T")[0] : "",
         completionDate: p.completionDate ? p.completionDate.split("T")[0] : "",
@@ -184,9 +184,9 @@ export default function EditPortfolioPage() {
         demoUrl: p.demoUrl || "",
         caseStudyUrl: p.caseStudyUrl || "",
         technologyIds: p.technologies?.map((t) => t.id) || [],
-        tags: Array.isArray(p.tags) ? p.tags : [],
-        awards: Array.isArray(p.awards) ? p.awards : [],
-        testimonialIds: Array.isArray(p.testimonialIds) ? p.testimonialIds : [],
+        tags: Array.isArray(p.tags) ? p.tags as string[] : [],
+        awards: Array.isArray(p.awards) ? p.awards as string[] : [],
+        testimonialIds: Array.isArray(p.testimonialIds) ? p.testimonialIds as string[] : [],
         metaTitle: p.metaTitle || "",
         metaDescription: p.metaDescription || "",
         ogImage: p.ogImage || "",

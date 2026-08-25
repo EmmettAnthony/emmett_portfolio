@@ -16,9 +16,9 @@ export async function GET(req: Request) {
       where: search
         ? {
             OR: [
-              { email: { contains: search, mode: "insensitive" } },
-              { firstName: { contains: search, mode: "insensitive" } },
-              { lastName: { contains: search, mode: "insensitive" } },
+              { email: { contains: search } },
+              { firstName: { contains: search } },
+              { lastName: { contains: search } },
             ],
           }
         : undefined,

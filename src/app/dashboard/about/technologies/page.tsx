@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";import type { AboutTechnologyFormData } from "@/lib/validations/about";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { aboutTechnologySchema } from "@/lib/validations/about";
+import type { AboutTechnologyFormData } from "@/lib/validations/about";
 import {
   Wrench,
   Plus,
@@ -22,7 +23,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/toast";
-import type { AboutTechnologyFormData } from "@/lib/validations/about";
 
 interface Technology {
   id: string;

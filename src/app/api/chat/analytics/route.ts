@@ -83,13 +83,14 @@ export async function GET(request: NextRequest) {
 
     // Gather topic distribution from conversation tags
     const recentConversations = await prisma.chatConversation.findMany({
-      where: { createdAt: { gte: startDate, lte: endDate }, tags: { isEmpty: false } },
+      where: { createdAt: { gte: startDate, lte: endDate } },
       select: { tags: true },
     });
 
     const topicCount: Record<string, number> = {};
     recentConversations.forEach((c) => {
-      c.tags.forEach((tag) => {
+      const tags = Array.isArray(c.tags) ? (c.tags as string[]) : [];
+      tags.forEach((tag) => {
         topicCount[tag] = (topicCount[tag] || 0) + 1;
       });
     });

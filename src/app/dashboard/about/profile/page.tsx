@@ -5,8 +5,9 @@ import {
 } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";import type { AboutPageFormData } from "@/lib/validations/about";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { aboutPageSchema } from "@/lib/validations/about";
+import type { AboutPageFormData } from "@/lib/validations/about";
 import { Save, Loader2, User, ArrowLeft, Globe } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/toast";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { cn } from "@/lib/utils";
-import type { AboutPageFormData } from "@/lib/validations/about";
 
 interface AboutData {
   about: AboutPageFormData & { id: string };
@@ -101,11 +101,11 @@ export default function AboutProfilePage() {
         canonicalUrl: a.canonicalUrl ?? null,
         ogImage: a.ogImage ?? null,
         published: a.published ?? false,
-        whyWorkWithMe: a.whyWorkWithMe ?? [],
-        workProcess: a.workProcess ?? [],
-        personalInterests: a.personalInterests ?? [],
-        socialLinks: a.socialLinks ?? [],
-        faqs: a.faqs ?? [],
+        whyWorkWithMe: Array.isArray(a.whyWorkWithMe) ? a.whyWorkWithMe : [],
+        workProcess: Array.isArray(a.workProcess) ? a.workProcess : [],
+        personalInterests: Array.isArray(a.personalInterests) ? a.personalInterests : [],
+        socialLinks: Array.isArray(a.socialLinks) ? a.socialLinks : [],
+        faqs: Array.isArray(a.faqs) ? a.faqs : [],
       });
     }
   }, [data, form]);

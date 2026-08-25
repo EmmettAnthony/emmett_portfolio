@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 
     const where: Record<string, unknown> = {};
     if (email) {
-      where.email = { contains: email, mode: "insensitive" as const };
+      where.email = { contains: email };
     }
 
     const [emails, total] = await Promise.all([

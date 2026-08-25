@@ -32,9 +32,9 @@ export async function GET(request: Request) {
     if (endDate) where.preferredDate = { ...((where.preferredDate as Record<string, unknown>) || {}), lte: new Date(endDate) };
     if (search) {
       where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { email: { contains: search, mode: "insensitive" } },
-        { company: { contains: search, mode: "insensitive" } },
+        { name: { contains: search } },
+        { email: { contains: search } },
+        { company: { contains: search } },
       ];
     }
 

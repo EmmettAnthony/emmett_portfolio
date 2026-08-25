@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { BaseAIProvider, AIProviderConfig, AICompletionRequest, AICompletionResponse } from "../ai/providers/base";
+import { BaseAIProvider, AICompletionRequest, AICompletionResponse } from "../ai/providers/base";
 
 class TestProvider extends BaseAIProvider {
   get name() { return "Test"; }
-  async complete(req: AICompletionRequest): Promise<AICompletionResponse> {
+  async complete(_req: AICompletionRequest): Promise<AICompletionResponse> {
     return { content: "test response" };
   }
-  async *completeStream(req: AICompletionRequest): AsyncGenerator<string> {
+  async *completeStream(_req: AICompletionRequest): AsyncGenerator<string> {
     yield "chunk1";
     yield "chunk2";
   }

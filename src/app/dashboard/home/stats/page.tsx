@@ -77,16 +77,16 @@ export default function HomeStatsPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {stats.map((stat: Record<string, unknown>) => (
-            <Card key={stat.id}>
+            <Card key={stat.id as string}>
               <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-3xl font-bold text-zinc-900 dark:text-white">{stat.value}</p>
-                    <p className="mt-1 text-sm text-zinc-500">{stat.title}</p>
+                    <p className="text-3xl font-bold text-zinc-900 dark:text-white">{stat.value as string}</p>
+                    <p className="mt-1 text-sm text-zinc-500">{stat.title as string}</p>
                   </div>
                   <div className="flex gap-1">
                     <button onClick={() => openEdit(stat)} className="rounded p-1.5 text-zinc-400 hover:text-muted-foreground"><Edit3 className="h-3.5 w-3.5" /></button>
-                    <button onClick={() => setDeleteId(stat.id)} className="rounded p-1.5 text-zinc-400 hover:text-red-500"><Trash2 className="h-3.5 w-3.5" /></button>
+                    <button onClick={() => setDeleteId(stat.id as string)} className="rounded p-1.5 text-zinc-400 hover:text-red-500"><Trash2 className="h-3.5 w-3.5" /></button>
                   </div>
                 </div>
               </CardContent>

@@ -66,9 +66,7 @@ export async function POST(request: Request) {
                 subscriberId: log.subscriberId || "",
                 email,
                 eventType: "bounced",
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Prisma JSON type
-                metadata: { bounce: data.bounce },
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Prisma JSON field
+                                metadata: { bounce: data.bounce },
               } as any,
             });
           }
@@ -96,9 +94,7 @@ export async function POST(request: Request) {
                 subscriberId: log.subscriberId || "",
                 email,
                 eventType: "complained",
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Prisma JSON type
-                metadata: { complaint: data.complaint },
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Prisma JSON field
+                                metadata: { complaint: data.complaint },
               } as any,
             });
           }

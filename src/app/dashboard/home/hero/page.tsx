@@ -25,7 +25,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/toast";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { cn } from "@/lib/utils";
-import type { HomepageFormData } from "@/lib/validations/homepage";
 
 export default function HomeHeroPage() {
   const queryClient = useQueryClient();
@@ -57,14 +56,14 @@ export default function HomeHeroPage() {
         heroSecondaryCta: h.heroSecondaryCta ?? "View Portfolio", heroSecondaryLink: h.heroSecondaryLink ?? "/portfolio",
         heroResumeCta: h.heroResumeCta ?? null, heroResumeLink: h.heroResumeLink ?? null,
         statsTitle: h.statsTitle ?? null, statsSubtitle: h.statsSubtitle ?? null, statsEnabled: h.statsEnabled ?? true,
-        whyChooseTitle: h.whyChooseTitle ?? null, whyChooseSubtitle: h.whyChooseSubtitle ?? null, whyChooseItems: h.whyChooseItems ?? [],
-        processTitle: h.processTitle ?? null, processSubtitle: h.processSubtitle ?? null, processSteps: h.processSteps ?? [],
+        whyChooseTitle: h.whyChooseTitle ?? null, whyChooseSubtitle: h.whyChooseSubtitle ?? null, whyChooseItems: Array.isArray(h.whyChooseItems) ? h.whyChooseItems : [],
+        processTitle: h.processTitle ?? null, processSubtitle: h.processSubtitle ?? null, processSteps: Array.isArray(h.processSteps) ? h.processSteps : [],
         projectsTitle: h.projectsTitle ?? null, projectsSubtitle: h.projectsSubtitle ?? null, projectsEnabled: h.projectsEnabled ?? true, projectsCount: h.projectsCount ?? 6, layout: h.layout ?? "grid",
         testimonialsTitle: h.testimonialsTitle ?? null, testimonialsSubtitle: h.testimonialsSubtitle ?? null, testimonialsEnabled: h.testimonialsEnabled ?? true, testimonialsCount: h.testimonialsCount ?? 6, testimonialLayout: h.testimonialLayout ?? "grid",
         servicesTitle: h.servicesTitle ?? null, servicesSubtitle: h.servicesSubtitle ?? null,
         blogTitle: h.blogTitle ?? null, blogSubtitle: h.blogSubtitle ?? null, blogEnabled: h.blogEnabled ?? true, blogCount: h.blogCount ?? 3,
         certTitle: h.certTitle ?? null, certSubtitle: h.certSubtitle ?? null, certEnabled: h.certEnabled ?? true,
-        faqTitle: h.faqTitle ?? null, faqSubtitle: h.faqSubtitle ?? null, faqs: h.faqs ?? [], faqEnabled: h.faqEnabled ?? true,
+        faqTitle: h.faqTitle ?? null, faqSubtitle: h.faqSubtitle ?? null,         faqs: Array.isArray(h.faqs) ? h.faqs : [], faqEnabled: h.faqEnabled ?? true,
         newsletterTitle: h.newsletterTitle ?? null, newsletterDesc: h.newsletterDesc ?? null, newsletterEnabled: h.newsletterEnabled ?? true,
         ctaTitle: h.ctaTitle ?? null, ctaDescription: h.ctaDescription ?? null, ctaBackground: h.ctaBackground ?? null,
         ctaPrimaryButton: h.ctaPrimaryButton ?? "Get in Touch", ctaPrimaryLink: h.ctaPrimaryLink ?? "/contact",

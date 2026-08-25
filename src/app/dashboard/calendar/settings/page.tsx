@@ -64,6 +64,15 @@ function AvailabilitySettings() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
+  const { data } = useQuery({
+    queryKey: ["calendar-availability"],
+    queryFn: async () => {
+      const res = await fetch("/api/calendar/availability");
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+  });
+
   const saveMutation = useMutation({
     mutationFn: async (data: { dayOfWeek: number; isActive: boolean; startTime: string; endTime: string; slotDuration: number; [key: string]: unknown }) => {
       const res = await fetch("/api/calendar/availability", {

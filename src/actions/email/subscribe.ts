@@ -158,9 +158,9 @@ export async function getSubscribers(params?: {
   const where: Record<string, unknown> = {};
   if (params?.search) {
     where.OR = [
-      { email: { contains: params.search, mode: "insensitive" } },
-      { firstName: { contains: params.search, mode: "insensitive" } },
-      { lastName: { contains: params.search, mode: "insensitive" } },
+      { email: { contains: params.search } },
+      { firstName: { contains: params.search } },
+      { lastName: { contains: params.search } },
     ];
   }
   if (params?.status) where.status = params.status;

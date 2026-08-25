@@ -4,7 +4,7 @@ import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function BookError({
-  _error,
+  error: _error,
   reset,
 }: {
   error: Error & { digest?: string };

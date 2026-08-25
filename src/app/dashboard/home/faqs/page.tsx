@@ -48,8 +48,8 @@ export default function HomeFaqsPage() {
   const deleteFaq = (index: number) => saveMutation.mutate(faqs.filter((_faq: Record<string, unknown>, i: number) => i !== index));
   const startEdit = (index: number) => {
     setEditingIndex(index);
-    setEditQuestion(faqs[index].question);
-    setEditAnswer(faqs[index].answer);
+    setEditQuestion(faqs[index].question as string);
+    setEditAnswer(faqs[index].answer as string);
   };
 
   if (isLoading) return <div className="space-y-6"><Skeleton className="h-8 w-48" /></div>;
@@ -87,8 +87,8 @@ export default function HomeFaqsPage() {
                 ) : (
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-zinc-900 dark:text-white">{faq.question}</p>
-                      <p className="mt-1 text-sm text-zinc-500 line-clamp-2">{faq.answer}</p>
+                      <p className="font-medium text-zinc-900 dark:text-white">{faq.question as string}</p>
+                      <p className="mt-1 text-sm text-zinc-500 line-clamp-2">{faq.answer as string}</p>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
                       <button onClick={() => startEdit(index)} className="rounded p-1.5 text-zinc-400 hover:text-muted-foreground"><Edit3 className="h-3.5 w-3.5" /></button>

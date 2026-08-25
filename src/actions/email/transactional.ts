@@ -87,7 +87,7 @@ export async function getTransactionalEmails(params?: {
   } catch {
     // Fallback to local email logs
     const where: Record<string, unknown> = {};
-    if (params?.email) where.email = { contains: params.email, mode: "insensitive" };
+    if (params?.email) where.email = { contains: params.email };
 
     const [emails, total] = await Promise.all([
       prisma.emailLog.findMany({

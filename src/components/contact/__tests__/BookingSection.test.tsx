@@ -17,6 +17,21 @@ vi.mock("@/components/shared/AnimateOnScroll", () => ({
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
+/**
+ * Helper to set a date input value in jsdom.
+ * jsdom doesn't fully support <input type="date">, so we use the native
+ * value setter from HTMLInputElement.prototype and dispatch an input event
+ * that React's synthetic event system can pick up.
+ */
+function setDateValue(input: HTMLInputElement, value: string) {
+  const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+    window.HTMLInputElement.prototype,
+    "value",
+  )!.set!;
+  nativeInputValueSetter.call(input, value);
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
 function renderComponent() {
   return render(
     <NextIntlClientProvider locale="en" messages={enMessages}>
@@ -95,10 +110,12 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("Acme Inc."), "Acme");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      // Use fireEvent.submit instead of button click — jsdom's submit event
+      // doesn't reliably propagate from button clicks to the form's onSubmit
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith("/api/booking", {
@@ -196,10 +213,10 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("john@example.com"), "john@example.com");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith("/api/booking", {
@@ -219,10 +236,10 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("john@example.com"), "john@example.com");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(screen.getByText("Consultation Booked!")).toBeInTheDocument();
@@ -239,10 +256,10 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("john@example.com"), "john@example.com");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(screen.getByText(/Something went wrong/)).toBeInTheDocument();
@@ -275,10 +292,10 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("john@example.com"), "john@example.com");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(screen.getByText(/Something went wrong/)).toBeInTheDocument();
@@ -295,10 +312,10 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("john@example.com"), "john@example.com");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(screen.getByText(/Something went wrong/)).toBeInTheDocument();
@@ -316,10 +333,10 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("john@example.com"), "john@example.com");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       expect(document.querySelector(".animate-spin")).toBeInTheDocument();
     });
@@ -335,10 +352,10 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("john@example.com"), "john@example.com");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(screen.getByText("Consultation Booked!")).toBeInTheDocument();
@@ -355,10 +372,10 @@ describe("BookingSection", () => {
       await user.type(screen.getByPlaceholderText("john@example.com"), "john@example.com");
 
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      await user.click(dateInput);
-      await user.type(dateInput, "2026-07-20");
+      setDateValue(dateInput, "2026-07-20");
 
-      await user.click(screen.getByRole("button", { name: "Book Consultation" }));
+      const form = document.querySelector("form")!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(screen.getByText("Consultation Booked!")).toBeInTheDocument();

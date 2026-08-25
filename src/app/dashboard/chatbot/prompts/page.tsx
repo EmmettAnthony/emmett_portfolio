@@ -20,7 +20,7 @@ export default async function PromptsPage() {
     description: p.description,
     prompt: p.prompt,
     category: p.category,
-    variables: p.variables,
+    variables: Array.isArray(p.variables) ? p.variables as string[] : [],
     isSystem: p.isSystem,
     enabled: p.enabled,
     createdAt: p.createdAt.toISOString(),

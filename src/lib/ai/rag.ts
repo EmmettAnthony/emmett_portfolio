@@ -28,8 +28,8 @@ export async function searchKnowledgeBase(query: string, limit = 5): Promise<Sea
       where: {
         enabled: true,
         OR: [
-          { title: { contains: query, mode: "insensitive" } },
-          { content: { contains: query, mode: "insensitive" } },
+          { title: { contains: query } },
+          { content: { contains: query } },
         { tags: { has: query.toLowerCase() } },
         ],
       },
@@ -55,9 +55,9 @@ export async function searchPortfolio(query: string): Promise<SearchResult[]> {
   const results = await prisma.project.findMany({
     where: {
       OR: [
-        { name: { contains: query, mode: "insensitive" } },
-        { description: { contains: query, mode: "insensitive" } },
-        { tags: { contains: query, mode: "insensitive" } },
+        { name: { contains: query } },
+        { description: { contains: query } },
+        { tags: { contains: query } },
       ],
     },
     take: 5,
@@ -79,10 +79,10 @@ export async function searchBlogPosts(query: string): Promise<SearchResult[]> {
   const results = await prisma.blogPost.findMany({
     where: {
       OR: [
-        { title: { contains: query, mode: "insensitive" } },
-        { content: { contains: query, mode: "insensitive" } },
-        { excerpt: { contains: query, mode: "insensitive" } },
-        { tags: { contains: query, mode: "insensitive" } },
+        { title: { contains: query } },
+        { content: { contains: query } },
+        { excerpt: { contains: query } },
+        { tags: { contains: query } },
       ],
     },
     take: 5,
@@ -178,10 +178,10 @@ export async function searchSupportKnowledgeBase(query: string, limit = 3): Prom
       where: {
         published: true,
         OR: [
-          { title: { contains: query, mode: "insensitive" } },
-          { excerpt: { contains: query, mode: "insensitive" } },
-          { content: { contains: query, mode: "insensitive" } },
-          { tags: { contains: query, mode: "insensitive" } },
+          { title: { contains: query } },
+          { excerpt: { contains: query } },
+          { content: { contains: query } },
+          { tags: { contains: query } },
         ],
       },
       take: limit,

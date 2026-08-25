@@ -203,10 +203,10 @@ export async function getActivityLogs(options: GetActivityLogsOptions = {}) {
   if (search) {
     const searchFilter = {
       OR: [
-        { description: { contains: search, mode: "insensitive" } },
-        { entity: { contains: search, mode: "insensitive" } },
-        { action: { contains: search, mode: "insensitive" } },
-        { module: { contains: search, mode: "insensitive" } },
+        { description: { contains: search } },
+        { entity: { contains: search } },
+        { action: { contains: search } },
+        { module: { contains: search } },
       ],
     };
     where.AND = [searchFilter];

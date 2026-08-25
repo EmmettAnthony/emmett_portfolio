@@ -74,7 +74,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing-client";
-import { Editor, NodeViewProps } from "@tiptap/react";
+import { Editor } from "@tiptap/react";
 
 const lowlight = createLowlight(common);
 

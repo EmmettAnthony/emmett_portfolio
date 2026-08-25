@@ -1,25 +1,24 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { neon } from "@neondatabase/serverless";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
 function createPrismaClient(): PrismaClient {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
+  if (!process.env.DATABASE_URL) {
     throw new Error(
       "DATABASE_URL is not set. Set it in .env.local to enable database features."
     );
   }
 
-  const adapter = new PrismaPg({ connectionString });
+  const sql = neon(process.env.DATABASE_URL);
+  const adapter = new PrismaNeon(sql);
+
   return new PrismaClient({ adapter });
 }
 
-/**
- * Lazily create and return the PrismaClient singleton.
- */
 export function getPrisma(): PrismaClient {
   if (globalForPrisma.prisma) return globalForPrisma.prisma;
   globalForPrisma.prisma = createPrismaClient();

@@ -3,7 +3,7 @@ import { getSiteSettings } from "@/lib/get-site-settings";
 import { getTranslations, getLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { PrintButton } from "./PrintButton";
-import type { Skill, Experience, Education, Certification, Reference, ResumeAward, Language, FeaturedProject } from "@/app/resume/templates/types";
+
 
 export const dynamic = "force-dynamic";
 

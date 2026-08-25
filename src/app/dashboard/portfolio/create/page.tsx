@@ -23,7 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { UploadButton } from "@/lib/uploadthing-client";
 import { TestimonialSelector } from "@/components/services/TestimonialSelector";
-import type { PortfolioProjectForm, CaseStudyForm } from "@/lib/validations/portfolio";
+import { PortfolioProjectForm } from "@/lib/validations/portfolio";
 
 type Category = { id: string; name: string; slug: string };
 type Technology = { id: string; name: string; slug: string; icon?: string; color?: string };

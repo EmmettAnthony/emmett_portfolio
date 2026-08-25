@@ -77,8 +77,9 @@ export default function HomeLogosPage() {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {logos.map((logo: Record<string, unknown>) => (
-            <Card key={logo.id}>
+          {logos.map((lgo: Record<string, unknown>, idx: number) => {
+            const logo = lgo as { id: string; logoUrl?: string; name: string; website?: string; enabled?: boolean };
+            return (<Card key={logo.id}>
               <CardContent className="flex items-center gap-4 p-4">
                 <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800">
                   {logo.logoUrl ? <Image src={logo.logoUrl} alt={logo.name} width={40} height={40} className="max-h-10 max-w-10 object-contain" /> : <Heart className="h-6 w-6 text-zinc-400" />}
@@ -89,12 +90,12 @@ export default function HomeLogosPage() {
                 </div>
                 <div className="flex items-center gap-1">
                   {logo.enabled ? <Eye className="h-3.5 w-3.5 text-green-500" /> : <EyeOff className="h-3.5 w-3.5 text-zinc-400" />}
-                  <button onClick={() => openEdit(logo)} className="rounded p-1.5 text-zinc-400 hover:text-muted-foreground"><Edit3 className="h-3.5 w-3.5" /></button>
+                  <button onClick={() => openEdit(lgo)} className="rounded p-1.5 text-zinc-400 hover:text-muted-foreground"><Edit3 className="h-3.5 w-3.5" /></button>
                   <button onClick={() => setDeleteId(logo.id)} className="rounded p-1.5 text-zinc-400 hover:text-red-500"><Trash2 className="h-3.5 w-3.5" /></button>
                 </div>
               </CardContent>
-            </Card>
-          ))}
+            </Card>);
+          })}
         </div>
       )}
 

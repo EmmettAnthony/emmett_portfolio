@@ -2,8 +2,14 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockFetch = vi.fn();
 
+const mockKnowledgeBaseFindMany = vi.fn();
+
 vi.mock("@/lib/db", () => ({
-  prisma: { $queryRawUnsafe: vi.fn() },
+  prisma: {
+    knowledgeBase: {
+      findMany: mockKnowledgeBaseFindMany,
+    },
+  },
 }));
 
 describe("generateEmbedding", () => {
@@ -81,6 +87,7 @@ describe("searchByVector", () => {
     vi.resetModules();
     vi.stubGlobal("fetch", mockFetch);
     mockFetch.mockReset();
+    mockKnowledgeBaseFindMany.mockReset();
     process.env.OPENAI_API_KEY = "sk-test";
   });
 
@@ -91,16 +98,19 @@ describe("searchByVector", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns results from prisma query", async () => {
+  it("returns results from cosine similarity search", async () => {
     mockFetch.mockResolvedValue({
       ok: true,
-      json: vi.fn().mockResolvedValue({ data: [{ embedding: [0.1, 0.2] }] }),
+      json: vi.fn().mockResolvedValue({ data: [{ embedding: [1, 0] }] }),
     });
-    const { prisma } = await import("@/lib/db");
-    (prisma.$queryRawUnsafe as ReturnType<typeof vi.fn>).mockResolvedValue([{ id: "kb-1" }, { id: "kb-2" }]);
+    mockKnowledgeBaseFindMany.mockResolvedValue([
+      { id: "kb-1", title: "", content: "", embedding: "[1, 0]" },
+      { id: "kb-2", title: "", content: "", embedding: "[0, 1]" },
+      { id: "kb-3", title: "", content: "", embedding: "[0.9, 0.1]" },
+    ]);
     const { searchByVector } = await import("../ai/embeddings");
-    const result = await searchByVector("hello", 5);
-    expect(result).toEqual(["kb-1", "kb-2"]);
+    const result = await searchByVector("hello", 2);
+    expect(result).toEqual(["kb-1", "kb-3"]);
   });
 
   it("returns empty array when prisma query fails", async () => {
@@ -108,8 +118,7 @@ describe("searchByVector", () => {
       ok: true,
       json: vi.fn().mockResolvedValue({ data: [{ embedding: [0.1] }] }),
     });
-    const { prisma } = await import("@/lib/db");
-    (prisma.$queryRawUnsafe as ReturnType<typeof vi.fn>).mockRejectedValue(new Error("db error"));
+    mockKnowledgeBaseFindMany.mockRejectedValue(new Error("db error"));
     const { searchByVector } = await import("../ai/embeddings");
     const result = await searchByVector("hello");
     expect(result).toEqual([]);

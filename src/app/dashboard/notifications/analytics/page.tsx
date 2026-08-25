@@ -7,7 +7,7 @@ import {
   Eye,
   TrendingUp,
   BarChart3,
-  PieChart,
+  PieChart as PieChartIcon,
   Loader2,
 } from "lucide-react";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -21,7 +21,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  RechartsPieChart,
+  PieChart,
   Pie,
   Cell
 } from "recharts";
@@ -125,12 +125,12 @@ export default function NotificationAnalyticsPage() {
           className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900"
         >
           <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-            <PieChart className="h-4 w-4 text-zinc-400" />
+            <PieChartIcon className="h-4 w-4 text-zinc-400" />
             {t("byCategory")}
           </h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <RechartsPieChart>
+              <PieChart>
                 <Pie
                   data={data.byCategory?.map((c: { category: string; count: number }) => ({
                     name: c.category,
@@ -151,7 +151,7 @@ export default function NotificationAnalyticsPage() {
                   ))}
                 </Pie>
                 <Tooltip />
-              </RechartsPieChart>
+              </PieChart>
             </ResponsiveContainer>
           </div>
           <div className="mt-4 flex flex-wrap gap-3">

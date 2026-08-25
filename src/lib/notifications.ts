@@ -99,8 +99,8 @@ export async function getNotifications(params: {
   const searchFilters: Record<string, unknown>[] = [];
   if (params.search) {
     searchFilters.push(
-      { title: { contains: params.search, mode: "insensitive" } },
-      { message: { contains: params.search, mode: "insensitive" } },
+      { title: { contains: params.search } },
+      { message: { contains: params.search } },
     );
   }
 

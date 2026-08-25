@@ -21,8 +21,8 @@ export async function GET(request: NextRequest) {
     if (enabled !== null) where.enabled = enabled === "true";
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { content: { contains: search, mode: "insensitive" } },
+        { title: { contains: search } },
+        { content: { contains: search } },
       ];
     }
 
@@ -67,11 +67,10 @@ export async function POST(request: NextRequest) {
 
     generateEmbedding(`${parsed.title}\n\n${parsed.content}`).then((embedding) => {
       if (embedding) {
-        prisma.$executeRawUnsafe(
-          `UPDATE "knowledge_base" SET embedding = $1::vector WHERE id = $2`,
-          `[${embedding.join(",")}]`,
-          entry.id
-        ).catch(() => {});
+        prisma.knowledgeBase.update({
+          where: { id: entry.id },
+          data: { embedding: `[${embedding.join(",")}]` },
+        }).catch(() => {});
       }
     });
 
@@ -79,7 +78,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Failed to create knowledge base entry:", error);
     if (error instanceof Error && error.name === "ZodError") {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ZodError.errors
       return NextResponse.json({ error: "Invalid request", details: (error as any).errors }, { status: 400 });
     }
     return NextResponse.json({ error: "Failed to create knowledge base entry" }, { status: 500 });
@@ -119,11 +117,10 @@ export async function PUT(request: NextRequest) {
     if (textChanged) {
       generateEmbedding(`${entry.title}\n\n${entry.content}`).then((embedding) => {
         if (embedding) {
-          prisma.$executeRawUnsafe(
-            `UPDATE "knowledge_base" SET embedding = $1::vector WHERE id = $2`,
-            `[${embedding.join(",")}]`,
-            entry.id
-          ).catch(() => {});
+          prisma.knowledgeBase.update({
+            where: { id: entry.id },
+            data: { embedding: `[${embedding.join(",")}]` },
+          }).catch(() => {});
         }
       });
     }
@@ -132,7 +129,6 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error("Failed to update knowledge base entry:", error);
     if (error instanceof Error && error.name === "ZodError") {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ZodError.errors
       return NextResponse.json({ error: "Invalid request", details: (error as any).errors }, { status: 400 });
     }
     return NextResponse.json({ error: "Failed to update knowledge base entry" }, { status: 500 });

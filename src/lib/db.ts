@@ -12,11 +12,16 @@ function createPrismaClient(): PrismaClient {
     );
   }
 
-  const adapter = new PrismaNeon({
-    connectionString: process.env.DATABASE_URL,
-  });
+  const isNeon = process.env.DATABASE_URL.includes("neon.tech");
 
-  return new PrismaClient({ adapter });
+  if (isNeon) {
+    const adapter = new PrismaNeon({
+      connectionString: process.env.DATABASE_URL,
+    });
+    return new PrismaClient({ adapter });
+  }
+
+  return new PrismaClient();
 }
 
 export function getPrisma(): PrismaClient {

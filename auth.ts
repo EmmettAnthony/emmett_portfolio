@@ -38,10 +38,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         const connectionString = process.env.DATABASE_URL;
         if (connectionString) {
           try {
-            const adapter = new PrismaNeon({
-              connectionString: process.env.DATABASE_URL!,
-            });
-            const prisma = new PrismaClient({ adapter });
+            const isNeon = connectionString.includes("neon.tech");
+            const prisma = isNeon
+              ? new PrismaClient({
+                  adapter: new PrismaNeon({ connectionString }),
+                })
+              : new PrismaClient();
 
             const user = await prisma.user.findUnique({
               where: { email: username },

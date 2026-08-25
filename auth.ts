@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { logSignIn, logFailedSignIn, checkBruteForce } from "@/lib/auth-activity";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -37,7 +38,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         const connectionString = process.env.DATABASE_URL;
         if (connectionString) {
           try {
-            const prisma = new PrismaClient();
+            const adapter = new PrismaNeon({
+              connectionString: process.env.DATABASE_URL!,
+            });
+            const prisma = new PrismaClient({ adapter });
 
             const user = await prisma.user.findUnique({
               where: { email: username },

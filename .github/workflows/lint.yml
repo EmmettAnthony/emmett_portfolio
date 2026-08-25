@@ -22,6 +22,7 @@ concurrency:
 
 env:
   NODE_VERSION: "22"
+  DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/portfolio_lint"
 
 jobs:
   eslint:

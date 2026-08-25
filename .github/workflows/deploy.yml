@@ -33,6 +33,7 @@ concurrency:
 
 env:
   NODE_VERSION: "22"
+  DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/portfolio_deploy"
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -49,6 +50,8 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit-sha || github.sha }}
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: TypeScript Check
         run: npx tsc --noEmit
       - name: Lint Check

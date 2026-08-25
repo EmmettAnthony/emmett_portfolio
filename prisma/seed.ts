@@ -1,9 +1,14 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { UTApi } from "uploadthing/server";
 import { fileURLToPath } from "url";
 import { resolve } from "path";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaNeon({
+  connectionString: process.env.DATABASE_URL!,
+});
+
+const prisma = new PrismaClient({ adapter });
 const utapi = new UTApi();
 
 async function uploadImage(url: string): Promise<string | null> {

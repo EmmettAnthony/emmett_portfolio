@@ -33,6 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Unit Tests
         run: |
           if [ -n "${{ github.event.inputs.test-filter }}" ]; then
@@ -55,6 +57,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Component Tests
         run: npx vitest run tests/component/ --reporter=junit --outputFile=reports/junit-components.xml
       - uses: ./.github/actions/test-reporter
@@ -68,6 +72,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run API Tests
         run: npx vitest run tests/api/ tests/integration/ 2>/dev/null \
           --reporter=junit --outputFile=reports/junit-api.xml || \
@@ -83,6 +89,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Server Action Tests
         run: npx vitest run tests/server-actions/ tests/auth/ tests/database/ tests/payments/ \
           tests/email-tests/ tests/notifications/ tests/booking/ tests/crm/ tests/error-handling/ \
@@ -99,6 +107,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Security Tests
         run: npx vitest run tests/security/ --reporter=junit --outputFile=reports/junit-security.xml
       - uses: ./.github/actions/test-reporter

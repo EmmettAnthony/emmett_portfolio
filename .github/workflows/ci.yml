@@ -93,6 +93,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: ESLint
         run: npm run lint
       - name: Circular Dependency Check
@@ -106,6 +108,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: TypeScript Strict Check
         run: npx tsc --noEmit --pretty
 
@@ -127,6 +131,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Unit Tests
         run: npx vitest run tests/unit/ --reporter=junit --outputFile=reports/junit-unit.xml
       - uses: ./.github/actions/test-reporter
@@ -137,6 +143,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Component Tests
         run: npx vitest run tests/component/ --reporter=junit --outputFile=reports/junit-components.xml
       - uses: ./.github/actions/test-reporter
@@ -147,6 +155,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run API Tests
         run: npx vitest run tests/api/ --reporter=junit --outputFile=reports/junit-api.xml
       - uses: ./.github/actions/test-reporter
@@ -157,6 +167,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Server Action Tests
         run: npx vitest run tests/server-actions/ tests/auth/ tests/database/ tests/payments/ tests/email-tests/ tests/notifications/ tests/booking/ tests/crm/ --reporter=junit --outputFile=reports/junit-server-actions.xml
       - uses: ./.github/actions/test-reporter
@@ -167,6 +179,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Security Tests
         run: npx vitest run tests/security/ --reporter=junit --outputFile=reports/junit-security.xml
       - uses: ./.github/actions/test-reporter
@@ -177,6 +191,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Error Handling Tests
         run: npx vitest run tests/error-handling/ tests/activity-log/ tests/visual/ tests/performance/ --reporter=junit --outputFile=reports/junit-error-handling.xml
       - uses: ./.github/actions/test-reporter

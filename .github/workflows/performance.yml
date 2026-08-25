@@ -30,6 +30,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
 
       - name: Build Application
         run: npm run build
@@ -102,6 +104,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run Performance Tests
         run: npx vitest run tests/performance/ --reporter=junit --outputFile=reports/junit-performance.xml
       - uses: ./.github/actions/test-reporter

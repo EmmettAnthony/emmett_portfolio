@@ -30,6 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: Run ESLint
         run: npm run lint
       - name: Save ESLint Report
@@ -44,6 +46,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          prisma-generate: "true"
       - name: TypeScript Type Check
         run: npx tsc --noEmit --pretty
       - name: Save TypeScript Report

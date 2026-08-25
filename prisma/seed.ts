@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { UTApi } from "uploadthing/server";
 import { fileURLToPath } from "url";
 import { resolve } from "path";
@@ -9,7 +10,9 @@ const prisma = isNeon
   ? new PrismaClient({
       adapter: new PrismaNeon({ connectionString: process.env.DATABASE_URL! }),
     })
-  : new PrismaClient();
+  : new PrismaClient({
+      adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
+    });
 const utapi = new UTApi();
 
 async function uploadImage(url: string): Promise<string | null> {

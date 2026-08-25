@@ -1,12 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 const isNeon = process.env.DATABASE_URL?.includes("neon.tech");
 const prisma = isNeon
   ? new PrismaClient({
       adapter: new PrismaNeon({ connectionString: process.env.DATABASE_URL! }),
     })
-  : new PrismaClient();
+  : new PrismaClient({
+      adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
+    });
 
 async function main() {
   console.log("🔄 Resetting calendar seed data...\n");

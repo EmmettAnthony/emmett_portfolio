@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { logSignIn, logFailedSignIn, checkBruteForce } from "@/lib/auth-activity";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -43,7 +44,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
               ? new PrismaClient({
                   adapter: new PrismaNeon({ connectionString }),
                 })
-              : new PrismaClient();
+              : new PrismaClient({
+                  adapter: new PrismaPg({ connectionString }),
+                });
 
             const user = await prisma.user.findUnique({
               where: { email: username },

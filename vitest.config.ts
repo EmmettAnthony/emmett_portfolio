@@ -86,6 +86,7 @@ export default defineConfig({
         "src/components/ui/textarea.tsx",
         "src/components/ui/toast.tsx",
         "src/components/ui/skeleton.tsx",
+        "src/components/ui/ErrorBoundary.tsx",
         "src/components/ui/CalendlyEmbed.tsx",
         "src/components/ui/FriendlyEmbed.tsx",
         "src/components/ui/ImageSwitcher.tsx",

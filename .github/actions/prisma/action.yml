@@ -21,11 +21,11 @@ runs:
       shell: bash
       run: npx prisma validate
 
-    - name: Run Database Migrations
+    - name: Push Database Schema
       shell: bash
       env:
         DATABASE_URL: ${{ inputs.database-url }}
-      run: npx prisma migrate deploy
+      run: npx prisma db push --accept-data-loss --skip-generate
 
     - name: Seed Test Data
       if: inputs.run-seed == 'true'

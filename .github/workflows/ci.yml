@@ -265,6 +265,7 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: "https://emmettanthony.dev"
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN || '' }}
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_ci
       - name: Analyze Bundle
         run: npx next-bundle-analyzer .next/build-manifest.json 2>/dev/null || echo "Bundle analysis skipped"
       - uses: ./.github/actions/test-reporter

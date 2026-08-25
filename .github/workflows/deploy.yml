@@ -79,6 +79,7 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_SITE_URL: ${{ github.ref_name == 'main' && 'https://emmettanthony.dev' || 'https://preview.emmettanthony.dev' }}
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio_deploy
       - uses: ./.github/actions/test-reporter
 
   ##############################################################################

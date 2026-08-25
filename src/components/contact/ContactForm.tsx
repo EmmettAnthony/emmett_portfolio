@@ -165,7 +165,7 @@ export function ContactForm() {
     cn(
       fieldClasses(hasError),
       "appearance-none cursor-pointer",
-      !form.projectType && "text-zinc-400 dark:text-zinc-500"
+      !form.projectType && "text-zinc-400 dark:text-zinc-400"
     );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -301,7 +301,7 @@ export function ContactForm() {
               id="budget"
               value={form.budget}
               onChange={(e) => setForm({ ...form, budget: e.target.value })}
-              className={cn(fieldClasses(), "appearance-none cursor-pointer", !form.budget && "text-zinc-400 dark:text-zinc-500")}
+              className={cn(fieldClasses(), "appearance-none cursor-pointer", !form.budget && "text-zinc-400 dark:text-zinc-400")}
             >
               <option value="">{t("budgetPlaceholder")}</option>
               {budgetRanges.map((opt) => (
@@ -326,7 +326,7 @@ export function ContactForm() {
               id="timeline"
               value={form.timeline}
               onChange={(e) => setForm({ ...form, timeline: e.target.value })}
-              className={cn(fieldClasses(), "appearance-none cursor-pointer", !form.timeline && "text-zinc-400 dark:text-zinc-500")}
+              className={cn(fieldClasses(), "appearance-none cursor-pointer", !form.timeline && "text-zinc-400 dark:text-zinc-400")}
             >
               <option value="">{t("timelinePlaceholder")}</option>
               {timelineOptions.map((opt) => (

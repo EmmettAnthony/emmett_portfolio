@@ -82,7 +82,7 @@ export default function SupportAuditTrailPage() {
       <div className="space-y-2">
         {filtered.length === 0 ? (
           <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-800">
-            <Activity className="mx-auto mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-500" />
+            <Activity className="mx-auto mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-400" />
             <h3 className="text-lg font-medium text-zinc-900 dark:text-white">No audit entries found</h3>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
               {searchTerm ? "Try a different search" : "Activity will appear here as tickets are created and updated"}

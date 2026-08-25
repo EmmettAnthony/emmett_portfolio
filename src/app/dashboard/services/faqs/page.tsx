@@ -145,7 +145,7 @@ export default function GlobalFaqsPage() {
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 py-16 dark:border-zinc-700">
           <MessageCircle className="h-8 w-8 text-zinc-300 dark:text-muted-foreground" />
           <p className="mt-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">No global FAQs yet.</p>
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">FAQs here appear on all service pages.</p>
+          <p className="text-xs text-zinc-400 dark:text-zinc-400">FAQs here appear on all service pages.</p>
         </div>
       ) : (
         <div className="space-y-3">

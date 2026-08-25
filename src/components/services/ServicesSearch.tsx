@@ -152,7 +152,7 @@ export function ServicesSearch({ categories }: ServicesSearchProps) {
                         </span>
                       )}
                       {service.estimatedTimeline && (
-                        <span className="inline-flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-500">
+                        <span className="inline-flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
                           <Clock className="h-3 w-3" />
                           {service.estimatedTimeline}
                         </span>

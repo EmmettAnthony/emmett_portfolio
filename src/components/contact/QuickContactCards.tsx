@@ -57,7 +57,7 @@ export function QuickContactCards({ className }: { className?: string }) {
               <Icon className="h-5 w-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+              <p className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-400">
                 {card.label}
               </p>
               <p className="truncate text-sm font-semibold text-zinc-900 dark:text-white">

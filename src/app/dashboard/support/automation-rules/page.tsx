@@ -124,7 +124,7 @@ export default function AutomationRulesPage() {
 
       {rules.length === 0 ? (
         <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-800">
-          <Zap className="mx-auto mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-500" />
+          <Zap className="mx-auto mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-400" />
           <h3 className="text-lg font-medium text-zinc-900 dark:text-white">No automation rules</h3>
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">Create rules to automatically assign, prioritize, and notify based on conditions</p>
         </div>

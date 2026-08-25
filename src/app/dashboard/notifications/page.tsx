@@ -437,7 +437,7 @@ export default function NotificationsCenterPage() {
                   </div>
 
                   {/* Meta */}
-                  <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-zinc-400 dark:text-zinc-500">
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-zinc-400 dark:text-zinc-400">
                     <span>{CATEGORY_LABELS[n.category as NotificationCategory] || n.category}</span>
                     <span>·</span>
                     <TimeAgo date={n.createdAt} />

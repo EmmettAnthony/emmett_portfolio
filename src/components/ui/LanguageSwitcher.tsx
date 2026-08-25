@@ -112,12 +112,12 @@ export function LanguageSwitcher({
         <Globe className="h-4 w-4" />
       ) : (
         <>
-          <Globe className="h-4 w-4 text-zinc-400 dark:text-zinc-500" />
+          <Globe className="h-4 w-4 text-zinc-400 dark:text-zinc-400" />
           <span className="text-base leading-none">{localeFlags[currentLocale]}</span>
           {showLabel && <span className="ml-0.5">{localeNames[currentLocale]}</span>}
           <ChevronDown
             className={cn(
-              "h-3.5 w-3.5 text-zinc-400 transition-transform duration-200 dark:text-zinc-500",
+              "h-3.5 w-3.5 text-zinc-400 transition-transform duration-200 dark:text-zinc-400",
               open && "rotate-180"
             )}
           />

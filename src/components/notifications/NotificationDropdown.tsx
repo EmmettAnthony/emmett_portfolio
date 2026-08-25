@@ -143,7 +143,7 @@ export function NotificationDropdown({
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Bell className="mb-2 h-8 w-8 text-zinc-300 dark:text-muted-foreground" />
             <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">{t("noNewNotifications")}</p>
-            <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">{t("allCaughtUp")}</p>
+            <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-400">{t("allCaughtUp")}</p>
           </div>
         ) : (
           <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -194,7 +194,7 @@ export function NotificationDropdown({
                       </p>
                     )}
                     <div className="mt-1 flex items-center gap-2">
-                      <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
+                      <span className="text-[11px] text-zinc-400 dark:text-zinc-400">
                         <TimeAgo date={n.createdAt} t={t} />
                       </span>
                       {n.priority !== "LOW" && (

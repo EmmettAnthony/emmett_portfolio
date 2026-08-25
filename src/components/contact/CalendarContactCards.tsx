@@ -16,7 +16,7 @@ export function CalendarContactCards() {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+      <h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">
         {t("title")}
       </h3>
 
@@ -31,14 +31,14 @@ export function CalendarContactCards() {
             <CalendarCheck className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+            <p className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-400">
               {t("googleCalendar")}
             </p>
             <p className="truncate text-sm font-semibold text-zinc-900 dark:text-white">
               {t("googleCalendarDesc")}
             </p>
           </div>
-          <ExternalLink className="h-4 w-4 shrink-0 text-zinc-300 transition-colors group-hover:text-blue-600 dark:text-zinc-500" />
+          <ExternalLink className="h-4 w-4 shrink-0 text-zinc-300 transition-colors group-hover:text-blue-600 dark:text-zinc-400" />
         </a>
       )}
 
@@ -52,14 +52,14 @@ export function CalendarContactCards() {
             <Calendar className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+            <p className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-400">
               {t("calendly")}
             </p>
             <p className="truncate text-sm font-semibold text-zinc-900 dark:text-white">
               {t("calendlyDesc")}
             </p>
           </div>
-          <ExternalLink className="h-4 w-4 shrink-0 text-zinc-300 transition-colors group-hover:text-emerald-600 dark:text-zinc-500" />
+          <ExternalLink className="h-4 w-4 shrink-0 text-zinc-300 transition-colors group-hover:text-emerald-600 dark:text-zinc-400" />
         </button>
       )}
     </div>

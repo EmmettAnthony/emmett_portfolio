@@ -69,7 +69,7 @@ export default function PortalTicketsPage() {
 
         {filtered.length === 0 ? (
           <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-800">
-            <Ticket className="mx-auto mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-500" />
+            <Ticket className="mx-auto mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-400" />
             <h3 className="text-lg font-medium text-zinc-900 dark:text-white">No tickets found</h3>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
               {searchTerm ? "Try a different search" : "Submit a new support request to get started"}
@@ -101,7 +101,7 @@ export default function PortalTicketsPage() {
                     </span>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 flex-shrink-0 text-zinc-300 dark:text-zinc-500" />
+                <ChevronRight className="h-5 w-5 flex-shrink-0 text-zinc-300 dark:text-zinc-400" />
               </Link>
             ))}
           </div>

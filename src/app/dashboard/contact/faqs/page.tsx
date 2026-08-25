@@ -230,7 +230,7 @@ export default function ContactFaqsPage() {
           <p className="mt-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
             No contact FAQs yet.
           </p>
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="text-xs text-zinc-400 dark:text-zinc-400">
             Create FAQs that appear on the public contact page.
           </p>
         </div>

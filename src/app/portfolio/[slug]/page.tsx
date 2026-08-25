@@ -177,7 +177,7 @@ function MetricCard({
 }: ProjectMetric) {
   return (
     <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-      <p className="text-xs font-medium text-zinc-500 dark:text-zinc-500">
+      <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
         {label}
       </p>
       <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">
@@ -265,7 +265,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       <div className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 lg:px-8">
         <Link
           href="/portfolio"
-          className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-white"
+          className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
         >
           <ChevronLeft className="h-4 w-4" />
           {t("backToPortfolio")}
@@ -296,7 +296,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 </p>
               )}
 
-              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500">
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
                 {project.clientName && (
                   <span className="flex items-center gap-1.5">
                     <Building2 className="h-4 w-4" />
@@ -421,14 +421,14 @@ export default async function ProjectDetailPage({ params }: Props) {
               <div className="space-y-4">
                 {project.clientName && (
                   <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-500">
+                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                       {t("client")}
                     </p>
                     <p className="mt-1 text-sm font-semibold text-zinc-900 dark:text-white">
                       {project.clientName}
                     </p>
                     {project.clientIndustry && (
-                      <p className="text-xs text-zinc-500 dark:text-zinc-500">
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
                         {project.clientIndustry}
                       </p>
                     )}
@@ -436,7 +436,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 )}
                 {project.projectDuration && (
                   <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-500">
+                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                       {t("duration")}
                     </p>
                     <p className="mt-1 text-sm font-semibold text-zinc-900 dark:text-white">
@@ -446,7 +446,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 )}
                 {project.teamSize && (
                   <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-500">
+                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                       {t("teamSize")}
                     </p>
                     <p className="mt-1 text-sm font-semibold text-zinc-900 dark:text-white">

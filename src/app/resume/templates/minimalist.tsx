@@ -148,7 +148,7 @@ export async function MinimalistTemplate({
                         <h3 className="text-lg font-medium text-zinc-900 dark:text-white">{exp.jobTitle}</h3>
                         <p className={`text-sm font-medium ${accentColor}`}>{exp.company}</p>
                       </div>
-                      <span className="text-sm text-zinc-400 dark:text-zinc-500 whitespace-nowrap">
+                      <span className="text-sm text-zinc-400 dark:text-zinc-400 whitespace-nowrap">
                         {formatDate(exp.startDate)} – {exp.current ? t("present") : exp.endDate ? formatDate(exp.endDate) : ""}
                       </span>
                     </div>

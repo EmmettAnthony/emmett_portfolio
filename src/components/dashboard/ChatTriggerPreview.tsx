@@ -396,7 +396,7 @@ export function ChatTriggerPreview({
                               .map((q: string, i: number) => (
                                 <span
                                   key={i}
-                                  className="inline-flex animate-pulse items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-500"
+                                  className="inline-flex animate-pulse items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
                                 >
                                   <Sparkles className="h-3 w-3" />
                                   {q}
@@ -464,7 +464,7 @@ export function ChatTriggerPreview({
                         type="text"
                         placeholder="Type your message..."
                         disabled
-                        className="flex-1 bg-transparent py-2 text-sm text-zinc-400 outline-none placeholder:text-zinc-400 dark:text-zinc-500"
+                        className="flex-1 bg-transparent py-2 text-sm text-zinc-400 outline-none placeholder:text-zinc-400 dark:text-zinc-400"
                       />
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg opacity-50"
                         style={{ backgroundColor: widgetColor }}

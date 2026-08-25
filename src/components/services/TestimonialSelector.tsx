@@ -111,7 +111,7 @@ export function TestimonialSelector({ selectedIds, onChange }: TestimonialSelect
                   </div>
                 </div>
                 <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1">{t.content}</p>
-                {t.company && <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">{t.company}</p>}
+                {t.company && <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-400">{t.company}</p>}
               </button>
             );
           })

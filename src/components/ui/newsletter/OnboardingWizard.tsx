@@ -136,7 +136,7 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
                   i < currentStep &&
                     "bg-badge-info-bg text-badge-info-text",
                   i > currentStep &&
-                    "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500"
+                    "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-400"
                 )}
               >
                 {i < currentStep ? (

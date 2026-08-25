@@ -67,11 +67,11 @@ export function WidgetLivePreview({
             <div className="h-2 w-2 rounded-full bg-yellow-400" />
             <div className="h-2 w-2 rounded-full bg-green-400" />
           </div>
-          <span className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500">
+          <span className="text-[10px] font-medium text-zinc-400 dark:text-zinc-400">
             Live Preview
           </span>
         </div>
-        <div className="flex items-center gap-2 text-[9px] text-zinc-400 dark:text-zinc-500">
+        <div className="flex items-center gap-2 text-[9px] text-zinc-400 dark:text-zinc-400">
           <span>{widgetPosition === "right" ? "Right" : "Left"}</span>
           <span className="text-zinc-300 dark:text-zinc-600">·</span>
           <span className="capitalize">{widgetSize}</span>
@@ -226,7 +226,7 @@ export function WidgetLivePreview({
                     type="text"
                     disabled
                     placeholder="Type..."
-                    className="flex-1 bg-transparent py-0.5 text-[10px] text-zinc-400 outline-none placeholder:text-zinc-400 dark:text-zinc-500"
+                    className="flex-1 bg-transparent py-0.5 text-[10px] text-zinc-400 outline-none placeholder:text-zinc-400 dark:text-zinc-400"
                   />
                   <div
                     className="flex h-5 w-5 items-center justify-center rounded-md opacity-60"
@@ -248,7 +248,7 @@ export function WidgetLivePreview({
               <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                 Widget is disabled
               </p>
-              <p className="text-[10px] text-zinc-400 dark:text-zinc-500">
+              <p className="text-[10px] text-zinc-400 dark:text-zinc-400">
                 Toggle &quot;Chatbot Enabled&quot; above to show preview
               </p>
             </div>

@@ -85,7 +85,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, SelectProps>(
             error
               ? "border-red-500 focus:ring-red-500/50 focus:border-red-500"
               : "border-zinc-300 hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600",
-            !props.value && "text-zinc-400 dark:text-zinc-500",
+            !props.value && "text-zinc-400 dark:text-zinc-400",
             className
           )}
           {...props}

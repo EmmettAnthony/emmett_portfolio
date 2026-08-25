@@ -135,7 +135,7 @@ export default function VariablePicker({ onInsert, className }: VariablePickerPr
                   <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
                     {variable.label}
                   </span>
-                  <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[9px] font-medium text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+                  <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[9px] font-medium text-zinc-400 dark:bg-zinc-800 dark:text-zinc-400">
                     {variable.category}
                   </span>
                 </div>

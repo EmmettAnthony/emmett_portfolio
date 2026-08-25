@@ -180,7 +180,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ ticketN
               {ticket.category.name}
             </span>
           )}
-          <span className="ml-auto font-mono text-xs text-zinc-500 dark:text-zinc-500">
+          <span className="ml-auto font-mono text-xs text-zinc-500 dark:text-zinc-400">
             {ticket.ticketNumber}
           </span>
         </div>
@@ -188,7 +188,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ ticketN
         <h1 className="mb-2 text-2xl font-bold text-zinc-900 dark:text-white">{ticket.subject}</h1>
         <p className="mb-4 whitespace-pre-wrap text-sm text-zinc-600 dark:text-zinc-400">{ticket.description}</p>
 
-        <div className="flex flex-wrap gap-6 text-xs text-zinc-500 dark:text-zinc-500">
+        <div className="flex flex-wrap gap-6 text-xs text-zinc-500 dark:text-zinc-400">
           <span>From: <strong className="text-zinc-700 dark:text-zinc-300">{ticket.fullName}</strong></span>
           <span>Email: <strong className="text-zinc-700 dark:text-zinc-300">{ticket.email}</strong></span>
           {ticket.phone && <span>Phone: <strong className="text-zinc-700 dark:text-zinc-300">{ticket.phone}</strong></span>}
@@ -222,7 +222,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ ticketN
                     </span>
                   )}
                 </span>
-                <span className="text-xs text-zinc-500 dark:text-zinc-500">
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">
                   {format(new Date(reply.createdAt), "MMM d, yyyy h:mm a")}
                 </span>
               </div>

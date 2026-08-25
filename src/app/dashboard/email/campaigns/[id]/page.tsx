@@ -24,7 +24,7 @@ const statusColors: Record<string, { label: string; color: string }> = {
   AWAITING_WINNER: { label: "A/B Testing", color: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400" },
   SENT: { label: "Sent", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" },
   FAILED: { label: "Failed", color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" },
-  CANCELLED: { label: "Cancelled", color: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-500" },
+  CANCELLED: { label: "Cancelled", color: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400" },
 };
 
 const STATUS_ICON: Record<string, typeof Send> = {

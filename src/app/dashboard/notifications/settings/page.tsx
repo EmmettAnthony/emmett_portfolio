@@ -202,7 +202,7 @@ export default function NotificationSettingsPage() {
                           "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
                           isActive
                             ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                            : "bg-zinc-100 text-zinc-400 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-500 dark:hover:bg-zinc-700"
+                            : "bg-zinc-100 text-zinc-400 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         )}
                         title={CHANNEL_LABELS[channel]}
                       >

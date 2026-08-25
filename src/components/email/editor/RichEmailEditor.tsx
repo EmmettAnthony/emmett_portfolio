@@ -798,7 +798,7 @@ export default function RichEmailEditor({ value, onChange, onBlocksChange, class
                         </div>
                         {/* Block index indicator */}
                         <div className="absolute left-1 top-1 z-10">
-                          <span className="rounded bg-zinc-100 px-1 py-0.5 text-[9px] font-medium text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+                          <span className="rounded bg-zinc-100 px-1 py-0.5 text-[9px] font-medium text-zinc-400 dark:bg-zinc-800 dark:text-zinc-400">
                             {index + 1}
                           </span>
                         </div>

@@ -436,7 +436,7 @@ export default function ContactSubmissionsPage() {
           <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
             {search || statusFilter !== "all" ? "No matching submissions" : "No submissions yet"}
           </p>
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="text-xs text-zinc-400 dark:text-zinc-400">
             {search || statusFilter !== "all"
               ? "Try adjusting your filters"
               : "Contact form submissions will appear here"}
@@ -779,7 +779,7 @@ export default function ContactSubmissionsPage() {
                     ))}
                   </div>
                 ) : !timelineData || timelineData.length === 0 ? (
-                  <p className="text-sm text-zinc-400 dark:text-zinc-500">No timeline entries yet.</p>
+                  <p className="text-sm text-zinc-400 dark:text-zinc-400">No timeline entries yet.</p>
                 ) : (
                   <div className="space-y-3">
                     {timelineData.map((entry) => {

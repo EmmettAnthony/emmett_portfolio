@@ -139,7 +139,7 @@ export default function KnowledgeBasePage() {
                     <ChevronDown className="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-180" />
                     <span className="flex-1">{article.title}</span>
                     {article.readingTime && (
-                      <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-500">{article.readingTime} min read</span>
+                      <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">{article.readingTime} min read</span>
                     )}
                   </summary>
                   <div className="border-t border-zinc-200 px-5 py-4 dark:border-zinc-800">
@@ -180,7 +180,7 @@ export default function KnowledgeBasePage() {
                     <ChevronDown className="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-180" />
                     <span className="flex-1">{article.title}</span>
                     {article.readingTime && (
-                      <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-500">{article.readingTime} min read</span>
+                      <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">{article.readingTime} min read</span>
                     )}
                   </summary>
                   <div className="border-t border-zinc-200 px-5 py-4 dark:border-zinc-800">

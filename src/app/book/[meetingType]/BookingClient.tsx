@@ -379,7 +379,7 @@ export function BookingClient({ meetingType }: { meetingType: MeetingType }) {
                   </div>
 
                   {/* Day headers */}
-                  <div className="grid grid-cols-7 gap-px px-5 pt-4 text-center text-xs font-medium text-zinc-400 dark:text-zinc-500">
+                  <div className="grid grid-cols-7 gap-px px-5 pt-4 text-center text-xs font-medium text-zinc-400 dark:text-zinc-400">
                     {dayNames.map((d, i) => <div key={i} className="pb-1.5">{d}</div>)}
                   </div>
 

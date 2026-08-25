@@ -63,7 +63,7 @@ const STATUS_STYLES: Record<string, string> = {
   DRAFT: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-muted-foreground",
   IN_PROGRESS: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
   COMPLETED: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  ARCHIVED: "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500",
+  ARCHIVED: "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-400",
 };
 
 export default function PortfolioPage() {
@@ -539,7 +539,7 @@ export default function PortfolioPage() {
                       </span>
                     ))}
                     {project.technologies.length > 4 && (
-                      <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+                      <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-400 dark:bg-zinc-800 dark:text-zinc-400">
                         +{project.technologies.length - 4} more
                       </span>
                     )}

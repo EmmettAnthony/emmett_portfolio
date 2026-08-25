@@ -371,7 +371,7 @@ export default function NotificationInboxPage() {
                         {n.message}
                       </p>
                     )}
-                    <div className="mt-1.5 flex items-center gap-2.5 text-xs text-zinc-400 dark:text-zinc-500">
+                    <div className="mt-1.5 flex items-center gap-2.5 text-xs text-zinc-400 dark:text-zinc-400">
                       <span>{CATEGORY_LABELS[n.category as NotificationCategory] || n.category}</span>
                       <span>·</span>
                       <TimeAgo date={n.createdAt} />

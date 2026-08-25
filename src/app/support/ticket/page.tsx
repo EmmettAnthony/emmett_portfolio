@@ -52,7 +52,7 @@ export default function TicketLookupPage() {
         </button>
       </form>
 
-      <p className="mt-6 text-xs text-zinc-500 dark:text-zinc-500">
+      <p className="mt-6 text-xs text-zinc-500 dark:text-zinc-400">
         Your ticket number was provided when you submitted your support request. It typically looks like <span className="font-mono font-medium">SUP-XXXXX</span>.
       </p>
     </div>

@@ -19,7 +19,7 @@ export default function SupportPage() {
           <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
             <svg className="h-5 w-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           </div>
-          <div className="w-full cursor-pointer rounded-2xl border border-zinc-300 bg-white py-4 pl-12 pr-4 text-left text-base text-zinc-400 shadow-sm transition-colors hover:border-blue-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-500 dark:hover:border-blue-700">
+          <div className="w-full cursor-pointer rounded-2xl border border-zinc-300 bg-white py-4 pl-12 pr-4 text-left text-base text-zinc-400 shadow-sm transition-colors hover:border-blue-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-blue-700">
             Search the knowledge base...
           </div>
         </Link>

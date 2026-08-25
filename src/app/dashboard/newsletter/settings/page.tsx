@@ -601,7 +601,7 @@ function PopupSettingsSection() {
                   "text-xs font-medium",
                   isEnabled
                     ? "text-blue-600 dark:text-blue-400"
-                    : "text-zinc-400 dark:text-zinc-500"
+                    : "text-zinc-400 dark:text-zinc-400"
                 )}
               >
                 {isEnabled ? "On" : "Off"}

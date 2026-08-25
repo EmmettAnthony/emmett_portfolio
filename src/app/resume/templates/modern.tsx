@@ -268,7 +268,7 @@ export async function ModernTemplate({
                         </div>
 
                         {exp.location && (
-                          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-500">
+                          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                             <MapPin className="mr-1 inline h-3.5 w-3.5" />
                             {exp.location}
                           </p>
@@ -290,7 +290,7 @@ export async function ModernTemplate({
 
                         {achievements.length > 0 && (
                           <>
-                            <h4 className="mt-4 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-500">
+                            <h4 className="mt-4 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                               {t("keyAchievements")}
                             </h4>
                             <ul className="mt-2 space-y-2">
@@ -378,7 +378,7 @@ export async function ModernTemplate({
                       )}
 
                       {edu.grade && (
-                        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-500">
+                        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                           {t("grade")}{edu.grade}
                         </p>
                       )}
@@ -425,7 +425,7 @@ export async function ModernTemplate({
                     delay={catIndex * 0.1}
                     className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900"
                   >
-                    <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-500">
+                    <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                       {category}
                     </h3>
                     <div className="space-y-4">

@@ -124,7 +124,7 @@ export function TimezoneSelect({ value, onChange }: TimezoneSelectProps) {
         className={cn(
           "flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-sm transition-colors",
           "border-zinc-300 text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800",
-          !value && "text-zinc-400 dark:text-zinc-500"
+          !value && "text-zinc-400 dark:text-zinc-400"
         )}
       >
         <Globe className="h-4 w-4 shrink-0 text-zinc-400" />

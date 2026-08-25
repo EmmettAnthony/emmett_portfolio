@@ -13,6 +13,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json", "html", "lcov", "clover"],
       reportsDirectory: "./public/coverage",
+      // @ts-expect-error -- vitest v8 coverage supports `all` but the type defs lag behind
       all: true,
       include: ["src/**/*.{ts,tsx}"],
       exclude: [

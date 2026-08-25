@@ -154,7 +154,7 @@ describe("ChatWindow", () => {
       metadata: null,
       createdAt: new Date().toISOString(),
     }));
-    renderWithContext({ ...baseCtx, messages: messages as never[], feedbackScore: 4 });
+    renderWithContext({ ...baseCtx, messages: messages as never[], feedbackScore: 4 as unknown as null });
     expect(screen.queryByTestId("chat-feedback")).not.toBeInTheDocument();
   });
 

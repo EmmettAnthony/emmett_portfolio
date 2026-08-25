@@ -50,14 +50,14 @@ export async function searchByVector(query: string, limit = 5): Promise<string[]
     });
 
     const scored = entries
-      .map((e) => {
+      .map((e: { id: string; embedding: string | null }) => {
         const vec = JSON.parse(e.embedding!) as number[];
         return { id: e.id, score: cosineSimilarity(embedding, vec) };
       })
-      .sort((a, b) => b.score - a.score)
+      .sort((a: { id: string; score: number }, b: { id: string; score: number }) => b.score - a.score)
       .slice(0, limit);
 
-    return scored.map((r) => r.id);
+    return scored.map((r: { id: string; score: number }) => r.id);
   } catch {
     return [];
   }

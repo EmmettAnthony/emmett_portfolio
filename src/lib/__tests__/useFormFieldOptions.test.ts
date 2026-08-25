@@ -53,6 +53,10 @@ describe("useFormFieldOptions", () => {
 
     const fetchMock = vi.mocked(globalThis.fetch);
     fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: new Headers(),
       json: () => Promise.resolve({
         projectTypes: [
           { value: "web_development", label: "Web Dev", enabled: true, order: 1 },
@@ -65,7 +69,7 @@ describe("useFormFieldOptions", () => {
           { value: "asap", label: "ASAP", enabled: true, order: 1 },
         ],
       }),
-    });
+    } as Response);
 
     currentEffectFn!();
     await flushMicrotasks();
@@ -86,8 +90,12 @@ describe("useFormFieldOptions", () => {
 
     const fetchMock = vi.mocked(globalThis.fetch);
     fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: new Headers(),
       json: () => Promise.resolve({ projectTypes: [], budgetRanges: [] }),
-    });
+    } as Response);
 
     currentEffectFn!();
     await flushMicrotasks();
@@ -123,8 +131,12 @@ describe("useFormFieldOptions", () => {
 
     const fetchMock = vi.mocked(globalThis.fetch);
     fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: new Headers(),
       json: () => Promise.reject(new Error("Invalid JSON")),
-    });
+    } as Response);
 
     currentEffectFn!();
     await flushMicrotasks();
@@ -142,6 +154,10 @@ describe("useFormFieldOptions", () => {
 
     const fetchMock = vi.mocked(globalThis.fetch);
     fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: new Headers(),
       json: () => Promise.resolve({
         projectTypes: [
           { value: "web_development", label: "Web", enabled: true, order: 1 },
@@ -157,7 +173,7 @@ describe("useFormFieldOptions", () => {
           { value: "flexible", label: "Flexible", enabled: false, order: 2 },
         ],
       }),
-    });
+    } as Response);
 
     currentEffectFn!();
     await flushMicrotasks();

@@ -75,7 +75,7 @@ describe("contactFormSchema", () => {
   });
 
   it("fails when projectType is missing entirely", () => {
-    const data = { ...validData };
+    const data = { ...validData } as Record<string, unknown>;
     delete data.projectType;
     const result = contactFormSchema.safeParse(data);
     expect(result.success).toBe(false);

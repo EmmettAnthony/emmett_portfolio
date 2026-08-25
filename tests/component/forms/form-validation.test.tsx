@@ -28,12 +28,12 @@ function InvoiceForm({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<InvoiceFormData>({
-    resolver: zodResolver(invoiceFormSchema),
+    resolver: zodResolver(invoiceFormSchema) as any,
     defaultValues,
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} data-testid="invoice-form">
+    <form onSubmit={handleSubmit(onSubmit as any)} data-testid="invoice-form">
       <div>
         <label htmlFor="customerName">Customer Name</label>
         <input id="customerName" {...register("customerName")} data-testid="field-customerName" />

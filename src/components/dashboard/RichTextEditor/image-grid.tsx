@@ -2,7 +2,8 @@ import { Node, mergeAttributes } from "@tiptap/core";
 import {
   ReactNodeViewRenderer,
   NodeViewWrapper,
-  NodeViewContent
+  NodeViewContent,
+  type NodeViewProps
 } from "@tiptap/react";
 
 declare module "@tiptap/core" {

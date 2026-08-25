@@ -26,7 +26,9 @@ import {
   CATEGORY_LABELS,
   PRIORITY_LABELS,
   TYPE_LABELS,
-  CHANNEL_LABELS
+  CHANNEL_LABELS,
+  type NotificationPriority,
+  type NotificationType,
 } from "@/types/notifications";
 import { useToast } from "@/components/ui/toast";
 import type { NotificationTemplateData, NotificationCategory, DeliveryChannel } from "@/types/notifications";

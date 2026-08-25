@@ -85,13 +85,14 @@ export async function getChatbotAnalytics() {
   });
 
   const topTopics = await prisma.chatConversation.findMany({
-    where: { createdAt: { gte: thirtyDaysAgo }, tags: { isEmpty: false } },
+    where: { createdAt: { gte: thirtyDaysAgo }, tags: { not: [] } },
     select: { tags: true },
   });
 
   const topicCount: Record<string, number> = {};
   topTopics.forEach((c) => {
-    c.tags.forEach((tag) => {
+    const tags = (c.tags ?? []) as string[];
+    tags.forEach((tag: string) => {
       topicCount[tag] = (topicCount[tag] || 0) + 1;
     });
   });
@@ -101,12 +102,12 @@ export async function getChatbotAnalytics() {
     .slice(0, 10)
     .map(([topic, count]) => ({ topic, count }));
 
-  const conversationsOverTime = dailyStats.map((d) => ({
+  const conversationsOverTime = dailyStats.map((d: typeof dailyStats[number]) => ({
     date: d.date.toISOString().split("T")[0],
     count: d.totalConversations,
   }));
 
-  const leadsOverTime = dailyStats.map((d) => ({
+  const leadsOverTime = dailyStats.map((d: typeof dailyStats[number]) => ({
     date: d.date.toISOString().split("T")[0],
     count: d.leadsGenerated,
   }));

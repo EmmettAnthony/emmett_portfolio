@@ -5,7 +5,8 @@ import {
   useContext,
   useState,
   useCallback,
-  useEffect
+  useEffect,
+  type ReactNode
 } from "react";
 import type {
   ChatMessageData

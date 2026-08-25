@@ -10,17 +10,17 @@ export default async function PromptsPage() {
     orderBy: [{ isSystem: "desc" }, { category: "asc" }, { name: "asc" }],
   });
 
-  const categories = [...new Set(rawPrompts.map((p) => p.category))];
+  const categories: string[] = [...new Set(rawPrompts.map((p: { category: string }) => p.category))];
 
   // Serialize dates to strings for client component compatibility
-  const prompts = rawPrompts.map((p) => ({
+  const prompts = rawPrompts.map((p: { id: string; name: string; label: string | null; description: string | null; prompt: string; category: string; variables: unknown; isSystem: boolean; enabled: boolean; createdAt: Date; updatedAt: Date }) => ({
     id: p.id,
     name: p.name,
-    label: p.label,
+    label: p.label ?? "",
     description: p.description,
     prompt: p.prompt,
     category: p.category,
-    variables: Array.isArray(p.variables) ? p.variables as string[] : [],
+    variables: Array.isArray(p.variables) ? (p.variables as string[]) : [],
     isSystem: p.isSystem,
     enabled: p.enabled,
     createdAt: p.createdAt.toISOString(),

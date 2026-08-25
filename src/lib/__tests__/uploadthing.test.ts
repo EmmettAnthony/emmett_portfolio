@@ -30,7 +30,7 @@ describe("uploadthing file router", () => {
       const { UploadThingError } = await import("uploadthing/server");
 
       const middleware = ourFileRouter.imageUploader.middleware;
-      await expect(middleware()).rejects.toThrow(UploadThingError);
+      await expect(middleware({ files: [], input: undefined })).rejects.toThrow(UploadThingError);
     });
 
     it("returns userId when authenticated", async () => {
@@ -38,7 +38,7 @@ describe("uploadthing file router", () => {
       const { ourFileRouter } = await import("../uploadthing");
 
       const middleware = ourFileRouter.imageUploader.middleware;
-      const result = await middleware();
+      const result = await middleware({ files: [], input: undefined });
       expect(result).toEqual({ userId: "admin" });
     });
 
@@ -69,7 +69,7 @@ describe("uploadthing file router", () => {
       const { UploadThingError } = await import("uploadthing/server");
 
       const middleware = ourFileRouter.blogEditorImage.middleware;
-      await expect(middleware()).rejects.toThrow(UploadThingError);
+      await expect(middleware({ files: [], input: undefined })).rejects.toThrow(UploadThingError);
     });
 
     it("returns userId when authenticated", async () => {
@@ -77,7 +77,7 @@ describe("uploadthing file router", () => {
       const { ourFileRouter } = await import("../uploadthing");
 
       const middleware = ourFileRouter.blogEditorImage.middleware;
-      const result = await middleware();
+      const result = await middleware({ files: [], input: undefined });
       expect(result).toEqual({ userId: "admin" });
     });
 
@@ -106,7 +106,7 @@ describe("uploadthing file router", () => {
       const { ourFileRouter } = await import("../uploadthing");
 
       const middleware = ourFileRouter.attachmentUploader.middleware;
-      const result = await middleware();
+      const result = await middleware({ files: [], input: undefined });
       expect(result).toEqual({});
     });
 
@@ -137,7 +137,7 @@ describe("uploadthing file router", () => {
       const { ourFileRouter } = await import("../uploadthing");
 
       const middleware = ourFileRouter.publicUploader.middleware;
-      const result = await middleware();
+      const result = await middleware({ files: [], input: undefined });
       expect(result).toEqual({});
     });
 
@@ -165,7 +165,7 @@ describe("uploadthing file router", () => {
       const { ourFileRouter } = await import("../uploadthing");
 
       const middleware = ourFileRouter.supportAttachmentUploader.middleware;
-      const result = await middleware();
+      const result = await middleware({ files: [], input: undefined });
       expect(result).toEqual({});
     });
 
@@ -220,7 +220,7 @@ describe("uploadthing file router", () => {
       const { UploadThingError } = await import("uploadthing/server");
 
       const middleware = ourFileRouter.mediaUploader.middleware;
-      await expect(middleware()).rejects.toThrow(UploadThingError);
+      await expect(middleware({ files: [], input: undefined })).rejects.toThrow(UploadThingError);
     });
 
     it("returns userId when authenticated", async () => {
@@ -228,7 +228,7 @@ describe("uploadthing file router", () => {
       const { ourFileRouter } = await import("../uploadthing");
 
       const middleware = ourFileRouter.mediaUploader.middleware;
-      const result = await middleware();
+      const result = await middleware({ files: [], input: undefined });
       expect(result).toEqual({ userId: "admin" });
     });
 
@@ -259,7 +259,7 @@ describe("uploadthing file router", () => {
       const { UploadThingError } = await import("uploadthing/server");
 
       const middleware = ourFileRouter.testimonialUploader.middleware;
-      await expect(middleware()).rejects.toThrow(UploadThingError);
+      await expect(middleware({ files: [], input: undefined })).rejects.toThrow(UploadThingError);
     });
 
     it("returns userId when authenticated", async () => {
@@ -267,7 +267,7 @@ describe("uploadthing file router", () => {
       const { ourFileRouter } = await import("../uploadthing");
 
       const middleware = ourFileRouter.testimonialUploader.middleware;
-      const result = await middleware();
+      const result = await middleware({ files: [], input: undefined });
       expect(result).toEqual({ userId: "admin" });
     });
 
@@ -297,7 +297,7 @@ describe("uploadthing file router", () => {
     it("exports OurFileRouter type", async () => {
       const mod = await import("../uploadthing");
       // Type assertion — if it compiles, the type is exported correctly
-      const router: mod.OurFileRouter = mod.ourFileRouter;
+      const router: import("../uploadthing").OurFileRouter = mod.ourFileRouter;
       expect(router).toBeDefined();
     });
   });

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { getSiteSettings } from "@/lib/get-site-settings";
 import { getTranslations, getLocale } from "next-intl/server";
 import type { Metadata } from "next";
+import type { Experience, Education, Skill } from "@prisma/client";
 import { PrintButton } from "./PrintButton";
 
 
@@ -239,7 +240,7 @@ export default async function ResumePrintPage() {
         {resume.experiences.length > 0 && (
           <div className="section">
             <h2>{t("experience")}</h2>
-            {resume.experiences.map((exp) => {
+            {resume.experiences.map((exp: Experience) => {
               const responsibilities = (exp.responsibilities as string[]) ?? [];
               const achievements = (exp.achievements as string[]) ?? [];
               const technologies = (exp.technologies as string[]) ?? [];
@@ -289,7 +290,7 @@ export default async function ResumePrintPage() {
         {resume.education.length > 0 && (
           <div className="section">
             <h2>{t("education")}</h2>
-            {resume.education.map((edu) => (
+            {resume.education.map((edu: Education) => (
               <div key={edu.id} className="edu-item">
                 <div className="edu-header">
                   <div>
@@ -314,22 +315,22 @@ export default async function ResumePrintPage() {
             <h2>{t("skills")}</h2>
             <div className="skills-section">
               {(() => {
-                const grouped = resume.skills.reduce(
+                const grouped = resume.skills.reduce<Record<string, Skill[]>>(
                   (acc, skill) => {
                     const cat = skill.category || "Other";
                     if (!acc[cat]) acc[cat] = [];
                     acc[cat].push(skill);
                     return acc;
                   },
-                  {} as Record<string, typeof resume.skills>,
+                  {},
                 );
                 return Object.entries(grouped).map(([category, skills]) => (
                   <div key={category} className="skill-category">
                     <h3>{category}</h3>
                     <div className="skill-list">
                       {skills
-                        .sort((a, b) => b.proficiency - a.proficiency)
-                        .map((_skill, _i) => (
+                        .sort((a: Skill, b: Skill) => b.proficiency - a.proficiency)
+                        .map((skill: Skill) => (
                           <span key={skill.id} className="skill-item">
                             {skill.name} ({skill.proficiency}%
                             {skill.yearsOfExperience != null ? `, ${skill.yearsOfExperience}y` : ""}

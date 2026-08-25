@@ -45,7 +45,7 @@ describe("getCountryFromRequest", () => {
   });
 
   it("returns null when geo.country is null", () => {
-    vi.mocked(geolocation).mockReturnValue({ country: null });
+    vi.mocked(geolocation).mockReturnValue({ country: null } as any);
     expect(getCountryFromRequest(mockRequest)).toBeNull();
   });
 
@@ -62,7 +62,7 @@ describe("getCountryFromRequest", () => {
   });
 
   it("returns null when geolocation returns undefined", () => {
-    vi.mocked(geolocation).mockReturnValue(undefined);
+    vi.mocked(geolocation).mockReturnValue(undefined as any);
     expect(getCountryFromRequest(mockRequest)).toBeNull();
   });
 });
@@ -99,8 +99,11 @@ describe("getCountryFromIp", () => {
     const fetchMock = vi.mocked(globalThis.fetch);
     fetchMock.mockResolvedValueOnce({
       ok: false,
+      status: 200,
+      statusText: "OK",
+      headers: new Headers(),
       json: () => Promise.resolve({}),
-    });
+    } as Response);
     expect(await getCountryFromIp("1.2.3.4")).toBeNull();
     fetchMock.mockClear();
     expect(await getCountryFromIp("1.2.3.4")).toBeNull();
@@ -150,7 +153,7 @@ describe("resolveCountry", () => {
   });
 
   it("falls back to IP lookup when request has no country", async () => {
-    vi.mocked(geolocation).mockReturnValue({ country: null });
+    vi.mocked(geolocation).mockReturnValue({ country: null } as any);
     const result = await resolveCountry(mockRequest, "1.2.3.4");
     expect(result).toBe("US");
   });

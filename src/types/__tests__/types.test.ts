@@ -3,6 +3,12 @@
 // ──────────────────────────────────────────────────────────────────────────────
 
 import { describe, it, expect } from "vitest";
+import type { PortfolioProject, PortfolioStats } from "../portfolio";
+import type { SubscriberStatus, CampaignStatus, Subscriber } from "../newsletter";
+import type { EmailProvider, CampaignStatusType, EmailSettings } from "../email";
+import type { EventType, AppointmentStatus, CalendarEvent } from "../calendar";
+import type { InquiryStatus, Service } from "../services";
+import type { LanguageData } from "../locale";
 
 // ─── Activity Types ───────────────────────────────────────────────────────
 
@@ -154,8 +160,7 @@ describe("chatbot types", () => {
 
 describe("portfolio types", () => {
   it("defines PortfolioProject with required fields", async () => {
-    const mod = await import("../portfolio");
-    const project: mod.PortfolioProject = {
+    const project: PortfolioProject = {
       id: "1",
       title: "Test",
       slug: "test",
@@ -204,8 +209,7 @@ describe("portfolio types", () => {
   });
 
   it("defines PortfolioStats with number fields", async () => {
-    const mod = await import("../portfolio");
-    const stats: mod.PortfolioStats = {
+    const stats: PortfolioStats = {
       total: 10,
       published: 5,
       draft: 3,
@@ -223,15 +227,13 @@ describe("portfolio types", () => {
 
 describe("newsletter types", () => {
   it("subscriber statuses cover all expected values", async () => {
-    const mod = await import("../newsletter");
-    type Status = mod.SubscriberStatus;
+    type Status = SubscriberStatus;
     const statuses: Status[] = ["ACTIVE", "UNSUBSCRIBED", "BOUNCED", "PENDING_VERIFICATION"];
     expect(statuses.length).toBe(4);
   });
 
   it("campaign statuses cover all expected values", async () => {
-    const mod = await import("../newsletter");
-    type CStatus = mod.CampaignStatus;
+    type CStatus = CampaignStatus;
     const statuses: CStatus[] = [
       "DRAFT", "REVIEW", "APPROVED", "SCHEDULED", "SENDING",
       "AWAITING_WINNER", "SENT", "PAUSED", "CANCELLED", "FAILED",
@@ -240,8 +242,7 @@ describe("newsletter types", () => {
   });
 
   it("defines Subscriber with required fields", async () => {
-    const mod = await import("../newsletter");
-    const sub: mod.Subscriber = {
+    const sub: Subscriber = {
       id: "1",
       firstName: "John",
       lastName: "Doe",
@@ -276,22 +277,19 @@ describe("newsletter types", () => {
 
 describe("email types", () => {
   it("exports EmailProvider union values", async () => {
-    const mod = await import("../email");
-    type Provider = mod.EmailProvider;
+    type Provider = EmailProvider;
     const providers: Provider[] = ["brevo", "resend", "smtp"];
     expect(providers.length).toBe(3);
   });
 
   it("export CampaignStatusType union values", async () => {
-    const mod = await import("../email");
-    type CStatus = mod.CampaignStatusType;
+    type CStatus = CampaignStatusType;
     const statuses: CStatus[] = ["DRAFT", "SCHEDULED", "SENDING", "SENT", "ARCHIVED", "FAILED", "CANCELLED"];
     expect(statuses.length).toBe(7);
   });
 
   it("defines EmailSettings with layout fields", async () => {
-    const mod = await import("../email");
-    const settings: mod.EmailSettings = {
+    const settings: EmailSettings = {
       id: "1",
       apiKey: "key",
       smtpServer: "smtp.example.com",
@@ -320,22 +318,19 @@ describe("email types", () => {
 
 describe("calendar types", () => {
   it("event types include all expected values", async () => {
-    const mod = await import("../calendar");
-    type ET = mod.EventType;
+    type ET = EventType;
     const types: ET[] = ["MEETING", "CONSULTATION", "PROJECT_DEADLINE", "PERSONAL", "TASK", "REMINDER"];
     expect(types.length).toBe(6);
   });
 
   it("appointment statuses include all expected values", async () => {
-    const mod = await import("../calendar");
-    type AS = mod.AppointmentStatus;
+    type AS = AppointmentStatus;
     const statuses: AS[] = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED", "RESCHEDULED", "NO_SHOW"];
     expect(statuses.length).toBe(6);
   });
 
   it("defines CalendarEvent with required fields", async () => {
-    const mod = await import("../calendar");
-    const event: mod.CalendarEvent = {
+    const event: CalendarEvent = {
       id: "1",
       title: "Test Event",
       description: null,
@@ -371,8 +366,7 @@ describe("calendar types", () => {
 
 describe("services types", () => {
   it("InquiryStatus includes all expected values", async () => {
-    const mod = await import("../services");
-    type IS = mod.InquiryStatus;
+    type IS = InquiryStatus;
     const statuses: IS[] = [
       "NEW", "CONTACTED", "QUALIFIED", "PROPOSAL_SENT",
       "NEGOTIATION", "CONVERTED", "CLOSED", "LOST",
@@ -381,8 +375,7 @@ describe("services types", () => {
   });
 
   it("defines Service with required fields", async () => {
-    const mod = await import("../services");
-    const service: mod.Service = {
+    const service: Service = {
       id: "1",
       title: "Web Development",
       slug: "web-development",
@@ -420,8 +413,7 @@ describe("services types", () => {
 
 describe("locale types", () => {
   it("defines LanguageData with required fields", async () => {
-    const mod = await import("../locale");
-    const lang: mod.LanguageData = {
+    const lang: LanguageData = {
       id: "1",
       code: "en",
       name: "English",

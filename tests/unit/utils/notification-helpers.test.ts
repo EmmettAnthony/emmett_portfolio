@@ -38,7 +38,7 @@ function getDeliveryChannels(
   const channels = preference.categoryChannels[category] ?? ["IN_APP"];
 
   if (priority === "CRITICAL") {
-    const uniqueChannels = new Set([...channels, "EMAIL"]);
+    const uniqueChannels = new Set<DeliveryChannel>([...channels, "EMAIL"]);
     return Array.from(uniqueChannels);
   }
 
@@ -131,7 +131,7 @@ describe("Notification Helpers", () => {
     });
 
     it("always includes EMAIL for CRITICAL priority", () => {
-      const preference = { ...defaultPreference, categoryChannels: { ...defaultPreference.categoryChannels, CRM: ["IN_APP"] } };
+      const preference = { ...defaultPreference, categoryChannels: { ...defaultPreference.categoryChannels, CRM: ["IN_APP"] as DeliveryChannel[] } };
       const channels = getDeliveryChannels(preference, "CRM", "CRITICAL");
       expect(channels).toContain("IN_APP");
       expect(channels).toContain("EMAIL");

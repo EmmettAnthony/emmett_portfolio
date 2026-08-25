@@ -6,10 +6,9 @@ vi.mock("@/lib/sentry", () => ({
 
 const { mockLimit, mockRatelimit, mockRedis } = vi.hoisted(() => {
   const mockLimit = vi.fn();
-  const mockRatelimit = vi.fn(function () {
+  const mockRatelimit = Object.assign(vi.fn(function () {
     return { limit: mockLimit };
-  });
-  mockRatelimit.slidingWindow = vi.fn();
+  }), { slidingWindow: vi.fn() });
   const mockRedis = vi.fn(function () {
     return {};
   });
@@ -24,7 +23,7 @@ beforeEach(() => {
   mockRatelimit.mockImplementation(function () {
     return { limit: mockLimit };
   });
-  mockRatelimit.slidingWindow = vi.fn();
+  (mockRatelimit as any).slidingWindow = vi.fn();
   mockRedis.mockImplementation(function () {
     return {};
   });

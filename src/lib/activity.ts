@@ -323,7 +323,7 @@ export async function getActivityAnalytics(startDate?: string, endDate?: string)
         select: { id: true, name: true, email: true },
       })
     : [];
-  const userMap = new Map(users.map((u) => [u.id, u]));
+  const userMap = new Map(users.map((u: { id: string; name: string | null; email: string }) => [u.id, u]));
 
   // Recent trend
   const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -394,10 +394,9 @@ export async function getActivityAnalytics(startDate?: string, endDate?: string)
     dailyCounts: Array.from(dailyMap.entries()).map(([date, count]) => ({ date, count })),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     topUsers: (topUsers as any[])
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic callback type
-      .filter((u: any) => u.userId)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic callback type
-      .map((u: any) => {
+ 
+      .filter((u: { userId?: string | null }) => u.userId)
+      .map((u: { userId: string; _count: number }) => {
         const user = userMap.get(u.userId);
         return {
           userId: u.userId,

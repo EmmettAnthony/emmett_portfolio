@@ -83,7 +83,7 @@ describe("createTicketSchema", () => {
     expect(result.phone).toBe("+1234567890");
     expect(result.preferredContact).toBe("email");
     expect(result.attachments).toHaveLength(1);
-    expect(result.attachments[0].fileName).toBe("file.pdf");
+    expect(result.attachments?.[0].fileName).toBe("file.pdf");
   });
 
   it("rejects invalid preferredContact", () => {

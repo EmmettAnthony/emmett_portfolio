@@ -103,7 +103,7 @@ export function ActivityFeed({ limit = 10, showTitle = true, compact = false, cl
       )}
 
       <div className="space-y-0.5">
-        {notifications.map((_n, _idx) => {
+        {notifications.map((n, idx) => {
           const Icon = categoryIcons[n.category] || Activity;
           const colorClass = categoryColors[n.category] || categoryColors.SYSTEM;
 

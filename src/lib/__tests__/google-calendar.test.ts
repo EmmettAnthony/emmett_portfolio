@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 const mockGoogleAuth = vi.hoisted(() => vi.fn());
 const mockEventsInsert = vi.hoisted(() => vi.fn());

@@ -29,7 +29,7 @@ export async function sendEscalationEmail(conversationId: string) {
       visitorEmail: conversation.visitorEmail,
       visitorId: conversation.visitorId,
       messageCount: conversation.messageCount,
-      messages: conversation.messages.map((m) => ({
+      messages: conversation.messages.map((m: { role: string; content: string; createdAt: Date }) => ({
         role: m.role,
         content: m.content,
         createdAt: m.createdAt,

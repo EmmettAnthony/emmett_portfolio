@@ -17,8 +17,9 @@ import { cookies } from "next/headers";
 import {
   locales,
   defaultLocale,
-  localeDirections
+  localeDirections,
 } from "@/i18n/routing";
+import type { Locale } from "@/i18n/routing";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -125,7 +126,7 @@ export default async function RootLayout({
   return (
     <html
       lang={activeLocale}
-      dir={localeDirections[activeLocale as Locale]}
+      dir={localeDirections[activeLocale as Locale] ?? "ltr"}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >

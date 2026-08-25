@@ -77,14 +77,14 @@ export async function getAboutPageData(): Promise<AboutPageData | null> {
       yearsOfExperience: about.yearsOfExperience,
       summaryHeading: about.summaryHeading,
       missionStatement: about.missionStatement,
-      statistics: about.statistics.map((s) => ({
+      statistics: about.statistics.map((s: (typeof about.statistics)[number]) => ({
         title: s.title,
         value: s.value,
         suffix: s.suffix,
         icon: s.icon,
         order: s.order,
       })),
-      technologies: about.technologies.map((t) => ({
+      technologies: about.technologies.map((t: (typeof about.technologies)[number]) => ({
         name: t.name,
         category: t.category,
         logo: t.logo,
@@ -95,7 +95,7 @@ export async function getAboutPageData(): Promise<AboutPageData | null> {
       personalInterests: about.personalInterests as unknown as Array<Record<string, unknown>>,
       socialLinks: about.socialLinks as unknown as Array<Record<string, unknown>>,
       faqs: about.faqs as unknown as Array<Record<string, unknown>>,
-      experiences: resumeProfile?.experiences.map((e) => ({
+      experiences: resumeProfile?.experiences.map((e: { id: string; jobTitle: string; company: string; location: string | null; startDate: Date; endDate: Date | null; current: boolean; responsibilities: unknown }) => ({
         id: e.id,
         jobTitle: e.jobTitle,
         company: e.company,
@@ -105,7 +105,7 @@ export async function getAboutPageData(): Promise<AboutPageData | null> {
         current: e.current,
         responsibilities: e.responsibilities as unknown as string[],
       })) ?? [],
-      education: resumeProfile?.education.map((e) => ({
+      education: resumeProfile?.education.map((e: { id: string; institution: string; degree: string | null; fieldOfStudy: string | null; startDate: Date; endDate: Date | null; grade: string | null }) => ({
         id: e.id,
         institution: e.institution,
         degree: e.degree,
@@ -114,7 +114,7 @@ export async function getAboutPageData(): Promise<AboutPageData | null> {
         endDate: e.endDate,
         grade: e.grade,
       })) ?? [],
-      certifications: resumeProfile?.certifications.map((c) => ({
+      certifications: resumeProfile?.certifications.map((c: { id: string; name: string; organization: string; issueDate: Date; credentialUrl: string | null }) => ({
         id: c.id,
         name: c.name,
         organization: c.organization,

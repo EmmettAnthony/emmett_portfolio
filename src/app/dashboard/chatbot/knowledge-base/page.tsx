@@ -18,7 +18,7 @@ export default async function KnowledgeBasePage() {
   ]);
 
   // Serialize dates to strings for client component compatibility
-  const items = rawItems.map((item) => ({
+  const items = rawItems.map((item: { id: string; title: string; content: string; category: { id: string; name: string; color: string | null } | null; tags: unknown; source: string | null; enabled: boolean; createdAt: Date; updatedAt: Date }) => ({
     id: item.id,
     title: item.title,
     content: item.content,
@@ -30,7 +30,7 @@ export default async function KnowledgeBasePage() {
     updatedAt: item.updatedAt.toISOString(),
   }));
 
-  const categories = rawCategories.map((cat) => ({
+  const categories = rawCategories.map((cat: { id: string; name: string; slug: string; color: string | null; icon: string | null; _count: { items: number } }) => ({
     id: cat.id,
     name: cat.name,
     slug: cat.slug,

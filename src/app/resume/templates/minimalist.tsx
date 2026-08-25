@@ -11,7 +11,7 @@ import {
   formatDate
 } from "./types";
 import { ResumeSectionTracker } from "@/components/resume/ResumeSectionTracker";
-import type { TemplateProps, Skill, Experience, Education, Certification, Reference, ResumeAward, Language } from "@/app/resume/templates/types";
+import type { TemplateProps, Skill, Experience, Education, Certification, Reference, ResumeAward, Language, FeaturedProject } from "@/app/resume/templates/types";
 
 export async function MinimalistTemplate({
   resume,

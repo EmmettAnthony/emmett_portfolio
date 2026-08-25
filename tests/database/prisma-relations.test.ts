@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 interface RelationDef {
   from: string;
   to: string;
-  type: "one-to-one" | "one-to-many" | "many-to-many";
+  type: "one-to-one" | "one-to-many" | "many-to-many" | "many-to-one";
   onDelete?: "Cascade" | "SetNull" | "Restrict" | "NoAction";
   foreignKey: string;
 }

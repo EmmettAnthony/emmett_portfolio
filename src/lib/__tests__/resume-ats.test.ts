@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { calculateATSScore } from "../resume-ats";
+import { calculateATSScore, type ResumeData } from "../resume-ats";
 
-function makeEmptyResume() {
+function makeEmptyResume(): ResumeData {
   return {
     fullName: null,
     professionalTitle: null,

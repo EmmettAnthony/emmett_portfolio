@@ -41,7 +41,7 @@ function hasXss(input: string): boolean {
   return xssPatterns.some((pattern) => pattern.test(input));
 }
 
-function validateFileUpload(filename: string, sizeBytes: number, mimeType: string): { valid: boolean; error?: string } {
+function validateFileUpload(filename: string, sizeBytes: number, mimeType: string): { valid: boolean; error?: string; warning?: string } {
   const allowedExtensions = [".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".gif", ".svg"];
   const allowedMimeTypes = [
     "application/pdf",

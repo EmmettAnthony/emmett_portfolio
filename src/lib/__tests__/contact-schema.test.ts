@@ -338,7 +338,7 @@ const base = {
       phone: "555-0000",
       website: "https://acme.com",
       projectGoals: "Grow business",
-      preferredContactMethod: "Email",
+      preferredContactMethod: "Email" as const,
     };
     const score = calculateLeadScore(data);
     expect(score).toBe(30);
@@ -375,16 +375,16 @@ const base = {
   it("caps score at 100", () => {
     const data = {
       ...base,
-      budget: "$10,000+",
-      referralSource: "Previous Client",
+      budget: "$10,000+" as const,
+      referralSource: "Previous Client" as const,
       fullName: "Max",
       company: "Corp",
       phone: "555-1111",
       website: "https://max.com",
       projectGoals: "Scale globally",
-      preferredContactMethod: "Phone",
+      preferredContactMethod: "Phone" as const,
       projectDetails: "A".repeat(101),
-      timeline: "ASAP",
+      timeline: "ASAP" as const,
     };
     const score = calculateLeadScore(data);
     expect(score).toBe(100);
@@ -393,12 +393,12 @@ const base = {
   it("combines budget + referral + profile + details + timeline correctly", () => {
     const data = {
       ...base,
-      budget: "$1,000 - $5,000",
-      referralSource: "Referral",
+      budget: "$1,000 - $5,000" as const,
+      referralSource: "Referral" as const,
       company: "Corp",
       phone: "555-1111",
       projectDetails: "A".repeat(101),
-      timeline: "Within 1 Month",
+      timeline: "Within 1 Month" as const,
     };
     const score = calculateLeadScore(data);
     expect(score).toBe(20 + 20 + 5 + 5 + 10 + 5);

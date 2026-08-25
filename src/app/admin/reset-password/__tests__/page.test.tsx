@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
@@ -196,7 +196,7 @@ describe("ResetPasswordPage", () => {
   it("disables submit button while loading", async () => {
     const user = userEvent.setup();
     let resolveFetch: (v: unknown) => void;
-    global.fetch = vi.fn(() => new Promise((resolve) => { resolveFetch = resolve; }));
+    global.fetch = vi.fn(() => new Promise((resolve) => { resolveFetch = resolve; })) as any;
 
     await renderPage();
     await user.type(screen.getByLabelText("New Password"), "newpassword123");

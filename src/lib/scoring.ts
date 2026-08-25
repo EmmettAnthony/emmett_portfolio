@@ -12,8 +12,8 @@ export async function calculateEngagementScore(subscriberId: string): Promise<nu
   const now = Date.now();
 
   const events = sub.campaignEvents || [];
-  const opens = events.filter((e) => e.eventType === "opened").length;
-  const clicks = events.filter((e) => e.eventType === "clicked").length;
+  const opens = events.filter((e: { eventType: string }) => e.eventType === "opened").length;
+  const clicks = events.filter((e: { eventType: string }) => e.eventType === "clicked").length;
 
   score += Math.min(opens * 10, 40);
   score += Math.min(clicks * 15, 30);

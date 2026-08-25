@@ -9,7 +9,7 @@ interface ATSResult {
   tips: string[];
 }
 
-interface ResumeData {
+export interface ResumeData {
   fullName?: string | null;
   professionalTitle?: string | null;
   summary?: string | null;

@@ -79,7 +79,7 @@ export async function getKnowledgeContext(query: string): Promise<string> {
       OR: [
         { title: { contains: query } },
         { content: { contains: query } },
-        { tags: { has: query.toLowerCase() } },
+        { tags: { array_contains: query.toLowerCase() } },
       ],
     },
     take: 5,
@@ -90,8 +90,8 @@ export async function getKnowledgeContext(query: string): Promise<string> {
 
   return results
     .map(
-      (item, i) =>
-        `[${i + 1}] ${item.title}${item.category ? ` (Category: ${item.category.name})` : ""}\n${item.content.slice(0, 500)}`
+      (item: typeof results[number], i: number) =>
+        `[${i + 1}] ${item.title}${(item as typeof item & { category?: { name: string } | null }).category ? ` (Category: ${(item as typeof item & { category?: { name: string } | null }).category!.name})` : ""}\n${item.content.slice(0, 500)}`
     )
     .join("\n\n");
 }

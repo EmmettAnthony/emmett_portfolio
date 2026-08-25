@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { cache } from "@/lib/cache";
 import { dispatchWebhook } from "@/lib/webhooks";
+import { Prisma } from "@prisma/client";
 
 interface ResendWebhookPayload {
   type: string;
@@ -66,8 +67,8 @@ export async function POST(request: Request) {
                 subscriberId: log.subscriberId || "",
                 email,
                 eventType: "bounced",
-                                metadata: { bounce: data.bounce },
-              } as any,
+                                metadata: { bounce: data.bounce } as Prisma.InputJsonValue,
+              },
             });
           }
         }
@@ -94,8 +95,8 @@ export async function POST(request: Request) {
                 subscriberId: log.subscriberId || "",
                 email,
                 eventType: "complained",
-                                metadata: { complaint: data.complaint },
-              } as any,
+                                metadata: { complaint: data.complaint } as Prisma.InputJsonValue,
+              },
             });
           }
         }

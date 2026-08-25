@@ -40,7 +40,7 @@ export default async function ConversationDetailPage({ params }: { params: Promi
 
       <ConversationReplyPanel
         conversationId={id}
-        initialMessages={conversation.messages.map((m) => ({
+        initialMessages={conversation.messages.map((m: { id: string; role: string; content: string; createdAt: Date; metadata: unknown }) => ({
           id: m.id,
           role: m.role,
           content: m.content,
@@ -63,7 +63,7 @@ export default async function ConversationDetailPage({ params }: { params: Promi
           timeline: conversation.lead.timeline,
           status: conversation.lead.status,
         } : null}
-        feedback={conversation.feedback.map((fb) => ({
+        feedback={conversation.feedback.map((fb: { score: number; comment: string | null; category: string | null }) => ({
           score: fb.score,
           comment: fb.comment,
           category: fb.category,

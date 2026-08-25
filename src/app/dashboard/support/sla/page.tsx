@@ -67,7 +67,7 @@ export default function SLAPage() {
     );
   }
 
-  const statCards = [
+  const statCards: { title: string; value: number; icon: React.ComponentType<{ className?: string }> }[] = [
     { title: "SLA Breached", value: data.breachCount, icon: ShieldAlert },
     { title: "At Risk", value: data.atRiskCount, icon: AlertTriangle },
     { title: "Within SLA", value: data.okCount, icon: Clock },
@@ -83,7 +83,7 @@ export default function SLAPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        {statCards.map((_stat, _i) => (
+        {statCards.map((stat, i) => (
           <StatsCard key={stat.title} {...stat} />
         ))}
       </div>

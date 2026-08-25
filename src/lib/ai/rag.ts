@@ -30,7 +30,7 @@ export async function searchKnowledgeBase(query: string, limit = 5): Promise<Sea
         OR: [
           { title: { contains: query } },
           { content: { contains: query } },
-        { tags: { has: query.toLowerCase() } },
+        { tags: { array_contains: query.toLowerCase() } },
         ],
       },
       take: limit,
@@ -39,12 +39,12 @@ export async function searchKnowledgeBase(query: string, limit = 5): Promise<Sea
     });
   }
 
-  return results.map((item) => ({
+  return results.map((item: typeof results[number]) => ({
     id: item.id,
     title: item.title,
     content: item.content.slice(0, 1000),
-    category: item.category?.name ?? null,
-    tags: item.tags,
+    category: (item as typeof item & { category?: { name: string } | null }).category?.name ?? null,
+    tags: item.tags as string[],
     score: calculateRelevance(item.title, item.content, query),
     source: item.source,
     sourceUrl: item.sourceUrl,
@@ -63,12 +63,12 @@ export async function searchPortfolio(query: string): Promise<SearchResult[]> {
     take: 5,
   });
 
-  return results.map((item) => ({
+  return results.map((item: typeof results[number]) => ({
     id: item.id,
     title: item.name,
     content: item.description ?? "",
     category: "Portfolio",
-    tags: (item.tags ?? "").split(",").map((t) => t.trim()).filter(Boolean),
+    tags: ((item.tags ?? "") as string).split(",").map((t: string) => t.trim()).filter(Boolean),
     score: calculateRelevance(item.name, item.description ?? "", query),
     source: "portfolio",
     sourceUrl: `/portfolio/${item.slug}`,
@@ -95,12 +95,12 @@ export async function searchBlogPosts(query: string): Promise<SearchResult[]> {
     },
   });
 
-  return results.map((item) => ({
+  return results.map((item: typeof results[number]) => ({
     id: item.id,
     title: item.title,
     content: item.excerpt ?? "",
     category: "Blog",
-    tags: item.tags ? [item.tags] : [],
+    tags: item.tags ? [item.tags as string] : [],
     score: calculateRelevance(item.title, item.excerpt ?? "", query),
     source: "blog",
     sourceUrl: `/blog/${item.slug}`,
@@ -189,7 +189,7 @@ export async function searchSupportKnowledgeBase(query: string, limit = 3): Prom
       include: { category: { select: { name: true } } },
     });
 
-    return articles.map((a, i) => ({
+    return articles.map((a: typeof articles[number], i: number) => ({
       id: a.id,
       title: a.title,
       content: a.excerpt || a.content.substring(0, 300),

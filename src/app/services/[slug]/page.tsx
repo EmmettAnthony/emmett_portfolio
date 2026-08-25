@@ -94,6 +94,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     notFound();
   }
 
+  const service = data.service;
 
 
   const features: string[] = Array.isArray(service.features)

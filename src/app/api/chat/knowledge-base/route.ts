@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { knowledgeBaseSchema, knowledgeBaseUpdateSchema } from "@/lib/validations/chatbot";
 import { auth } from "@/../auth";
 import { generateEmbedding } from "@/lib/ai/embeddings";
+import { ZodError } from "zod";
 
 export async function GET(request: NextRequest) {
   try {
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Failed to create knowledge base entry:", error);
     if (error instanceof Error && error.name === "ZodError") {
-      return NextResponse.json({ error: "Invalid request", details: (error as any).errors }, { status: 400 });
+      return NextResponse.json({ error: "Invalid request", details: (error as ZodError).issues }, { status: 400 });
     }
     return NextResponse.json({ error: "Failed to create knowledge base entry" }, { status: 500 });
   }
@@ -129,7 +130,7 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error("Failed to update knowledge base entry:", error);
     if (error instanceof Error && error.name === "ZodError") {
-      return NextResponse.json({ error: "Invalid request", details: (error as any).errors }, { status: 400 });
+      return NextResponse.json({ error: "Invalid request", details: (error as ZodError).issues }, { status: 400 });
     }
     return NextResponse.json({ error: "Failed to update knowledge base entry" }, { status: 500 });
   }

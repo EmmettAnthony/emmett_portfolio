@@ -20,7 +20,10 @@ vi.mock("framer-motion")
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
-const defaultContextValue = {
+const defaultContextValue: {
+  conversationId: string | null;
+  setShowContactForm: ReturnType<typeof vi.fn>;
+} = {
   conversationId: "test-conv-123",
   setShowContactForm: vi.fn(),
 };

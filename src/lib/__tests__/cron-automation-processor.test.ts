@@ -30,7 +30,7 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-function makeAutomation(overrides = {}) {
+function makeAutomation(overrides: Record<string, any> = {}) {
   return {
     id: "auto-1",
     triggerType: "welcome_series",
@@ -358,9 +358,9 @@ describe("processAutomationQueue", () => {
     await processAutomationQueue();
 
     const stepUpdate = mockStepUpdate.mock.calls.find(
-      (c: unknown[]) => (c[0] as Record<string, unknown>)?.where?.id === "step-1"
+      (c: unknown[]) => ((c[0] as any)?.where?.id === "step-1")
     );
-    const cleanedCondition = stepUpdate?.[0]?.data?.condition;
+    const cleanedCondition = (stepUpdate?.[0] as any)?.data?.condition;
     expect(cleanedCondition._scheduledFor).toBeUndefined();
     expect(cleanedCondition._executeAt).toBeUndefined();
     expect(cleanedCondition.otherField).toBe("keep");

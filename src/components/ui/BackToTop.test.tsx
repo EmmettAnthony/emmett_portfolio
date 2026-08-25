@@ -105,7 +105,7 @@ describe("BackToTop", () => {
   });
 
   it("is hidden when scrollYProgress is undefined", () => {
-    mockGetScrollProgress.mockReturnValue(undefined);
+    mockGetScrollProgress.mockReturnValue(undefined as any);
     renderComponent();
     const button = screen.getByLabelText("Back to top");
     expect(button.style.opacity).toBe("0");

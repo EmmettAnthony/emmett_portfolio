@@ -6,7 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 
 interface ProviderOptions {
-  session?: { user: { id: string; name?: string; email?: string; role?: string } } | null;
+  session?: { user: { id: string; name?: string; email?: string; role?: string }; expires?: string } | null;
   queryClient?: QueryClient;
   theme?: string;
 }
@@ -33,7 +33,7 @@ function WithProviders({
   options?: ProviderOptions;
 }) {
   const queryClient = options.queryClient ?? createTestQueryClient();
-  const session = options.session ?? { user: { id: "test-user", email: "test@example.com", role: "ADMIN" } };
+  const session = (options.session ?? { user: { id: "test-user", email: "test@example.com", role: "ADMIN" }, expires: "2099-01-01" }) as { user: { id: string; name?: string; email?: string; role?: string }; expires: string };
 
   return (
     <QueryClientProvider client={queryClient}>

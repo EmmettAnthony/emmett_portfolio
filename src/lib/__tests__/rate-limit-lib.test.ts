@@ -6,10 +6,9 @@ vi.mock("@/lib/sentry", () => ({
 
 const { mockLimit, mockRatelimit, mockRedis } = vi.hoisted(() => {
   const mockLimit = vi.fn();
-  const mockRatelimit = vi.fn(function () {
+  const mockRatelimit = Object.assign(vi.fn(function () {
     return { limit: mockLimit };
-  });
-  mockRatelimit.slidingWindow = vi.fn();
+  }), { slidingWindow: vi.fn() });
   const mockRedis = vi.fn(function () {
     return {};
   });
@@ -28,7 +27,7 @@ beforeEach(() => {
   delete process.env.UPSTASH_REDIS_REST_TOKEN;
   mockLimit.mockReset();
   mockRatelimit.mockReset();
-  mockRatelimit.slidingWindow = vi.fn();
+  (mockRatelimit as any).slidingWindow = vi.fn();
   mockRatelimit.mockImplementation(function () {
     return { limit: mockLimit };
   });
@@ -163,9 +162,9 @@ describe("rateLimit", () => {
     const { rateLimit } = await import("../rate-limit");
     await rateLimit(uniqueKey(), 5, 60_000);
 
-    expect(mockRatelimit.slidingWindow).toHaveBeenCalledWith(5, "60 s");
+    expect((mockRatelimit as any).slidingWindow).toHaveBeenCalledWith(5, "60 s");
     expect(mockRatelimit).toHaveBeenCalledWith(expect.objectContaining({
-      limiter: mockRatelimit.slidingWindow(5, "60 s"),
+      limiter: (mockRatelimit as any).slidingWindow(5, "60 s"),
     }));
   });
 

@@ -307,7 +307,7 @@ export async function fullExportSync(): Promise<{
         const { client, integration } = await getAuthenticatedClient();
 
         const calendar = google.calendar({ version: "v3", auth: client });
-        const calendarId = integration.calendarId || "primary";
+        const calendarId = integration?.calendarId || "primary";
         const googleEvent = toGoogleEvent(event);
 
         if (googleEventId) {

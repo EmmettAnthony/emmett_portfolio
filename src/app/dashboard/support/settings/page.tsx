@@ -46,7 +46,7 @@ export default function SupportSettingsPage() {
     onError: () => toast("error", "Failed to save settings"),
   });
 
-  if (isLoading) {
+  if (saveMutation.isPending) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-64 rounded-2xl" />

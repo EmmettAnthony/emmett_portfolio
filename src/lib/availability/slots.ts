@@ -68,7 +68,7 @@ export async function getAvailableSlots(
     const minutes = current % 60;
     const timeStr = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 
-    const isBooked = existingAppointments.some((apt) => {
+    const isBooked = existingAppointments.some((apt: { preferredTime: string | null; duration: number }) => {
       if (!apt.preferredTime) return false;
       const [aH, aM] = apt.preferredTime.split(":").map(Number);
       const aStart = aH * 60 + aM;

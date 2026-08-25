@@ -49,6 +49,7 @@ export default function TagsPage() {
 
   const { toast } = useToast();
   const [tags, setTags] = useState<TagItem[]>([]);
+  const [isLoading] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [editingTag, setEditingTag] = useState<TagItem | null>(null);

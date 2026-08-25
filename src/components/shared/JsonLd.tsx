@@ -11,7 +11,7 @@ export async function JsonLd() {
       include: { education: true },
     });
     if (profile) {
-      alumniOf = profile.education.map((edu) => ({
+      alumniOf = profile.education.map((edu: { institution: string }) => ({
         "@type": "EducationalOrganization" as const,
         name: edu.institution,
       }));

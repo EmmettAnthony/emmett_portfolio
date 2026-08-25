@@ -100,7 +100,7 @@ function extractDisplayName(xml: string, calendarUrl: string): string | null {
 }
 
 function escapeXml(s: string): string {
-  return s.replace(/[<>&'"]/g, (c) => {
+  return s.replace(/[<>&'"]/g, (c: string) => {
     switch (c) {
       case "<": return "&lt;";
       case ">": return "&gt;";
@@ -108,6 +108,7 @@ function escapeXml(s: string): string {
       case "'": return "&apos;";
       case '"': return "&quot;";
     }
+    return c;
   });
 }
 

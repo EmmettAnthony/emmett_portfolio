@@ -107,7 +107,7 @@ function validateEmailVariables(template: EmailTemplate, data: Record<string, st
 }
 
 function renderTemplate(template: EmailTemplate, data: Record<string, string>): { subject: string; body: string } {
-  let subject = template.subject;
+  const subject = template.subject;
   let body = template.body;
 
   for (const [key, value] of Object.entries(data)) {

@@ -5,9 +5,10 @@ const req = createRequire(import.meta.url);
 
 beforeEach(() => {
   vi.resetModules();
-  delete process.env.SENTRY_DSN;
-  delete process.env.NODE_ENV;
-  delete process.env.NEXT_PUBLIC_SENTRY_DSN;
+  const env = process.env as Record<string, string | undefined>;
+  delete env.SENTRY_DSN;
+  delete env.NODE_ENV;
+  delete env.NEXT_PUBLIC_SENTRY_DSN;
 });
 
 describe("captureError", () => {

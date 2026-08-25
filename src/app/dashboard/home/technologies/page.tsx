@@ -87,12 +87,12 @@ export default function HomeTechnologiesPage() {
               <CardHeader><CardTitle className="text-sm font-semibold">{group.category} <Badge variant="secondary" className="ml-2 text-xs">{group.items.length}</Badge></CardTitle></CardHeader>
               <CardContent className="space-y-2">
                 {group.items.length === 0 && <p className="text-xs text-zinc-400">No technologies</p>}
-                {group.items.map((tech: Record<string, unknown>) => (
-                  <div key={tech.id as string} className="flex items-center justify-between rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-800">
-                    <div><p className="text-sm font-medium">{tech.name}</p>{tech.experienceLevel && <p className="text-xs text-zinc-400">{tech.experienceLevel}</p>}</div>
+                {group.items.map((tech) => (
+                  <div key={String(tech.id)} className="flex items-center justify-between rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-800">
+                    <div><p className="text-sm font-medium">{String(tech.name ?? "")}</p>{tech.experienceLevel != null && <p className="text-xs text-zinc-400">{String(tech.experienceLevel ?? "")}</p>}</div>
                     <div className="flex items-center gap-1">
                       <button onClick={() => openEdit(tech)} className="rounded p-1 text-zinc-400 hover:text-muted-foreground"><Edit3 className="h-3 w-3" /></button>
-                      <button onClick={() => setDeleteId(tech.id as string)} className="rounded p-1 text-zinc-400 hover:text-red-500"><Trash2 className="h-3 w-3" /></button>
+                      <button onClick={() => setDeleteId(String(tech.id))} className="rounded p-1 text-zinc-400 hover:text-red-500"><Trash2 className="h-3 w-3" /></button>
                     </div>
                   </div>
                 ))}

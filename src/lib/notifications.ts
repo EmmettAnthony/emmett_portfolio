@@ -1,8 +1,15 @@
 import { prisma } from "@/lib/db";
 import type { NotificationCategory, NotificationPriority } from "@/types/notifications";
-import type { NotifCategory, NotifPriority, Prisma } from "@prisma/client";
+import type { NotifCategory, NotifPriority } from "@prisma/client";
 import { sendNotification } from "@/lib/notifications/notification-service";
 import type { SendNotificationResult } from "@/lib/notifications/notification-service";
+
+type NotificationWhereInput = NonNullable<Parameters<typeof prisma.notification.findMany>[0]>["where"];
+type NotificationTemplateWhereInput = NonNullable<Parameters<typeof prisma.notificationTemplate.findMany>[0]>["where"];
+type NotificationPreferenceUpdateInput = Parameters<typeof prisma.notificationPreference.upsert>[0]["update"];
+type NotificationPreferenceCreateInput = Parameters<typeof prisma.notificationPreference.upsert>[0]["create"];
+type NotificationTemplateUpdateInput = Parameters<typeof prisma.notificationTemplate.update>[0]["data"];
+type NotificationTemplateCreateInput = Parameters<typeof prisma.notificationTemplate.create>[0]["data"];
 
 // ─── Create (migrated to sendNotification pipeline → bus → SSE) ───────────────
 
@@ -80,7 +87,7 @@ export async function getNotifications(params: {
   limit?: number;
   sort?: string;
 }) {
-  const where: Prisma.NotificationWhereInput = {};
+  const where: NotificationWhereInput = {};
 
   if (params.category) where.category = params.category as NotifCategory;
   if (params.priority) where.priority = params.priority as NotifPriority;
@@ -110,11 +117,11 @@ export async function getNotifications(params: {
     where.AND = [
       { OR: userFilters },
       { OR: searchFilters },
-    ] as unknown as Prisma.NotificationWhereInput['AND'];
+    ];
   } else if (userFilters.length > 0) {
-    where.OR = userFilters as unknown as Prisma.NotificationWhereInput['OR'];
+    where.OR = userFilters;
   } else if (searchFilters.length > 0) {
-    where.OR = searchFilters as unknown as Prisma.NotificationWhereInput['OR'];
+    where.OR = searchFilters;
   }
 
   if (params.startDate || params.endDate) {
@@ -127,7 +134,7 @@ export async function getNotifications(params: {
   const limit = Math.min(params.limit || 50, 100);
   const skip = (page - 1) * limit;
 
-  const orderBy: Prisma.NotificationOrderByWithRelationInput = {};
+  const orderBy: Record<string, string> = {};
   if (params.sort === "oldest") orderBy.createdAt = "asc";
   else orderBy.createdAt = "desc";
 
@@ -195,11 +202,11 @@ export async function snoozeNotification(id: string, until: Date) {
 // ─── Analytics ─────────────────────────────────────────────────────────────────
 
 export async function getNotificationAnalytics(startDate?: string, endDate?: string) {
-  const where: Prisma.NotificationWhereInput = {};
+  const where: NotificationWhereInput = {};
   if (startDate || endDate) {
     where.createdAt = {};
-    if (startDate) where.createdAt.gte = new Date(startDate);
-    if (endDate) where.createdAt.lte = new Date(endDate);
+    if (startDate) (where.createdAt as Record<string, Date>).gte = new Date(startDate);
+    if (endDate) (where.createdAt as Record<string, Date>).lte = new Date(endDate);
   }
 
   const [total, unread, byCategory, recent] = await Promise.all([
@@ -223,15 +230,15 @@ export async function updateNotificationPreferences(userId: string, data: Record
    
   return prisma.notificationPreference.upsert({
     where: { userId },
-    update: data as Prisma.NotificationPreferenceUpdateInput,
-    create: { userId, ...data } as Prisma.NotificationPreferenceCreateInput,
+    update: data as NotificationPreferenceUpdateInput,
+    create: { userId, ...data } as NotificationPreferenceCreateInput,
   });
 }
 
 // ─── Templates ─────────────────────────────────────────────────────────────────
 
 export async function getNotificationTemplates(params: { category?: string } = {}) {
-  const where: Prisma.NotificationTemplateWhereInput = {};
+  const where: NotificationTemplateWhereInput = {};
   if (params.category) where.category = params.category as NotifCategory;
   return prisma.notificationTemplate.findMany({ where, orderBy: { label: "asc" } });
 }
@@ -241,15 +248,14 @@ export async function upsertNotificationTemplate(
   id?: string
 ) {
   if (id) {
-     
     return prisma.notificationTemplate.update({
       where: { id },
-      data: data as Prisma.NotificationTemplateUpdateInput,
+      data: data as NotificationTemplateUpdateInput,
     });
   }
 
   return prisma.notificationTemplate.create({
-    data: data as Prisma.NotificationTemplateCreateInput,
+    data: data as NotificationTemplateCreateInput,
   });
 }
 

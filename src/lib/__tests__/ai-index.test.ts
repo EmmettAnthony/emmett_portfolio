@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 const mockConstructors: Record<string, ReturnType<typeof vi.fn>> = {};
 
 function createMockProvider(name: string) {
-  const ctor = vi.fn(function (config: unknown) {
+  const ctor = vi.fn(function (this: any, config: unknown) {
     this.name = name;
     this.config = config;
   });
@@ -40,7 +40,7 @@ vi.mock("../ai/providers/groq", () => ({
 }));
 
 vi.mock("../ai/providers/base", () => ({
-  BaseAIProvider: vi.fn(function (config: unknown) {
+  BaseAIProvider: vi.fn(function (this: any, config: unknown) {
     this.config = config;
   }),
   AIProviderConfig: {},

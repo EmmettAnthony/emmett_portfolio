@@ -26,9 +26,9 @@ export default function KnowledgeBasePage() {
         method: "PATCH", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ helpful }),
       });
-      setArticles((prev: Record<string, unknown>[]) => prev.map(a =>
+      setArticles((prev) => prev.map(a =>
         a.id === articleId
-          ? { ...a, helpfulCount: (a.helpfulCount || 0) + (helpful ? 1 : 0), notHelpfulCount: (a.notHelpfulCount || 0) + (helpful ? 0 : 1) }
+          ? { ...a, helpfulCount: (Number(a.helpfulCount) || 0) + (helpful ? 1 : 0), notHelpfulCount: (Number(a.notHelpfulCount) || 0) + (helpful ? 0 : 1) }
           : a
       ));
     } catch {}

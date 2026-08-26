@@ -25,7 +25,7 @@ runs:
       shell: bash
       env:
         DATABASE_URL: ${{ inputs.database-url }}
-      run: npx prisma db push --accept-data-loss --skip-generate
+      run: npx prisma db push --accept-data-loss
 
     - name: Seed Test Data
       if: inputs.run-seed == 'true'
